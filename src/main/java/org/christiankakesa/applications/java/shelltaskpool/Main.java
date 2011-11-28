@@ -14,11 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by IntelliJ IDEA.
- * User: christian
- * Date: 30/04/11
- * Time: 00:25
- * .
+ * 
  */
 public class Main {
     public static final String APP_NAME = "shelltaskpool.jar";
@@ -27,9 +23,9 @@ public class Main {
     public static final String APP_COPYRIGHT = "Christian Kakesa (c) " + Calendar.getInstance().get(Calendar.YEAR);
     public static final int DEFAULT_CORE_POOL_SIZE = 2;
     public static final long THREAD_KEEP_ALIVE_TIME = 30L;
-    public static final int MAX_JOBS = 1024;
-    public static final int MAX_LINE_LENGTH = 1024;
-    public static final String JOB_SEPARATOR = "|";
+    public static final int MAX_JOBS = 5120;
+    public static final int MAX_LINE_LENGTH = 2048;
+    public static final char JOB_SEPARATOR = ';';
 
     private static final Log LOG = LogFactory.getLog(Main.class);
     private static final int PROGRAM_ERROR = -42;
@@ -70,7 +66,7 @@ public class Main {
         String arg;
         final LongOpt[] opts = {
                 new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
-                new LongOpt("jobname", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
+                new LongOpt("batchname", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
                 new LongOpt("corepoolsize", LongOpt.OPTIONAL_ARGUMENT, null, 'c'),
                 new LongOpt("jobslist", LongOpt.OPTIONAL_ARGUMENT, null, 'l'),
                 new LongOpt("jobsfile", LongOpt.OPTIONAL_ARGUMENT, null, 'f'),
@@ -87,7 +83,11 @@ public class Main {
                 case 'n':
                     arg = g.getOptarg();
                     if (arg != null) {
-                        Statistics.getInstance().setJobName(arg);
+                        Batch.getInstance().setBatchName(arg);
+                        LOG.debug("Batchname: " + Batch.getInstance().getBatchName());
+                    } else {
+                    	LOG.error("Batch name are required");
+                    	return PROGRAM_ERROR;
                     }
                     break;
                 case 'c':
@@ -100,7 +100,7 @@ public class Main {
                             LOG.error(e.getStackTrace().toString());
                             corePoolSize = DEFAULT_CORE_POOL_SIZE;
                         }
-                        LOG.debug("CorePoolSize set to : " + corePoolSize);
+                        LOG.debug("CorePoolSize: " + corePoolSize);
                     } else {
                         LOG.error("No core pool size specified");
                         return PROGRAM_ERROR;
@@ -110,7 +110,7 @@ public class Main {
                     arg = g.getOptarg();
                     if (arg != null) {
                         jobsList = arg;
-                        LOG.debug("JobsList set to : " + jobsList);
+                        LOG.debug("JobsList: " + jobsList);
                     } else {
                         LOG.error("No jobs list specified");
                         //jobsList = null;
@@ -144,6 +144,10 @@ public class Main {
                     return PROGRAM_ERROR;
             }
         }
+        if (Batch.getInstance().getBatchName() == null) {
+        	LOG.error("Name of the batch are required. Set the \"n\" parameter");
+        	return PROGRAM_ERROR;
+        }
         if (jobsFile == null && jobsList == null) {
             LOG.error("No jobs specified. Try \"-h\" or \"--help\" parameter to print help screen");
             return PROGRAM_ERROR;
@@ -152,7 +156,7 @@ public class Main {
         if (jobsList != null) {
             String[] l = StringUtils.split(jobsList, JOB_SEPARATOR);
             for (String s : l) {
-                if (addJob(s) != 0)
+                if (addJob(s.trim()) != 0)
                     return PROGRAM_ERROR;
             }
         }
@@ -199,7 +203,7 @@ public class Main {
             }
         } else {
             LOG.error("Max jobs is " + MAX_JOBS);
-            LOG.error("Reduce the number jobs");
+            LOG.error("Reduce the number of jobs");
             return PROGRAM_ERROR;
         }
         return 0;

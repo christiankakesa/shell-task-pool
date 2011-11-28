@@ -1,22 +1,20 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * Created by IntelliJ IDEA.
- * User: christian
- * Date: 30/04/11
- * Time: 02:33
- * .
+ * 
  */
 public class Utils {
-    //private static final Log LOG = LogFactory.getLog(Utils.class);
+    private static final Log LOG = LogFactory.getLog(Utils.class);
 
     public static void printHelp() {
         System.out.print(getHelp());
@@ -28,20 +26,24 @@ public class Utils {
         sb.append("Usage: ").append(Main.APP_NAME).append(" [-h,--help]\n");
         sb.append(getSpace(nbSpace)).append("\tShow this help screen\n");
         sb.append("\n");
+        sb.append(getSpace(nbSpace)).append(" [-n,--batchname=]\n");
+        sb.append(getSpace(nbSpace)).append("\tSet the name of the entire batch\n");
+        sb.append(getSpace(nbSpace)).append("\texample : -n \"Alimentation différentiel des omes\"\n");
+        sb.append("\n");
         sb.append(getSpace(nbSpace)).append(" [-c,--corepoolsize=]\n");
         sb.append(getSpace(nbSpace)).append("\tSet number of thread processor\n");
         sb.append(getSpace(nbSpace)).append("\texample : -c5\n");
         sb.append("\n");
         sb.append(getSpace(nbSpace)).append(" [-l,--jobslist=]\n");
-        sb.append(getSpace(nbSpace)).append("\tList of jobs seperated by '|' and arguments separated by ','\n");
-        sb.append(getSpace(nbSpace)).append("\texample : -l'nslookup google.fr|/path/script2.sh > /tmp/script2.log'\n");
+        sb.append(getSpace(nbSpace)).append("\tList of jobs seperated by ';'\n");
+        sb.append(getSpace(nbSpace)).append("\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n");
         sb.append("\n");
         sb.append(getSpace(nbSpace)).append(" [-f,--jobsfile=]\n");
-        sb.append(getSpace(nbSpace)).append("\tPath to the jobs file. Jobs are separated by new line and arguments by ','\n");
+        sb.append(getSpace(nbSpace)).append("\tPath to the jobs plain text file. Jobs are separated by new line\n");
         sb.append(getSpace(nbSpace)).append("\texample : -f /home/me/test.job\n");
         sb.append("\n");
         sb.append(getSpace(nbSpace)).append(" [-p,--jobsparam=]\n");
-        sb.append(getSpace(nbSpace)).append("\tSet param to add for each jobs\n");
+        sb.append(getSpace(nbSpace)).append("\tSet global params to add for each job\n");
         sb.append(getSpace(nbSpace)).append("\texample : -p'-x 2011/05/05 -m 1024'\n");
         sb.append("--------------\n");
         sb.append("Author name  : ").append(Main.AUTHOR_NAME).append("\n");
@@ -76,28 +78,26 @@ public class Utils {
         }
         return tokens.toArray(new String[tokens.size()]);
     }
+    
+    public static String stringToSHA1(String plainText) {
+    	//TODO: Removes unneeded test
+		if ("" == plainText || null == plainText || plainText.isEmpty() || plainText.equals(null)) {
+			return null;
+		}
+		final StringBuilder sb = new StringBuilder();
+		try {
+			final MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+			byte[] digest = sha1.digest((plainText).getBytes());
+			String hexString;
+			for (byte b : digest) {
+				hexString = Integer.toHexString(0x00FF & b);
+				sb.append(hexString.length() == 1 ? "0" + hexString : hexString);
+			}
+		} catch (NoSuchAlgorithmException e) {
+			LOG.error(e);
+			return null;
+		}
 
-    /*public static String[] getOsShell() {
-        final String osName = System.getProperty("os.name");
-        if (osName.startsWith("Windows")) {
-            // On tente de déterminer le shell selon la variable d'environnement ComSpec :
-            final String comspec = System.getenv("ComSpec");
-            if (comspec != null) {
-                return new String[]{comspec, "/C"};
-            }
-            // Sinon on détermine le shell selon le nom du système :
-            if (osName.startsWith("Windows 3") || osName.startsWith("Windows 95")
-                    || osName.startsWith("Windows 98") || osName.startsWith("Windows ME")) {
-                return new String[]{"command.com", "/C"};
-            }
-            return new String[]{"cmd.exe", "/C"};
-        }
-        // On tente de déterminer le shell selon la variable d'environnement SHELL :
-        final String shell = System.getenv("SHELL");
-        if (shell != null) {
-            return new String[]{shell, "-c"};
-        }
-        // Sinon on utilise le shell par défaut (/bin/sh)
-        return new String[]{"/bin/sh", "-c"};
-    }*/
+		return sb.toString();
+	}
 }

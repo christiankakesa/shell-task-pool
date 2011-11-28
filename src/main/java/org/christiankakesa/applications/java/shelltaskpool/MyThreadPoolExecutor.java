@@ -8,11 +8,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by IntelliJ IDEA.
- * User: christian
- * Date: 30/04/11
- * Time: 00:27
- * .
+ * 
  */
 public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     private static final Log LOG = LogFactory.getLog(MyThreadPoolExecutor.class);
@@ -33,13 +29,13 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
         super.execute(r);
         LOG.debug("Task " + r.toString() + " added");
     }
-
-    @Override
+    
+    /*@Override
     public void shutdown() {
         super.shutdown();
         LOG.debug("ThreadPool shutdown. All pool is working !!!");
     }
-    /*
+    
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
         //TODO: What to do here
@@ -50,6 +46,5 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     protected void afterExecute(Runnable r, Throwable t) {
         super.afterExecute(r, t);
         //TODO: What to do here
-    }
-    */
+    }*/
 }
