@@ -20,12 +20,6 @@ public class ShellTaskWorker implements Runnable {
 				+ Batch.getInstance().getBatchId() + " - Command line: "
 				+ this.commandLine);
 		job.start();
-		LOG.info("Batch id: " + Batch.getInstance().getBatchId()
-				+ " | Batch name: " + Batch.getInstance().getBatchName()
-				+ " | Job id: " + job.getId() + " | Job command line:"
-				+ job.getCommandLine() + " | Job duration: "
-				+ job.getJobDuration() + " | Job exit code: "
-				+ job.getExitCode());
 	}
 
 }

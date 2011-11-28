@@ -3,6 +3,7 @@ package org.christiankakesa.applications.java.shelltaskpool;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,6 +64,18 @@ public class Utils {
         }
         return sb.toString();
     }
+    
+    public static String buildDurationFromDates(Date end, Date start) {
+    	if (end != null && start != null) {
+			final long tsTime = (end.getTime() - start.getTime()) / 1000;
+			return String.format("%02d:%02d:%02d", tsTime / 3600,
+					(tsTime % 3600) / 60, (tsTime % 60));
+		}
+		LOG.debug("Can't determine duration : endDate = " + end
+				+ " - startDate = " + start);
+		return "00:00:00";
+    }
+    
     /**
      * Build String Array of command line
      * 

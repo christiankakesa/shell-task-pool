@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.logging.LogFactory;
+import org.christiankakesa.applications.java.shelltaskpool.Batch.BatchStatus;
 
 /**
  * Representing the job to execute
@@ -48,17 +49,24 @@ public class JobExecution {
 			this.setExitCode(process.waitFor());
 			this.setEndDate(Calendar.getInstance().getTime());
 		} catch (IOException e) {
+			Batch.getInstance().setBatchStatus(BatchStatus.FAILED);
 			LOG.error(e);
 		} catch (InterruptedException e) {
+			Batch.getInstance().setBatchStatus(BatchStatus.FAILED);
 			LOG.error(e);
 		}
 		if (this.exitCode == 0) {
 			this.setStatus(JobStatus.COMPLETED);
 		} else {
 			this.setStatus(JobStatus.FAILED);
+			Batch.getInstance().setBatchStatus(BatchStatus.FAILED);
 		}
-		LOG.debug("Command: " + processBuilder.command() + " - Exit code: ["
-				+ this.getExitCode() + "] !!!\n");
+		LOG.info("Batch status: " + Batch.getInstance().getBatchStatus()
+				+ " | Job id: " + this.getId() + " | Job command line:"
+				+ this.getCommandLine() + " | Job duration: "
+				+ this.getDuration() + " | Job status: "
+				+ this.getStatus() + " | Job exit code: "
+				+ this.getExitCode());
 	}
 	
 	public synchronized void destroy() {
@@ -109,15 +117,8 @@ public class JobExecution {
 	 * 
 	 * @return
 	 */
-	public String getJobDuration() {
-		if (endDate != null && startDate != null) {
-			final long tsTime = (endDate.getTime() - startDate.getTime()) / 1000;
-			return String.format("%02d:%02d:%02d", tsTime / 3600,
-					(tsTime % 3600) / 60, (tsTime % 60));
-		}
-		LOG.debug("Can't determine job duration : endDate = " + endDate
-				+ " - startDate = " + startDate);
-		return "00:00:00";
+	public String getDuration() {
+		return Utils.buildDurationFromDates(this.getEndDate(), this.getStartDate());
 	}
 
 	public int getExitCode() {
