@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.logging.LogFactory;
-import org.christiankakesa.applications.java.shelltaskpool.Batch.BatchStatus;
 
 /**
  * Representing the job to execute
@@ -22,56 +21,68 @@ public class JobExecution {
 	 * The entire command to execute in this job
 	 */
 	private String commandLine;
-	private volatile long id = 0;
-	private volatile Date startDate;
-	private volatile Date endDate;
-	private volatile String status = JobStatus.UNKNOWN;
-	private volatile int exitCode = -42;
+	private long id = 0;
+	private Date startDate;
+	private Date endDate;
+	private JobStatus status = JobStatus.NONE;
+	private int exitCode = -42;
 	private ProcessBuilder processBuilder;
 	private Process process;
+
 	/**
 	 * 
 	 * @param commandLine
 	 */
 	public JobExecution(final String commandLine) {
 		this.commandLine = commandLine;
-		this.setId(Batch.getInstance().addJobExecution(this));
+		/** Add the job to the Batch.jobExecutionList and set a jobId */
+		Batch.getInstance().addJobExecution(this);
 	}
-	
-	public synchronized void start() {
+
+	public void start() {
 		processBuilder = new ProcessBuilder(
 				Utils.buildCommandLineArray(this.commandLine));
-		this.setStatus(JobStatus.RUNNING);
+		/** Start a job only when job status is NONE */
+		if (this.getStatus() != JobStatus.NONE) {
+			LOG.warn("JobId: " + this.getId() + " with status: "
+					+ this.getStatus() + " couldn't be started");
+			return;
+		}
+		this.setStartDate(Calendar.getInstance().getTime());
 		try {
-			this.setStartDate(Calendar.getInstance().getTime());
 			process = processBuilder.start();
-			LOG.debug(getProcessOutput(process)); /** Log the output of the process */
+			this.setStatus(JobStatus.RUNNING);
+			LOG.debug(getProcessOutput(process));
+			/** Log the output of the process */
 			this.setExitCode(process.waitFor());
 			this.setEndDate(Calendar.getInstance().getTime());
+			if (this.exitCode == 0) {
+				this.setStatus(JobStatus.COMPLETED);
+			} else {
+				this.setStatus(JobStatus.FAILED);
+			}
+			LOG.info("Job id: " + this.getId() + " | Job command line:"
+					+ this.getCommandLine() + " | Job duration: "
+					+ this.getDuration() + " | Job status: " + this.getStatus()
+					+ " | Job exit code: " + this.getExitCode());
 		} catch (IOException e) {
-			Batch.getInstance().setBatchStatus(BatchStatus.FAILED);
 			LOG.error(e);
 		} catch (InterruptedException e) {
-			Batch.getInstance().setBatchStatus(BatchStatus.FAILED);
 			LOG.error(e);
 		}
-		if (this.exitCode == 0) {
-			this.setStatus(JobStatus.COMPLETED);
+		if (this.getStatus() == JobStatus.COMPLETED) {
+			Batch.getInstance().incrementJobSuccess();
 		} else {
-			this.setStatus(JobStatus.FAILED);
-			Batch.getInstance().setBatchStatus(BatchStatus.FAILED);
+			Batch.getInstance().incrementJobFailed();
 		}
-		LOG.info("Batch status: " + Batch.getInstance().getBatchStatus()
-				+ " | Job id: " + this.getId() + " | Job command line:"
-				+ this.getCommandLine() + " | Job duration: "
-				+ this.getDuration() + " | Job status: "
-				+ this.getStatus() + " | Job exit code: "
-				+ this.getExitCode());
 	}
-	
-	public synchronized void destroy() {
-		if (process != null)
-			process.destroy();
+
+	public void destroy() {
+		if (process != null) {
+			synchronized (JobExecution.class) {
+				process.destroy();
+			}
+		}
 	}
 
 	public String getCommandLine() {
@@ -91,7 +102,7 @@ public class JobExecution {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	private void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
@@ -99,16 +110,16 @@ public class JobExecution {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	private void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 
-	public String getStatus() {
+	public JobStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	private void setStatus(JobStatus running) {
+		this.status = running;
 	}
 
 	/**
@@ -118,17 +129,18 @@ public class JobExecution {
 	 * @return
 	 */
 	public String getDuration() {
-		return Utils.buildDurationFromDates(this.getEndDate(), this.getStartDate());
+		return Utils.buildDurationFromDates(this.getEndDate(),
+				this.getStartDate());
 	}
 
 	public int getExitCode() {
 		return exitCode;
 	}
 
-	public void setExitCode(final int exitCode) {
+	private void setExitCode(final int exitCode) {
 		this.exitCode = exitCode;
 	}
-	
+
 	private String getProcessOutput(final Process process) {
 		final StringBuilder sb = new StringBuilder();
 		final InputStreamReader tempReader = new InputStreamReader(
@@ -146,5 +158,9 @@ public class JobExecution {
 			line = null;
 		}
 		return sb.toString();
+	}
+
+	public static enum JobStatus {
+		NONE, RUNNING, FAILED, COMPLETED
 	}
 }

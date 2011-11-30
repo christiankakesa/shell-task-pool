@@ -84,7 +84,7 @@ public class Main {
                     arg = g.getOptarg();
                     if (arg != null) {
                         Batch.getInstance().setBatchName(arg);
-                        LOG.debug("Batchname: " + Batch.getInstance().getBatchName());
+                        LOG.debug("Param [batchname]: " + Batch.getInstance().getBatchName());
                     } else {
                     	LOG.error("Batch name are required");
                     	return PROGRAM_ERROR;
@@ -100,7 +100,7 @@ public class Main {
                             LOG.error(e.getStackTrace().toString());
                             corePoolSize = DEFAULT_CORE_POOL_SIZE;
                         }
-                        LOG.debug("CorePoolSize: " + corePoolSize);
+                        LOG.debug("Param [corepoolsize]: " + corePoolSize);
                     } else {
                         LOG.error("No core pool size specified");
                         return PROGRAM_ERROR;
@@ -110,7 +110,7 @@ public class Main {
                     arg = g.getOptarg();
                     if (arg != null) {
                         jobsList = arg;
-                        LOG.debug("JobsList: " + jobsList);
+                        LOG.debug("Param [jobslist]: " + jobsList);
                     } else {
                         LOG.error("No jobs list specified");
                         //jobsList = null;
@@ -121,7 +121,7 @@ public class Main {
                     arg = g.getOptarg();
                     if (arg != null) {
                         jobsFile = arg;
-                        LOG.debug("JobsFile set to : " + jobsFile);
+                        LOG.debug("Param [jobsfile]: " + jobsFile);
                     } else {
                         LOG.error("No jobs file specified");
                         //jobsFile = null;
@@ -132,7 +132,7 @@ public class Main {
                     arg = g.getOptarg();
                     if (arg != null) {
                         jobsParam = arg;
-                        LOG.debug("JobsParam set to : " + jobsParam);
+                        LOG.debug("Param [jobsparam]: " + jobsParam);
                     } else {
                         LOG.error("No jobs param specified");
                         //jobsParam = null;
@@ -156,7 +156,7 @@ public class Main {
         if (jobsList != null) {
             String[] l = StringUtils.split(jobsList, JOB_SEPARATOR);
             for (String s : l) {
-                if (addJob(s.trim()) != 0)
+                if (!addJob(s.trim()))
                     return PROGRAM_ERROR;
             }
         }
@@ -165,7 +165,7 @@ public class Main {
                 BufferedReader br = new BufferedReader(new FileReader(jobsFile));
                 String jobsFileLine;
                 while ((jobsFileLine = br.readLine()) != null) {
-                    if (addJob(jobsFileLine) != 0) {
+                    if (!addJob(jobsFileLine)) {
                         br.close();
                         return PROGRAM_ERROR;
                     }
@@ -184,28 +184,26 @@ public class Main {
         return 0;
     }
 
-    public static int addJob(String job) {
-        if (job == null || job.isEmpty()) {
-            LOG.error("Cannot add job, ");
-            return PROGRAM_ERROR;
+    public static boolean addJob(String jobStr) {
+        boolean res = false;
+    	if (jobStr == null || jobStr.isEmpty()) {
+            LOG.error("Cannot add null or empty job");
+            return res;
         }
+        LOG.debug("Try to add this command line to the job array : " + jobStr);
         if (jobsParam != null && jobsParam.length() > 0) {
-            job = job + " " + jobsParam;
+            jobStr = jobStr + " " + jobsParam;
         }
         if (allJobs.size() < MAX_JOBS) {
-            if (job.length() < MAX_LINE_LENGTH) {
-                allJobs.add(job);
-                LOG.debug("Real command added : " + job);
+            if (jobStr.length() < MAX_LINE_LENGTH) {
+                res = allJobs.add(jobStr);
             } else {
-                LOG.error("Length of command line jobs is " + MAX_LINE_LENGTH);
-                LOG.error("Command line : " + job);
-                return PROGRAM_ERROR;
+                LOG.error("Length of the jobs command line is too high : " + jobStr.length() + "!!!. Maximum is " + MAX_LINE_LENGTH);
             }
         } else {
-            LOG.error("Max jobs is " + MAX_JOBS);
+            LOG.error("Maximum of jobs is " + MAX_JOBS);
             LOG.error("Reduce the number of jobs");
-            return PROGRAM_ERROR;
         }
-        return 0;
+        return res;
     }
 }

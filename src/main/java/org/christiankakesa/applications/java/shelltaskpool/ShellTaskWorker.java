@@ -16,8 +16,7 @@ public class ShellTaskWorker implements Runnable {
 
 	public void run() {
 		final JobExecution job = new JobExecution(this.commandLine);
-		LOG.debug("Starting job " + job.getId() + " from batch "
-				+ Batch.getInstance().getBatchId() + " - Command line: "
+		LOG.debug("Starting job " + job.getId() + " - Command line: "
 				+ this.commandLine);
 		job.start();
 	}

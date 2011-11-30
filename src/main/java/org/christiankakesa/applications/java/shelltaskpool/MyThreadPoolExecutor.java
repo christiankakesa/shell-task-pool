@@ -31,10 +31,11 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     
     private void myInit() {
     	Batch.getInstance().setBatchStartDate(Calendar.getInstance().getTime());
-    	LOG.info("Batch start -Batch id: " + Batch.getInstance().getBatchId()
+    	LOG.info("START OF THE BATCH -Batch id: " + Batch.getInstance().getBatchId()
 				+ " | Batch name: " + Batch.getInstance().getBatchName()
 				+ " | Batch startDate: " + Batch.getInstance().getBatchStartDate()
 				+ " | Batch endDate: " + Batch.getInstance().getBatchEndDate()
+				+ " | Batch duration: " + Batch.getInstance().getBatchDuration()
 				+ " | Batch status: " + Batch.getInstance().getBatchStatus());
     }
 
@@ -47,10 +48,11 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     public void terminated() {
     	super.terminated();
     	Batch.getInstance().setBatchEndDate(Calendar.getInstance().getTime());
-    	LOG.info("Batch end -Batch id: " + Batch.getInstance().getBatchId()
+    	LOG.info("END OF THE BATCH - Batch id: " + Batch.getInstance().getBatchId()
 				+ " | Batch name: " + Batch.getInstance().getBatchName()
 				+ " | Batch startDate: " + Batch.getInstance().getBatchStartDate()
 				+ " | Batch endDate: " + Batch.getInstance().getBatchEndDate()
+				+ " | Batch duration: " + Batch.getInstance().getBatchDuration()
 				+ " | Batch status: " + Batch.getInstance().getBatchStatus());
     }
     
