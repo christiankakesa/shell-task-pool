@@ -29,31 +29,26 @@ public final class Utils {
 		final int nbSpace = Main.APP_NAME.length() + "Usage: ".length();
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Usage: ").append(Main.APP_NAME).append(" [-h,--help]\n");
-		sb.append(getSpace(nbSpace)).append("\tShow this help screen\n");
-		sb.append("\n");
+		sb.append(getSpace(nbSpace)).append("\tShow this help screen\n").append("\n");
 		sb.append(getSpace(nbSpace)).append(" [-n,--batchname=]\n");
 		sb.append(getSpace(nbSpace)).append(
 				"\tSet the name of the entire batch\n");
 		sb.append(getSpace(nbSpace)).append(
-				"\texample : -n \"Alimentation différentiel des omes\"\n");
-		sb.append("\n");
+				"\texample : -n \"Alimentation différentiel des omes\"\n").append("\n");
 		sb.append(getSpace(nbSpace)).append(" [-c,--corepoolsize=]\n");
 		sb.append(getSpace(nbSpace)).append(
 				"\tSet number of thread processor\n");
-		sb.append(getSpace(nbSpace)).append("\texample : -c5\n");
-		sb.append("\n");
+		sb.append(getSpace(nbSpace)).append("\texample : -c5\n").append("\n");
 		sb.append(getSpace(nbSpace)).append(" [-l,--jobslist=]\n");
 		sb.append(getSpace(nbSpace))
 				.append("\tList of jobs seperated by ';'\n");
 		sb.append(getSpace(nbSpace))
-				.append("\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n");
-		sb.append("\n");
+				.append("\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n").append("\n");
 		sb.append(getSpace(nbSpace)).append(" [-f,--jobsfile=]\n");
 		sb.append(getSpace(nbSpace))
 				.append("\tPath to the jobs plain text file. Jobs are separated by new line\n");
 		sb.append(getSpace(nbSpace)).append(
-				"\texample : -f /home/me/test.job\n");
-		sb.append("\n");
+				"\texample : -f /home/me/test.job\n").append("\n");
 		sb.append(getSpace(nbSpace)).append(" [-p,--jobsparam=]\n");
 		sb.append(getSpace(nbSpace)).append(
 				"\tSet global params to add for each job\n");
@@ -62,8 +57,7 @@ public final class Utils {
 		sb.append("--------------\n");
 		sb.append("Author name  : ").append(Main.AUTHOR_NAME).append("\n");
 		sb.append("Author email : ").append(Main.AUTHOR_EMAIL).append("\n");
-		sb.append("Copyright    : ").append(Main.APP_COPYRIGHT).append("\n");
-		sb.append("\n");
+		sb.append("Copyright    : ").append(Main.APP_COPYRIGHT).append("\n").append("\n");
 		return sb.toString();
 	}
 
