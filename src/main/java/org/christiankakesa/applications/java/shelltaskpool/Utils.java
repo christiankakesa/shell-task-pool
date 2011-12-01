@@ -22,7 +22,7 @@ public final class Utils {
 	}
 
 	public static void printHelp() {
-		LOG.info(getHelp());
+		System.out.print(getHelp());
 	}
 
 	public static CharSequence getHelp() {
@@ -113,6 +113,9 @@ public final class Utils {
 	 * @return An hexadecimal string hash
 	 */
 	public static String hexSHA1(String plainText) {
+		if (null == plainText) {
+			return "";
+		}
 		final StringBuilder sb = new StringBuilder();
 		try {
 
