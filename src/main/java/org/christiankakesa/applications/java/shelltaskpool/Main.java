@@ -12,11 +12,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
- * 
+ * Main class of <b>Shell Task Pool</b>
  */
-public class Main {
+public final class Main {
     public static final String APP_NAME = "shelltaskpool.jar";
     public static final String AUTHOR_NAME = "Christian Kakesa";
     public static final String AUTHOR_EMAIL = "christian.kakesa@gmail.com";
@@ -30,7 +31,7 @@ public class Main {
     private static final Log LOG = LogFactory.getLog(Main.class);
     private static final int PROGRAM_ERROR = -42;
 
-    private static final ArrayList<String> allJobs = new ArrayList<String>(MAX_JOBS);
+    private static final List<String> allJobs = new ArrayList<String>(MAX_JOBS);
     private static int corePoolSize = DEFAULT_CORE_POOL_SIZE;
     private static String jobsFile;
     private static String jobsList;
@@ -45,9 +46,9 @@ public class Main {
 
     public static void shellTaskPool(String[] args) {
         int paramReturn = paramParser(args);
-        if (paramReturn != 0)
+        if (paramReturn != 0) {
             System.exit(paramReturn);
-
+        }
         MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(corePoolSize, corePoolSize, THREAD_KEEP_ALIVE_TIME);
         for (String cmd : allJobs) {
             mtpe.addTask(new ShellTaskWorker(cmd));
@@ -148,16 +149,21 @@ public class Main {
         	LOG.error("Name of the batch are required. Set the \"n\" parameter");
         	return PROGRAM_ERROR;
         }
-        if (jobsFile == null && jobsList == null) {
+        return haveJobToRun() ? 0 :PROGRAM_ERROR;
+    }
+    
+    private static boolean haveJobToRun() {
+    	if (jobsFile == null && jobsList == null) {
             LOG.error("No jobs specified. Try \"-h\" or \"--help\" parameter to print help screen");
-            return PROGRAM_ERROR;
+            return false;
         }
         // Build jobsList
         if (jobsList != null) {
             String[] l = StringUtils.split(jobsList, JOB_SEPARATOR);
             for (String s : l) {
-                if (!addJob(s.trim()))
-                    return PROGRAM_ERROR;
+                if (!addJob(s.trim())) {
+                    return false;
+                }
             }
         }
         if (jobsFile != null) {
@@ -167,21 +173,19 @@ public class Main {
                 while ((jobsFileLine = br.readLine()) != null) {
                     if (!addJob(jobsFileLine)) {
                         br.close();
-                        return PROGRAM_ERROR;
+                        return false;
                     }
                 }
                 br.close();
             } catch (FileNotFoundException e) {
-                LOG.error("jobsFile not exists : " + jobsFile);
-                LOG.error(e);
-                return PROGRAM_ERROR;
+                LOG.error("jobsFile not exists : " + jobsFile, e);
+                return false;
             } catch (IOException e) {
-                LOG.error("Problem when reading the file : " + jobsFile);
-                LOG.error(e);
-                return PROGRAM_ERROR;
+                LOG.error("Problem when reading the file : " + jobsFile, e);
+                return false;
             }
         }
-        return 0;
+        return true;
     }
 
     /**
@@ -192,19 +196,20 @@ public class Main {
      */
     public static boolean addJob(String jobCommandLine) {
         boolean res = false;
-    	if (jobCommandLine == null || jobCommandLine.isEmpty()) {
+        String jcl = jobCommandLine;
+    	if (jcl == null || jcl.isEmpty()) {
             LOG.error("Cannot add null or empty job");
             return res;
         }
-        LOG.debug("Try to add this command line to the job array : " + jobCommandLine);
+        LOG.debug("Try to add this command line to the job array : " + jcl);
         if (jobsParam != null && jobsParam.length() > 0) {
-            jobCommandLine = jobCommandLine + " " + jobsParam;
+        	jcl = jcl + " " + jobsParam;
         }
         if (allJobs.size() < MAX_JOBS) {
-            if (jobCommandLine.length() < MAX_LINE_LENGTH) {
-                res = allJobs.add(jobCommandLine);
+            if (jcl.length() < MAX_LINE_LENGTH) {
+                res = allJobs.add(jcl);
             } else {
-                LOG.error("Length of the jobs command line is too high : " + jobCommandLine.length() + "!!!. Maximum is " + MAX_LINE_LENGTH);
+                LOG.error("Length of the jobs command line is too high : " + jcl.length() + "!!!. Maximum is " + MAX_LINE_LENGTH);
             }
         } else {
             LOG.error("Maximum of jobs is " + MAX_JOBS);

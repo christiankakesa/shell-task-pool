@@ -18,8 +18,11 @@ import org.apache.commons.logging.LogFactory;
 public class Utils {
 	private static final Log LOG = LogFactory.getLog(Utils.class);
 
+	private Utils() {
+	}
+	
 	public static void printHelp() {
-		System.out.print(getHelp());
+		LOG.info(getHelp());
 	}
 
 	public static CharSequence getHelp() {
@@ -121,7 +124,7 @@ public class Utils {
 				sb.append(hexString.length() == 1 ? "0" + hexString : hexString);
 			}
 		} catch (NoSuchAlgorithmException e) {
-			LOG.error(e);
+			LOG.error("Can't build a SHA1 MessageDigest object", e);
 		}
 		return sb.toString();
 	}

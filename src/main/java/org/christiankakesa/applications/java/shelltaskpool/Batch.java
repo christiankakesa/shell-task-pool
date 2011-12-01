@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 
+ * Store all informations about Batch and Jobs
  */
-public class Batch {
+public final class Batch {
 	// private static final org.apache.commons.logging.Log LOG =
 	// LogFactory.getLog(Statistics.class);
 	/**
@@ -93,10 +93,10 @@ public class Batch {
 	 * @return void
 	 */
 	public void setBatchStatusFromSuccessFailed() {
-		if (this.jobFailed == 0 && this.jobSuccess >= 1)
+		if (this.jobFailed == 0 && this.jobSuccess >= 1) {
 			/** Batch completed success full */
 			this.setBatchStatus(BatchStatus.COMPLETED);
-		else if (this.jobFailed > 0 && this.jobSuccess >= 1) {
+		} else if (this.jobFailed > 0 && this.jobSuccess >= 1) {
 			/** Batch completed but there are job failed */
 			this.setBatchStatus(BatchStatus.COMPLETED_WITH_ERROR);
 		} else {
@@ -140,9 +140,9 @@ public class Batch {
 	 */
 	public void addJobExecution(final JobExecution je) {
 		if (jobExecutionList.add(je)) {
-			if (this.jobExecutionList.size() == 1)
+			if (this.jobExecutionList.size() == 1) {
 				this.batchStatus = BatchStatus.RUNNING;
-
+			}
 			synchronized (Batch.class) {
 				++jobCounterId;
 				je.setId(jobCounterId);
