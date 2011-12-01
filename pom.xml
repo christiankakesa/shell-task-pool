@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.christiankakesa.applications.java</groupId>
     <artifactId>shelltaskpool</artifactId>
-    <name>Parrallelisation des traitements en ligne de commande</name>
+    <name>Shell Task Pool</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <build>
@@ -140,4 +140,5 @@
         <name>Christian Kakesa</name>
         <url>http://www.kakesa.net</url>
     </organization>
+    <description>Thread Pool Executor for concurrent shell command line .</description>
 </project>
