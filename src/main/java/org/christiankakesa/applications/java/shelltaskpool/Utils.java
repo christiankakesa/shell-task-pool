@@ -20,7 +20,7 @@ public final class Utils {
 
 	private Utils() {
 	}
-	
+
 	public static void printHelp() {
 		LOG.info(getHelp());
 	}
@@ -29,26 +29,24 @@ public final class Utils {
 		final int nbSpace = Main.APP_NAME.length() + "Usage: ".length();
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Usage: ").append(Main.APP_NAME).append(" [-h,--help]\n");
-		sb.append(getSpace(nbSpace)).append("\tShow this help screen\n").append("\n");
+		sb.append(getSpace(nbSpace)).append("\tShow this help screen\n\n");
 		sb.append(getSpace(nbSpace)).append(" [-n,--batchname=]\n");
 		sb.append(getSpace(nbSpace)).append(
 				"\tSet the name of the entire batch\n");
-		sb.append(getSpace(nbSpace)).append(
-				"\texample : -n \"Alimentation différentiel des omes\"\n").append("\n");
+		sb.append(getSpace(nbSpace))
+				.append("\texample : -n \"Alimentation différentiel des omes\"\n\n");
 		sb.append(getSpace(nbSpace)).append(" [-c,--corepoolsize=]\n");
-		sb.append(getSpace(nbSpace)).append(
-				"\tSet number of thread processor\n");
-		sb.append(getSpace(nbSpace)).append("\texample : -c5\n").append("\n");
+		sb.append(getSpace(nbSpace)).append("\tSet number of thread processor\n");
+		sb.append(getSpace(nbSpace)).append("\texample : -c5\n\n");
 		sb.append(getSpace(nbSpace)).append(" [-l,--jobslist=]\n");
+		sb.append(getSpace(nbSpace)).append("\tList of jobs seperated by ';'\n");
 		sb.append(getSpace(nbSpace))
-				.append("\tList of jobs seperated by ';'\n");
-		sb.append(getSpace(nbSpace))
-				.append("\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n").append("\n");
+				.append("\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n");
 		sb.append(getSpace(nbSpace)).append(" [-f,--jobsfile=]\n");
 		sb.append(getSpace(nbSpace))
 				.append("\tPath to the jobs plain text file. Jobs are separated by new line\n");
-		sb.append(getSpace(nbSpace)).append(
-				"\texample : -f /home/me/test.job\n").append("\n");
+		sb.append(getSpace(nbSpace))
+				.append("\texample : -f /home/me/test.job\n\n");
 		sb.append(getSpace(nbSpace)).append(" [-p,--jobsparam=]\n");
 		sb.append(getSpace(nbSpace)).append(
 				"\tSet global params to add for each job\n");
@@ -57,7 +55,7 @@ public final class Utils {
 		sb.append("--------------\n");
 		sb.append("Author name  : ").append(Main.AUTHOR_NAME).append("\n");
 		sb.append("Author email : ").append(Main.AUTHOR_EMAIL).append("\n");
-		sb.append("Copyright    : ").append(Main.APP_COPYRIGHT).append("\n").append("\n");
+		sb.append("Copyright    : ").append(Main.APP_COPYRIGHT).append("\n\n");
 		return sb.toString();
 	}
 
@@ -77,11 +75,14 @@ public final class Utils {
 			final long secondInMilli = 1000;
 			final long secondsInHour = 3600;
 			final long secondsInMinute = 60;
-			final long tsTime = (end.getTime() - start.getTime()) / secondInMilli;
-			/** tsTime / 3600,
-					(tsTime % 3600) / 60, (tsTime % 60) */
+			final long tsTime = (end.getTime() - start.getTime())
+					/ secondInMilli;
+			/**
+			 * tsTime / 3600, (tsTime % 3600) / 60, (tsTime % 60)
+			 */
 			return String.format("%02d:%02d:%02d", tsTime / secondsInHour,
-					(tsTime % secondsInHour) / secondsInMinute, (tsTime % secondsInMinute));
+					(tsTime % secondsInHour) / secondsInMinute,
+					(tsTime % secondsInMinute));
 		}
 		LOG.debug("Can't determine duration : endDate = " + end
 				+ " - startDate = " + start);
@@ -107,6 +108,7 @@ public final class Utils {
 
 	/**
 	 * Build an hexadecimal SHA1 hash for string
+	 * 
 	 * @param plainText
 	 * @return An hexadecimal string hash
 	 */
