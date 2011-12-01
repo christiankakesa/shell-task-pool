@@ -3,6 +3,7 @@ package org.christiankakesa.applications.java.shelltaskpool;
 //import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 //import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -17,5 +18,11 @@ public class UtilsTest {
 	@Test
 	public void testTotoStringToSHA1() {
 		assertEquals("0b9c2625dc21ef05f6ad4ddf47c5f203837aa32c", Utils.hexSHA1("toto"));
+	}
+	
+	@Test
+	public void testUUID() {
+		assertNotNull(Utils.UUID());
+		assertFalse(Utils.UUID().isEmpty());
 	}
 }
