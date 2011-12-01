@@ -27,17 +27,17 @@ public final class Main {
     public static final int MAX_JOBS = 5120;
     public static final int MAX_LINE_LENGTH = 2048;
     public static final char JOB_SEPARATOR = ';';
+    public static final int DEFAULT_ERROR_CODE = -42;
 
-    private static final int DEFAULT_ERROR_CODE = -42;
     private static final List<String> JOBS_ARRAY_LIST = new ArrayList<String>(MAX_JOBS);
-    
-    private static final Log LOG = LogFactory.getLog(Main.class);
     
     private static int corePoolSize = DEFAULT_CORE_POOL_SIZE;
     private static String jobsFile;
     private static String jobsList;
     private static String jobsParam;
 
+    private static final Log LOG = LogFactory.getLog(Main.class);
+    
     private Main() {
     }
 

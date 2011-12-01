@@ -80,14 +80,14 @@ public final class Utils {
 
 	public static String buildDurationFromDates(Date end, Date start) {
 		if (end != null && start != null) {
-			final long MILLISECOND = 1000;
-			final long SECONDS_IN_HOUR = 3600;
-			final long SECONDS_IN_MINUTE = 60;
-			final long tsTime = (end.getTime() - start.getTime()) / MILLISECOND;
+			final long secondInMilli = 1000;
+			final long secondsInHour = 3600;
+			final long secondsInMinute = 60;
+			final long tsTime = (end.getTime() - start.getTime()) / secondInMilli;
 			/** tsTime / 3600,
 					(tsTime % 3600) / 60, (tsTime % 60) */
-			return String.format("%02d:%02d:%02d", tsTime / SECONDS_IN_HOUR,
-					(tsTime % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE, (tsTime % SECONDS_IN_MINUTE));
+			return String.format("%02d:%02d:%02d", tsTime / secondsInHour,
+					(tsTime % secondsInHour) / secondsInMinute, (tsTime % secondsInMinute));
 		}
 		LOG.debug("Can't determine duration : endDate = " + end
 				+ " - startDate = " + start);
@@ -123,9 +123,9 @@ public final class Utils {
 			final MessageDigest sha1 = MessageDigest.getInstance("SHA1");
 			byte[] digest = sha1.digest((plainText).getBytes());
 			String hexString;
-			final int SHA1_HEXPAD = 0x00FF;
+			final int hexPadSHA1 = 0x00FF;
 			for (byte b : digest) {
-				hexString = Integer.toHexString(SHA1_HEXPAD & b);
+				hexString = Integer.toHexString(hexPadSHA1 & b);
 				sb.append(hexString.length() == 1 ? "0" + hexString : hexString);
 			}
 		} catch (NoSuchAlgorithmException e) {

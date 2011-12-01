@@ -17,7 +17,6 @@ public class JobExecution {
 	private static final org.apache.commons.logging.Log LOG = LogFactory
 			.getLog(JobExecution.class);
 
-	private final int DEFAULT_ERROR_CODE = -42;
 	/**
 	 * Job command line string
 	 */
@@ -26,7 +25,7 @@ public class JobExecution {
 	private Date startDate;
 	private Date endDate;
 	private JobStatus status = JobStatus.NONE;
-	private int exitCode = DEFAULT_ERROR_CODE;
+	private int exitCode = Main.DEFAULT_ERROR_CODE;
 	private Process process;
 
 	/**
