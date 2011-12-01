@@ -17,16 +17,16 @@ public class JobExecution {
 	private static final org.apache.commons.logging.Log LOG = LogFactory
 			.getLog(JobExecution.class);
 
+	private final int DEFAULT_ERROR_CODE = -42;
 	/**
-	 * The entire command to execute in this job
+	 * Job command line string
 	 */
 	private String commandLine;
 	private long id = 0;
 	private Date startDate;
 	private Date endDate;
 	private JobStatus status = JobStatus.NONE;
-	private int exitCode = -42;
-	private ProcessBuilder processBuilder;
+	private int exitCode = DEFAULT_ERROR_CODE;
 	private Process process;
 
 	/**
@@ -40,7 +40,7 @@ public class JobExecution {
 	}
 
 	public void start() {
-		processBuilder = new ProcessBuilder(
+		ProcessBuilder processBuilder = new ProcessBuilder(
 				Utils.parseCommandLineToStringArray(this.commandLine));
 		/** Start a job only when job status is NONE */
 		if (this.getStatus() != JobStatus.NONE) {

@@ -28,10 +28,11 @@ public final class Main {
     public static final int MAX_LINE_LENGTH = 2048;
     public static final char JOB_SEPARATOR = ';';
 
+    private static final int DEFAULT_ERROR_CODE = -42;
+    private static final List<String> JOBS_ARRAY_LIST = new ArrayList<String>(MAX_JOBS);
+    
     private static final Log LOG = LogFactory.getLog(Main.class);
-    private static final int PROGRAM_ERROR = -42;
-
-    private static final List<String> allJobs = new ArrayList<String>(MAX_JOBS);
+    
     private static int corePoolSize = DEFAULT_CORE_POOL_SIZE;
     private static String jobsFile;
     private static String jobsList;
@@ -50,7 +51,7 @@ public final class Main {
             System.exit(paramReturn);
         }
         MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(corePoolSize, corePoolSize, THREAD_KEEP_ALIVE_TIME);
-        for (String cmd : allJobs) {
+        for (String cmd : JOBS_ARRAY_LIST) {
             mtpe.addTask(new ShellTaskWorker(cmd));
         }
         mtpe.shutdown();
@@ -60,7 +61,7 @@ public final class Main {
         if (args.length == 0) {
             LOG.error("No argument found");
             Utils.printHelp();
-            return PROGRAM_ERROR;
+            return DEFAULT_ERROR_CODE;
         }
         LOG.debug("Command line args : " + StringUtils.join(args, " "));
         int c;
@@ -88,7 +89,7 @@ public final class Main {
                         LOG.debug("Param [batchname]: " + Batch.getInstance().getBatchName());
                     } else {
                     	LOG.error("Batch name are required");
-                    	return PROGRAM_ERROR;
+                    	return DEFAULT_ERROR_CODE;
                     }
                     break;
                 case 'c':
@@ -104,7 +105,7 @@ public final class Main {
                         LOG.debug("Param [corepoolsize]: " + corePoolSize);
                     } else {
                         LOG.error("No core pool size specified");
-                        return PROGRAM_ERROR;
+                        return DEFAULT_ERROR_CODE;
                     }
                     break;
                 case 'l':
@@ -115,7 +116,7 @@ public final class Main {
                     } else {
                         LOG.error("No jobs list specified");
                         //jobsList = null;
-                        return PROGRAM_ERROR;
+                        return DEFAULT_ERROR_CODE;
                     }
                     break;
                 case 'f':
@@ -126,7 +127,7 @@ public final class Main {
                     } else {
                         LOG.error("No jobs file specified");
                         //jobsFile = null;
-                        return PROGRAM_ERROR;
+                        return DEFAULT_ERROR_CODE;
                     }
                     break;
                 case 'p':
@@ -137,19 +138,19 @@ public final class Main {
                     } else {
                         LOG.error("No jobs param specified");
                         //jobsParam = null;
-                        return PROGRAM_ERROR;
+                        return DEFAULT_ERROR_CODE;
                     }
                     break;
                 default:
                     LOG.error("Unknown parameter : " + Character.toString((char) c));
-                    return PROGRAM_ERROR;
+                    return DEFAULT_ERROR_CODE;
             }
         }
         if (Batch.getInstance().getBatchName() == null) {
         	LOG.error("Name of the batch are required. Set the \"n\" parameter");
-        	return PROGRAM_ERROR;
+        	return DEFAULT_ERROR_CODE;
         }
-        return haveJobToRun() ? 0 :PROGRAM_ERROR;
+        return haveJobToRun() ? 0 :DEFAULT_ERROR_CODE;
     }
     
     private static boolean haveJobToRun() {
@@ -205,9 +206,9 @@ public final class Main {
         if (jobsParam != null && jobsParam.length() > 0) {
         	jcl = jcl + " " + jobsParam;
         }
-        if (allJobs.size() < MAX_JOBS) {
+        if (JOBS_ARRAY_LIST.size() < MAX_JOBS) {
             if (jcl.length() < MAX_LINE_LENGTH) {
-                res = allJobs.add(jcl);
+                res = JOBS_ARRAY_LIST.add(jcl);
             } else {
                 LOG.error("Length of the jobs command line is too high : " + jcl.length() + "!!!. Maximum is " + MAX_LINE_LENGTH);
             }

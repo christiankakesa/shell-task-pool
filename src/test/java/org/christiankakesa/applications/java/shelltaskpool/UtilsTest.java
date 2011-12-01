@@ -1,8 +1,8 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
-import static org.junit.Assert.assertNull;
+//import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
-//import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
 //import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -10,19 +10,8 @@ import org.junit.Test;
 public class UtilsTest {
 	
 	@Test
-	public void testIsEmptyStringToSHA1() {
-		assertNull(Utils.hexSHA1(""));
-	}
-	
-	@Test
-	public void testEqualsNullStringToSHA1() {
-		String test = null;
-		assertNull(Utils.hexSHA1(test));
-	}
-	
-	@Test
-	public void testNullStringToSHA1() {
-		assertNull(Utils.hexSHA1(null));
+	public void testFalseStringToSHA1() {
+		assertFalse(Utils.hexSHA1("toto").equals("11112625dc21ef05f6ad4ddf47c5f203837a1111"));
 	}
 	
 	@Test

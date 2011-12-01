@@ -13,9 +13,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * 
+ * Shell Task Pool utility class
  */
-public class Utils {
+public final class Utils {
 	private static final Log LOG = LogFactory.getLog(Utils.class);
 
 	private Utils() {
@@ -26,8 +26,7 @@ public class Utils {
 	}
 
 	public static CharSequence getHelp() {
-		final int nbSpace = Main.APP_NAME.length() + 7; // 7 ==
-														// "Usage: ".length();
+		final int nbSpace = Main.APP_NAME.length() + "Usage: ".length();
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Usage: ").append(Main.APP_NAME).append(" [-h,--help]\n");
 		sb.append(getSpace(nbSpace)).append("\tShow this help screen\n");
@@ -81,9 +80,14 @@ public class Utils {
 
 	public static String buildDurationFromDates(Date end, Date start) {
 		if (end != null && start != null) {
-			final long tsTime = (end.getTime() - start.getTime()) / 1000;
-			return String.format("%02d:%02d:%02d", tsTime / 3600,
-					(tsTime % 3600) / 60, (tsTime % 60));
+			final long MILLISECOND = 1000;
+			final long SECONDS_IN_HOUR = 3600;
+			final long SECONDS_IN_MINUTE = 60;
+			final long tsTime = (end.getTime() - start.getTime()) / MILLISECOND;
+			/** tsTime / 3600,
+					(tsTime % 3600) / 60, (tsTime % 60) */
+			return String.format("%02d:%02d:%02d", tsTime / SECONDS_IN_HOUR,
+					(tsTime % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE, (tsTime % SECONDS_IN_MINUTE));
 		}
 		LOG.debug("Can't determine duration : endDate = " + end
 				+ " - startDate = " + start);
@@ -119,8 +123,9 @@ public class Utils {
 			final MessageDigest sha1 = MessageDigest.getInstance("SHA1");
 			byte[] digest = sha1.digest((plainText).getBytes());
 			String hexString;
+			final int SHA1_HEXPAD = 0x00FF;
 			for (byte b : digest) {
-				hexString = Integer.toHexString(0x00FF & b);
+				hexString = Integer.toHexString(SHA1_HEXPAD & b);
 				sb.append(hexString.length() == 1 ? "0" + hexString : hexString);
 			}
 		} catch (NoSuchAlgorithmException e) {
