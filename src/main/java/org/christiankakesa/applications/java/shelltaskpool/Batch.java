@@ -42,7 +42,7 @@ public class Batch {
 	public void setBatchName(final String batchName) {
 		if (this.batchName == null) {
 			this.batchName = batchName;
-			this.batchId = Utils.stringToSHA1(this.batchName);
+			this.batchId = Utils.hexSHA1(this.batchName);
 		}
 	}
 

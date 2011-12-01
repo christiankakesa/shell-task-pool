@@ -184,21 +184,27 @@ public class Main {
         return 0;
     }
 
-    public static boolean addJob(String jobStr) {
+    /**
+     * Add job in the list of the jobs <b>Main.allJobs</b>.
+     * If jobsParam is set, jobsParam is added to the jobCommandLine.
+     * @param jobCommandLine
+     * @return true if job is correctly added
+     */
+    public static boolean addJob(String jobCommandLine) {
         boolean res = false;
-    	if (jobStr == null || jobStr.isEmpty()) {
+    	if (jobCommandLine == null || jobCommandLine.isEmpty()) {
             LOG.error("Cannot add null or empty job");
             return res;
         }
-        LOG.debug("Try to add this command line to the job array : " + jobStr);
+        LOG.debug("Try to add this command line to the job array : " + jobCommandLine);
         if (jobsParam != null && jobsParam.length() > 0) {
-            jobStr = jobStr + " " + jobsParam;
+            jobCommandLine = jobCommandLine + " " + jobsParam;
         }
         if (allJobs.size() < MAX_JOBS) {
-            if (jobStr.length() < MAX_LINE_LENGTH) {
-                res = allJobs.add(jobStr);
+            if (jobCommandLine.length() < MAX_LINE_LENGTH) {
+                res = allJobs.add(jobCommandLine);
             } else {
-                LOG.error("Length of the jobs command line is too high : " + jobStr.length() + "!!!. Maximum is " + MAX_LINE_LENGTH);
+                LOG.error("Length of the jobs command line is too high : " + jobCommandLine.length() + "!!!. Maximum is " + MAX_LINE_LENGTH);
             }
         } else {
             LOG.error("Maximum of jobs is " + MAX_JOBS);

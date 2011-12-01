@@ -41,7 +41,7 @@ public class JobExecution {
 
 	public void start() {
 		processBuilder = new ProcessBuilder(
-				Utils.buildCommandLineArray(this.commandLine));
+				Utils.parseCommandLineToStringArray(this.commandLine));
 		/** Start a job only when job status is NONE */
 		if (this.getStatus() != JobStatus.NONE) {
 			LOG.warn("JobId: " + this.getId() + " with status: "
