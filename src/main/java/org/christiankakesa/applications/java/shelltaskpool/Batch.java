@@ -13,7 +13,8 @@ public final class Batch {
 	// private static final org.apache.commons.logging.Log LOG =
 	// LogFactory.getLog(Statistics.class);
 	/**
-	 * Static singleton idiom 
+	 * Static singleton idiom
+	 * 
 	 * @link http://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom
 	 */
 	public static final Batch INSTANCE = new Batch();
@@ -40,9 +41,10 @@ public final class Batch {
 	}
 
 	public void setBatchName(final String batchName) {
-		if ( batchName == null) {
+		if (batchName == null) {
 			return;
 		}
+		/** Set the batch name and batch id only if no name given */
 		if (this.batchName == null) {
 			this.batchName = batchName;
 			this.batchId = Utils.hexSHA1(this.batchName);
@@ -70,12 +72,13 @@ public final class Batch {
 		this.batchEndDate = batchEndDate;
 		this.setBatchStatusFromSuccessFailed();
 	}
-	
+
 	/**
-	 * Get the string representation of batch duration. - format : "00:00:00" <==>
-	 * "hours:minutes:seconds"
-	 * 
-	 * @return
+	 * Get the string representation of batch duration.
+	 * <ul>
+	 * <li>format : "00:00:00" - "hours:minutes:seconds"</li>
+	 * </ul>
+	 * @return string duration formated
 	 */
 	public String getBatchDuration() {
 		return Utils.buildDurationFromDates(this.getBatchEndDate(),

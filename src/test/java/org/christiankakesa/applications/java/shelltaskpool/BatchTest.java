@@ -33,4 +33,20 @@ public class BatchTest {
 		assertNotNull(Batch.getInstance().getBatchStartDate());
 		assertEquals(Batch.getInstance().getBatchStatus(), BatchStatus.STARTED);
 	}
+	
+	@Test
+	public void testSetBatchStatus() {
+		Batch.getInstance().setBatchStatus(BatchStatus.NONE);
+		assertEquals(BatchStatus.NONE, Batch.getInstance().getBatchStatus());
+		Batch.getInstance().setBatchStatus(BatchStatus.STARTED);
+		assertEquals(BatchStatus.STARTED, Batch.getInstance().getBatchStatus());
+		Batch.getInstance().setBatchStatus(BatchStatus.RUNNING);
+		assertEquals(BatchStatus.RUNNING, Batch.getInstance().getBatchStatus());
+		Batch.getInstance().setBatchStatus(BatchStatus.FAILED);
+		assertEquals(BatchStatus.FAILED, Batch.getInstance().getBatchStatus());
+		Batch.getInstance().setBatchStatus(BatchStatus.COMPLETED_WITH_ERROR);
+		assertEquals(BatchStatus.COMPLETED_WITH_ERROR, Batch.getInstance().getBatchStatus());
+		Batch.getInstance().setBatchStatus(BatchStatus.COMPLETED);
+		assertEquals(BatchStatus.COMPLETED, Batch.getInstance().getBatchStatus());
+	}
 }

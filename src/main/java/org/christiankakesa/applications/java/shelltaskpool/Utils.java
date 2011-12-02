@@ -24,6 +24,11 @@ public final class Utils {
 	public static void printHelp() {
 		System.out.print(getHelp());
 	}
+	
+	public static void printHelpAndExit() {
+		printHelp();
+		System.exit(0);
+	}
 
 	public static CharSequence getHelp() {
 		final int nbSpace = Main.APP_NAME.length() + "Usage: ".length();
@@ -33,20 +38,22 @@ public final class Utils {
 		sb.append(getSpace(nbSpace)).append(" [-n,--batchname=]\n");
 		sb.append(getSpace(nbSpace)).append(
 				"\tSet the name of the entire batch\n");
-		sb.append(getSpace(nbSpace))
-				.append("\texample : -n \"Alimentation différentiel des omes\"\n\n");
+		sb.append(getSpace(nbSpace)).append(
+				"\texample : -n \"Alimentation différentiel des omes\"\n\n");
 		sb.append(getSpace(nbSpace)).append(" [-c,--corepoolsize=]\n");
-		sb.append(getSpace(nbSpace)).append("\tSet number of thread processor\n");
+		sb.append(getSpace(nbSpace)).append(
+				"\tSet number of thread processor\n");
 		sb.append(getSpace(nbSpace)).append("\texample : -c5\n\n");
 		sb.append(getSpace(nbSpace)).append(" [-l,--jobslist=]\n");
-		sb.append(getSpace(nbSpace)).append("\tList of jobs seperated by ';'\n");
+		sb.append(getSpace(nbSpace))
+				.append("\tList of jobs seperated by ';'\n");
 		sb.append(getSpace(nbSpace))
 				.append("\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n");
 		sb.append(getSpace(nbSpace)).append(" [-f,--jobsfile=]\n");
 		sb.append(getSpace(nbSpace))
 				.append("\tPath to the jobs plain text file. Jobs are separated by new line\n");
-		sb.append(getSpace(nbSpace))
-				.append("\texample : -f /home/me/test.job\n\n");
+		sb.append(getSpace(nbSpace)).append(
+				"\texample : -f /home/me/test.job\n\n");
 		sb.append(getSpace(nbSpace)).append(" [-p,--jobsparam=]\n");
 		sb.append(getSpace(nbSpace)).append(
 				"\tSet global params to add for each job\n");
@@ -134,6 +141,8 @@ public final class Utils {
 	}
 
 	/**
+	 * Generate UUID string
+	 * 
 	 * @return an UUID String
 	 */
 	public static String UUID() {
