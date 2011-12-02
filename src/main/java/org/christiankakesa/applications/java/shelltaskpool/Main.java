@@ -89,8 +89,7 @@ public final class Main {
 				try {
 					corePoolSize = Integer.valueOf(arg);
 				} catch (NumberFormatException e) {
-					LOG.error(e.getMessage());
-					LOG.error(e.getStackTrace().toString());
+					LOG.error("Numeric value expected", e);
 					corePoolSize = DEFAULT_CORE_POOL_SIZE;
 				}
 				LOG.debug("Param [corepoolsize]: " + corePoolSize);
@@ -139,7 +138,7 @@ public final class Main {
 				BufferedReader br = new BufferedReader(new FileReader(jobsFile));
 				String jobsFileLine;
 				while ((jobsFileLine = br.readLine()) != null) {
-					addJob(jobsFileLine);
+					addJob(jobsFileLine.trim());
 				}
 				br.close();
 			} catch (FileNotFoundException e) {

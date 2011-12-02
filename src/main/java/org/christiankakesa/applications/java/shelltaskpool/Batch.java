@@ -18,10 +18,10 @@ public final class Batch {
 	 * @link http://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom
 	 */
 	public static final Batch INSTANCE = new Batch();
-	private String batchName;
-	private String batchId;
-	private Date batchStartDate;
-	private Date batchEndDate;
+	private volatile String batchName;
+	private volatile String batchId;
+	private volatile Date batchStartDate;
+	private volatile Date batchEndDate;
 	private volatile BatchStatus batchStatus = BatchStatus.NONE;
 	private volatile long jobCounterId = 0;
 	private volatile long jobSuccess = 0;
