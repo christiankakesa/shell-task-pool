@@ -46,7 +46,7 @@ public final class Main {
 
 	public static void main(String[] args) {
 		Main.CmdLineParser clp = new Main.CmdLineParser(args);
-		clp.parse(args);
+		clp.parse();
 		MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(corePoolSize,
 				corePoolSize, THREAD_KEEP_ALIVE_TIME);
 		for (String cmd : JOBS_ARRAY_LIST) {
@@ -58,11 +58,11 @@ public final class Main {
 	private static class CmdLineParser {
 		private String[] pParams;
 		
-		public CmdLineParser(String[] params){
+		public CmdLineParser(final String[] params){
 			this.pParams = params;
 		}
 		
-		private void parse(String[] params) {
+		private void parse() {
 			if (this.pParams == null || this.pParams.length == 0) {
 				LOG.error("No argument found");
 				Utils.printHelpAndExit();
