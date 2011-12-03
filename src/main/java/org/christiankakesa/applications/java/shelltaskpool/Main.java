@@ -59,7 +59,7 @@ public final class Main {
 		private String[] pParams;
 		
 		public CmdLineParser(final String[] params){
-			this.pParams = params;
+			this.pParams = params.clone();
 		}
 		
 		private void parse() {
