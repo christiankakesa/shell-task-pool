@@ -45,7 +45,8 @@ public final class Main {
 	}
 
 	public static void main(String[] args) {
-		paramParser(args);
+		Main.CmdLineParser clp = new Main.CmdLineParser(args);
+		clp.parse(args);
 		MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(corePoolSize,
 				corePoolSize, THREAD_KEEP_ALIVE_TIME);
 		for (String cmd : JOBS_ARRAY_LIST) {
@@ -54,127 +55,139 @@ public final class Main {
 		mtpe.shutdown();
 	}
 
-	public static void paramParser(String[] args) {
-		if (args.length == 0) {
-			LOG.error("No argument found");
-			Utils.printHelpAndExit();
+	private static class CmdLineParser {
+		private String[] pParams;
+		
+		public CmdLineParser(String[] params){
+			this.pParams = params;
 		}
-		LOG.debug("Command line args : " + StringUtils.join(args, " "));
-		int c;
-		String arg;
-		final LongOpt[] opts = {
-				new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
-				new LongOpt("batchname", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
-				new LongOpt("corepoolsize", LongOpt.OPTIONAL_ARGUMENT, null,
-						'c'),
-				new LongOpt("jobslist", LongOpt.OPTIONAL_ARGUMENT, null, 'l'),
-				new LongOpt("jobsfile", LongOpt.OPTIONAL_ARGUMENT, null, 'f'),
-				new LongOpt("jobsparam", LongOpt.OPTIONAL_ARGUMENT, null, 'p'),
-
-		};
-		Getopt g = new Getopt(APP_NAME, args, "hn:c::l::f::p::", opts, false);
-		g.setOpterr(true);
-		while ((c = g.getopt()) != -1) {
-			switch (c) {
-			case 'h':
+		
+		private void parse(String[] params) {
+			if (this.pParams == null || this.pParams.length == 0) {
+				LOG.error("No argument found");
 				Utils.printHelpAndExit();
-			case 'n':
-				arg = g.getOptarg();
-				Batch.getInstance().setBatchName(arg);
-				LOG.debug("Param [batchname]: "
-						+ Batch.getInstance().getBatchName());
-				break;
-			case 'c':
-				arg = g.getOptarg();
+			}
+			this.parseCmdLine();
+		}
+		
+		public void parseCmdLine() {
+			String[] params = this.pParams;
+			LOG.debug("Command line args : " + StringUtils.join(params, " "));
+			int c;
+			String arg;
+			final LongOpt[] opts = {
+					new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
+					new LongOpt("batchname", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
+					new LongOpt("corepoolsize", LongOpt.OPTIONAL_ARGUMENT, null,
+							'c'),
+					new LongOpt("jobslist", LongOpt.OPTIONAL_ARGUMENT, null, 'l'),
+					new LongOpt("jobsfile", LongOpt.OPTIONAL_ARGUMENT, null, 'f'),
+					new LongOpt("jobsparam", LongOpt.OPTIONAL_ARGUMENT, null, 'p'),
+			};
+			Getopt g = new Getopt(APP_NAME, params, "hn:c::l::f::p::", opts, false);
+			g.setOpterr(true);
+			while ((c = g.getopt()) != -1) {
+				switch (c) {
+				case 'h':
+					Utils.printHelpAndExit();
+				case 'n':
+					arg = g.getOptarg();
+					Batch.getInstance().setBatchName(arg);
+					LOG.debug("Param [batchname]: "
+							+ Batch.getInstance().getBatchName());
+					break;
+				case 'c':
+					arg = g.getOptarg();
+					try {
+						corePoolSize = Integer.valueOf(arg);
+					} catch (NumberFormatException e) {
+						LOG.error("Numeric value expected", e);
+						corePoolSize = DEFAULT_CORE_POOL_SIZE;
+					}
+					LOG.debug("Param [corepoolsize]: " + corePoolSize);
+					break;
+				case 'l':
+					arg = g.getOptarg();
+					jobsList = arg;
+					LOG.debug("Param [jobslist]: " + jobsList);
+					break;
+				case 'f':
+					arg = g.getOptarg();
+					jobsFile = arg;
+					LOG.debug("Param [jobsfile]: " + jobsFile);
+					break;
+				case 'p':
+					arg = g.getOptarg();
+					jobsParam = arg;
+					LOG.debug("Param [jobsparam]: " + jobsParam);
+					break;
+				default:
+					LOG.error("Unknown parameter : " + Character.toString((char) c));
+					break;
+				}
+			}
+			if (Batch.getInstance().getBatchName() == null) {
+				LOG.error("Name of the batch are required. Set the \"n\" parameter");
+				Utils.printHelpAndExit();
+			}
+			/** Add job in <b>JOBS_ARRAY_LIST<b> */
+			prepareJobListToExecute();
+		}
+
+		private void prepareJobListToExecute() {
+			if (jobsFile == null && jobsList == null) {
+				LOG.error("No jobs specified.");
+				Utils.printHelpAndExit();
+			}
+			if (jobsList != null) {
+				String[] jl = StringUtils.split(jobsList, JOB_SEPARATOR);
+				for (String s : jl) {
+					addJob(s.trim());
+				}
+			}
+			if (jobsFile != null) {
 				try {
-					corePoolSize = Integer.valueOf(arg);
-				} catch (NumberFormatException e) {
-					LOG.error("Numeric value expected", e);
-					corePoolSize = DEFAULT_CORE_POOL_SIZE;
+					BufferedReader br = new BufferedReader(new FileReader(jobsFile));
+					String jobsFileLine;
+					while ((jobsFileLine = br.readLine()) != null) {
+						addJob(jobsFileLine.trim());
+					}
+					br.close();
+				} catch (FileNotFoundException e) {
+					LOG.error("jobsFile not exists : " + jobsFile, e);
+				} catch (IOException e) {
+					LOG.error("Problem whith the jobs file : " + jobsFile, e);
 				}
-				LOG.debug("Param [corepoolsize]: " + corePoolSize);
-				break;
-			case 'l':
-				arg = g.getOptarg();
-				jobsList = arg;
-				LOG.debug("Param [jobslist]: " + jobsList);
-				break;
-			case 'f':
-				arg = g.getOptarg();
-				jobsFile = arg;
-				LOG.debug("Param [jobsfile]: " + jobsFile);
-				break;
-			case 'p':
-				arg = g.getOptarg();
-				jobsParam = arg;
-				LOG.debug("Param [jobsparam]: " + jobsParam);
-				break;
-			default:
-				LOG.error("Unknown parameter : " + Character.toString((char) c));
-				break;
 			}
 		}
-		if (Batch.getInstance().getBatchName() == null) {
-			LOG.error("Name of the batch are required. Set the \"n\" parameter");
-			Utils.printHelpAndExit();
-		}
-		/** Add job in <b>JOBS_ARRAY_LIST<b> */
-		prepareJobListToExecute();
-	}
 
-	private static void prepareJobListToExecute() {
-		if (jobsFile == null && jobsList == null) {
-			LOG.error("No jobs specified.");
-			Utils.printHelpAndExit();
-		}
-		if (jobsList != null) {
-			String[] jl = StringUtils.split(jobsList, JOB_SEPARATOR);
-			for (String s : jl) {
-				addJob(s.trim());
+		/**
+		 * Add job in the list of the jobs <b>Main.allJobs</b>. If jobsParam is set,
+		 * jobsParam is added to the jobCommandLine.
+		 * 
+		 * @param jobCommandLine
+		 * @return true if job is correctly added
+		 */
+		public void addJob(String jobCommandLine) {
+			String jcl = jobCommandLine;
+			if (jcl.isEmpty()) {
+				LOG.error("Cannot add empty job");
+				return;
 			}
-		}
-		if (jobsFile != null) {
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(jobsFile));
-				String jobsFileLine;
-				while ((jobsFileLine = br.readLine()) != null) {
-					addJob(jobsFileLine.trim());
+			if (jobsParam != null && jobsParam.length() > 0) {
+				jcl = jcl + " " + jobsParam;
+			}
+			if (JOBS_ARRAY_LIST.size() < MAX_JOBS) {
+				if (jcl.length() < MAX_LINE_LENGTH) {
+					JOBS_ARRAY_LIST.add(jcl);
+				} else {
+					LOG.error("Length of the jobs command line is too high : "
+							+ jcl.length() + "!!!. Maximum is " + MAX_LINE_LENGTH);
 				}
-				br.close();
-			} catch (FileNotFoundException e) {
-				LOG.error("jobsFile not exists : " + jobsFile, e);
-			} catch (IOException e) {
-				LOG.error("Problem whith the jobs file : " + jobsFile, e);
-			}
-		}
-	}
-
-	/**
-	 * Add job in the list of the jobs <b>Main.allJobs</b>. If jobsParam is set,
-	 * jobsParam is added to the jobCommandLine.
-	 * 
-	 * @param jobCommandLine
-	 * @return true if job is correctly added
-	 */
-	public static void addJob(String jobCommandLine) {
-		String jcl = jobCommandLine;
-		if (jcl.isEmpty()) {
-			LOG.error("Cannot add empty job");
-			return;
-		}
-		if (jobsParam != null && jobsParam.length() > 0) {
-			jcl = jcl + " " + jobsParam;
-		}
-		if (JOBS_ARRAY_LIST.size() < MAX_JOBS) {
-			if (jcl.length() < MAX_LINE_LENGTH) {
-				JOBS_ARRAY_LIST.add(jcl);
 			} else {
-				LOG.error("Length of the jobs command line is too high : "
-						+ jcl.length() + "!!!. Maximum is " + MAX_LINE_LENGTH);
+				LOG.error("Maximum of jobs is " + MAX_JOBS);
+				LOG.error("Reduce the number of jobs");
 			}
-		} else {
-			LOG.error("Maximum of jobs is " + MAX_JOBS);
-			LOG.error("Reduce the number of jobs");
 		}
 	}
 }
