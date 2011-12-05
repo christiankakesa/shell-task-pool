@@ -39,7 +39,7 @@ public final class Main {
 	private static String jobsList;
 	private static String jobsParam;
 
-	private static final Log LOG = LogFactory.getLog(Main.class);
+	private static final Log LOG = LogFactory.getLog(Main.class.getName());
 
 	private Main() {
 	}
@@ -47,6 +47,9 @@ public final class Main {
 	public static void main(String[] args) {
 		Main.CmdLineParser clp = new Main.CmdLineParser(args);
 		clp.parse();
+		LOG.info("[BATCH_PARAMETER] BatchId: " + Batch.getInstance().getBatchId()
+				+ " | BatchName: " + Batch.getInstance().getBatchName()
+				+ " | BatchParameter: " + StringUtils.join(args, " "));
 		MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(corePoolSize,
 				corePoolSize, THREAD_KEEP_ALIVE_TIME);
 		for (String cmd : JOBS_ARRAY_LIST) {
@@ -72,7 +75,6 @@ public final class Main {
 		
 		public void parseCmdLine() {
 			String[] params = this.pParams;
-			LOG.debug("Command line args : " + StringUtils.join(params, " "));
 			int c;
 			String arg;
 			final LongOpt[] opts = {
@@ -80,11 +82,11 @@ public final class Main {
 					new LongOpt("batchname", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
 					new LongOpt("corepoolsize", LongOpt.OPTIONAL_ARGUMENT, null,
 							'c'),
-					new LongOpt("jobslist", LongOpt.OPTIONAL_ARGUMENT, null, 'l'),
+					new LongOpt("jobslist", LongOpt.OPTIONAL_ARGUMENT, null, 'j'),
 					new LongOpt("jobsfile", LongOpt.OPTIONAL_ARGUMENT, null, 'f'),
 					new LongOpt("jobsparam", LongOpt.OPTIONAL_ARGUMENT, null, 'p'),
 			};
-			Getopt g = new Getopt(APP_NAME, params, "hn:c::l::f::p::", opts, false);
+			Getopt g = new Getopt(APP_NAME, params, "hn:c::j::f::p::", opts, false);
 			g.setOpterr(true);
 			while ((c = g.getopt()) != -1) {
 				switch (c) {
@@ -106,7 +108,7 @@ public final class Main {
 					}
 					LOG.debug("Param [corepoolsize]: " + corePoolSize);
 					break;
-				case 'l':
+				case 'j':
 					arg = g.getOptarg();
 					jobsList = arg;
 					LOG.debug("Param [jobslist]: " + jobsList);
