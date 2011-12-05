@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * 
  */
 public class MyThreadPoolExecutor extends ThreadPoolExecutor {
-    private static final Log LOG = LogFactory.getLog(MyThreadPoolExecutor.class);
+    private static final Log LOG = LogFactory.getLog(MyThreadPoolExecutor.class.getName());
 
     public MyThreadPoolExecutor(int poolSize) {
         super(poolSize, poolSize, 0L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE));
@@ -31,12 +31,10 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     
     private void myInit() {
     	Batch.getInstance().setBatchStartDate(Calendar.getInstance().getTime());
-    	LOG.info("START OF THE BATCH -Batch id: " + Batch.getInstance().getBatchId()
-				+ " | Batch name: " + Batch.getInstance().getBatchName()
-				+ " | Batch startDate: " + Batch.getInstance().getBatchStartDate()
-				+ " | Batch endDate: " + Batch.getInstance().getBatchEndDate()
-				+ " | Batch duration: " + Batch.getInstance().getBatchDuration()
-				+ " | Batch status: " + Batch.getInstance().getBatchStatus());
+    	LOG.info("[BATCH_START] BatchId: " + Batch.getInstance().getBatchId()
+				+ " | BatchName: " + Batch.getInstance().getBatchName()
+				+ " | BatchStartDate: " + Batch.getInstance().getBatchStartDate()
+				+ " | BatchStatus: " + Batch.getInstance().getBatchStatus());
     }
 
     public void addTask(Runnable r) {
@@ -48,12 +46,12 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     public void terminated() {
     	super.terminated();
     	Batch.getInstance().setBatchEndDate(Calendar.getInstance().getTime());
-    	LOG.info("END OF THE BATCH - Batch id: " + Batch.getInstance().getBatchId()
-				+ " | Batch name: " + Batch.getInstance().getBatchName()
-				+ " | Batch startDate: " + Batch.getInstance().getBatchStartDate()
-				+ " | Batch endDate: " + Batch.getInstance().getBatchEndDate()
-				+ " | Batch duration: " + Batch.getInstance().getBatchDuration()
-				+ " | Batch status: " + Batch.getInstance().getBatchStatus());
+    	LOG.info("[BATCH_END] - BatchId: " + Batch.getInstance().getBatchId()
+				+ " | BatchName: " + Batch.getInstance().getBatchName()
+				+ " | BatchStartDate: " + Batch.getInstance().getBatchStartDate()
+				+ " | BatchEndDate: " + Batch.getInstance().getBatchEndDate()
+				+ " | BatchDuration: " + Batch.getInstance().getBatchDuration()
+				+ " | BatchStatus: " + Batch.getInstance().getBatchStatus());
     }
     
     /*@Override
