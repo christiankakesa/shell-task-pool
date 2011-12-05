@@ -15,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JobExecution {
 	private static final org.apache.commons.logging.Log LOG = LogFactory
-			.getLog(JobExecution.class);
+			.getLog(JobExecution.class.getName());
 
 	/**
 	 * Job command line string
@@ -35,7 +35,7 @@ public class JobExecution {
 	public JobExecution(final String commandLine) {
 		this.commandLine = commandLine;
 		/** Add the job to the Batch.jobExecutionList and set a jobId */
-		Batch.getInstance().addJobExecution(this);
+		Batch.getInstance().addJobToExecute(this);
 	}
 
 	public void start() {
@@ -60,10 +60,13 @@ public class JobExecution {
 			} else {
 				this.setStatus(JobStatus.FAILED);
 			}
-			LOG.info("Job id: " + this.getId() + " | Job command line:"
-					+ this.getCommandLine() + " | Job duration: "
-					+ this.getDuration() + " | Job status: " + this.getStatus()
-					+ " | Job exit code: " + this.getExitCode());
+			LOG.info("[JOB_EXECUTION] BatchId: " + Batch.getInstance().getBatchId()
+					+ " | BatchName: " + Batch.getInstance().getBatchName()
+					+ " | JobId: " + this.getId()
+					+ " | JobCommandLine:" + this.getCommandLine()
+					+ " | JobDuration: " + this.getDuration()
+					+ " | JobStatus: " + this.getStatus()
+					+ " | JobExitCode: " + this.getExitCode());
 		} catch (IOException e) {
 			LOG.error(e);
 		} catch (InterruptedException e) {
