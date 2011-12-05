@@ -11,7 +11,7 @@ import java.util.List;
  */
 public final class Batch {
 	// private static final org.apache.commons.logging.Log LOG =
-	// LogFactory.getLog(Statistics.class);
+	// LogFactory.getLog(Batch.class.getName());
 	/**
 	 * Static singleton idiom
 	 * 
@@ -141,10 +141,9 @@ public final class Batch {
 
 	/**
 	 * Add job to the jobExecutionList and set a job ID.
-	 * 
 	 * @param je
 	 */
-	public void addJobExecution(final JobExecution je) {
+	public void addJobToExecute(final JobExecution je) {
 		if (jobExecutionList.add(je)) {
 			if (this.jobExecutionList.size() == 1) {
 				this.batchStatus = BatchStatus.RUNNING;
