@@ -16,54 +16,45 @@ import org.apache.commons.logging.LogFactory;
  * Shell Task Pool utility class
  */
 public final class Utils {
-	private static final Log LOG = LogFactory.getLog(Utils.class);
-
+	private static final Log LOG = LogFactory.getLog(Utils.class.getName());
+	
 	private Utils() {
 	}
 
 	public static void printHelp() {
-		System.out.print(getHelp());
+		System.out.printf("%s", getHelp());
+		System.out.flush();
 	}
-	
+
 	public static void printHelpAndExit() {
 		printHelp();
 		System.exit(0);
 	}
 
-	public static CharSequence getHelp() {
-		final int nbSpace = Main.APP_NAME.length() + "Usage: ".length();
-		final StringBuilder sb = new StringBuilder();
-		sb.append("Usage: ").append(Main.APP_NAME).append(" [-h,--help]\n");
-		sb.append(getSpace(nbSpace)).append("\tShow this help screen\n\n");
-		sb.append(getSpace(nbSpace)).append(" [-n,--batchname=]\n");
-		sb.append(getSpace(nbSpace)).append(
-				"\tSet the name of the entire batch\n");
-		sb.append(getSpace(nbSpace)).append(
-				"\texample : -n \"Alimentation différentiel des omes\"\n\n");
-		sb.append(getSpace(nbSpace)).append(" [-c,--corepoolsize=]\n");
-		sb.append(getSpace(nbSpace)).append(
-				"\tSet number of thread processor\n");
-		sb.append(getSpace(nbSpace)).append("\texample : -c5\n\n");
-		sb.append(getSpace(nbSpace)).append(" [-l,--jobslist=]\n");
-		sb.append(getSpace(nbSpace))
-				.append("\tList of jobs seperated by ';'\n");
-		sb.append(getSpace(nbSpace))
-				.append("\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n");
-		sb.append(getSpace(nbSpace)).append(" [-f,--jobsfile=]\n");
-		sb.append(getSpace(nbSpace))
-				.append("\tPath to the jobs plain text file. Jobs are separated by new line\n");
-		sb.append(getSpace(nbSpace)).append(
-				"\texample : -f /home/me/test.job\n\n");
-		sb.append(getSpace(nbSpace)).append(" [-p,--jobsparam=]\n");
-		sb.append(getSpace(nbSpace)).append(
-				"\tSet global params to add for each job\n");
-		sb.append(getSpace(nbSpace)).append(
-				"\texample : -p'-x 2011/05/05 -m 1024'\n");
-		sb.append("--------------\n");
-		sb.append("Author name  : ").append(Main.AUTHOR_NAME).append("\n");
-		sb.append("Author email : ").append(Main.AUTHOR_EMAIL).append("\n");
-		sb.append("Copyright    : ").append(Main.APP_COPYRIGHT).append("\n\n");
-		return sb.toString();
+	public static String getHelp() {
+		final String dynamicSpaceAppend = getSpace(Main.APP_NAME.length() + "Usage: ".length());
+		String result = "Usage: " + Main.APP_NAME + " [-h,--help]\n"
+				+ dynamicSpaceAppend + "\tShow this help screen\n\n"
+				+ dynamicSpaceAppend + " [-n,--batchname=]\n"
+				+ dynamicSpaceAppend + "\tSet the name of the entire batch\n"
+				+ dynamicSpaceAppend	+ "\texample : -n \"Alimentation différentiel des omes\"\n\n"
+				+ dynamicSpaceAppend + " [-c,--corepoolsize=]\n"
+				+ dynamicSpaceAppend + "\tSet number of thread processor\n"
+				+ dynamicSpaceAppend + "\texample : -c5\n\n"
+				+ dynamicSpaceAppend + " [-j,--jobslist=]\n"
+				+ dynamicSpaceAppend + "\tList of jobs seperated by ';'\n"
+				+ dynamicSpaceAppend	+ "\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n"
+				+ dynamicSpaceAppend + " [-f,--jobsfile=]\n"
+				+ dynamicSpaceAppend	+ "\tPath to the jobs plain text file. Jobs are separated by new line\n"
+				+ dynamicSpaceAppend + "\texample : -f /home/me/test.job\n\n"
+				+ dynamicSpaceAppend + " [-p,--jobsparam=]\n"
+				+ dynamicSpaceAppend	+ "\tSet global params to add for each job\n"
+				+ dynamicSpaceAppend + "\texample : -p'-x 2011/05/05 -m 1024'\n"
+				+ "--------------\n"
+				+ "Author name  : " + Main.AUTHOR_NAME + "\n"
+				+ "Author email : " + Main.AUTHOR_EMAIL + "\n"
+				+ "Copyright    : " + Main.APP_COPYRIGHT + "\n\n";
+		return result;
 	}
 
 	public static String getSpace(int nbSpace) {
@@ -77,6 +68,16 @@ public final class Utils {
 		return sb.toString();
 	}
 
+	/**
+	 * Build string duration between two dates
+	 * <ul>
+	 * <li>format : HH:MM:SS</li>
+	 * </ul>
+	 * 
+	 * @param end
+	 * @param start
+	 * @return string representation of the duration
+	 */
 	public static String buildDurationFromDates(Date end, Date start) {
 		if (end != null && start != null) {
 			final long secondInMilli = 1000;
@@ -145,7 +146,7 @@ public final class Utils {
 	 * 
 	 * @return an UUID String
 	 */
-	public static String UUID() {
+	public static String buildUUID() {
 		return UUID.randomUUID().toString();
 	}
 }
