@@ -22,7 +22,10 @@ public class UtilsTest {
 	
 	@Test
 	public void testUUID() {
-		assertNotNull(Utils.UUID());
-		assertFalse(Utils.UUID().isEmpty());
+		assertNotNull(Utils.buildUUID());
+		final int testTime = 10;
+		for(int i = 0; i < testTime; ++i) {
+			assertFalse(Utils.buildUUID().isEmpty());
+		}
 	}
 }
