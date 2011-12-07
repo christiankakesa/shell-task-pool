@@ -44,7 +44,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     
     @Override
     public void terminated() {
-    	super.terminated();
+    	try {
     	Batch.getInstance().setBatchEndDate(Calendar.getInstance().getTime());
     	LOG.info("[BATCH_END] - BatchId: " + Batch.getInstance().getBatchId()
 				+ " | BatchName: " + Batch.getInstance().getBatchName()
@@ -52,23 +52,32 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 				+ " | BatchEndDate: " + Batch.getInstance().getBatchEndDate()
 				+ " | BatchDuration: " + Batch.getInstance().getBatchDuration()
 				+ " | BatchStatus: " + Batch.getInstance().getBatchStatus());
+    	} finally {
+    		super.terminated();
+    	}
     }
     
     /*@Override
     public void shutdown() {
-        super.shutdown();
-        LOG.debug("ThreadPool shutdown. All pool is working !!!");
+        try {
+        	LOG.debug("ThreadPool shutdown. All pool is working !!!");
+        } finally {
+        	super.shutdown();
+        }
     }
     
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
-        //TODO: What to do here
         super.beforeExecute(t, r);
+        //TODO: What to do here
     }
 
     @Override
-    protected void afterExecute(Runnable r, Throwable t) {
-        super.afterExecute(r, t);
-        //TODO: What to do here
+    protected void afterExecute(Runnable r, Throwable t) { 
+        try {
+        	//TODO: What to do here
+        } finally {
+        	super.afterExecute(r, t);
+        }
     }*/
 }
