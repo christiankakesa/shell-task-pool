@@ -70,7 +70,7 @@ public final class Batch {
 
 	public void setBatchEndDate(Date batchEndDate) {
 		this.batchEndDate = batchEndDate;
-		this.setBatchStatusFromSuccessFailed();
+		this.setBatchStatusWithJobStatus();
 	}
 
 	/**
@@ -98,7 +98,7 @@ public final class Batch {
 	 * 
 	 * @return void
 	 */
-	public void setBatchStatusFromSuccessFailed() {
+	public void setBatchStatusWithJobStatus() {
 		if (this.jobFailed == 0 && this.jobSuccess >= 1) {
 			/** Batch completed success full */
 			this.setBatchStatus(BatchStatus.COMPLETED);
@@ -149,8 +149,8 @@ public final class Batch {
 				this.batchStatus = BatchStatus.RUNNING;
 			}
 			synchronized (Batch.class) {
-				++jobCounterId;
-				je.setId(jobCounterId);
+				this.jobCounterId++;
+				je.setId(this.jobCounterId);
 			}
 		}
 	}
