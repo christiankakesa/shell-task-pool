@@ -57,7 +57,7 @@ public final class Utils {
 		return result;
 	}
 
-	public static String getSpace(int nbSpace) {
+	public static String getSpace(final int nbSpace) {
 		if (nbSpace <= 0) {
 			return "";
 		}
@@ -78,7 +78,7 @@ public final class Utils {
 	 * @param start
 	 * @return string representation of the duration
 	 */
-	public static String buildDurationFromDates(Date end, Date start) {
+	public static String buildDurationFromDates(final Date end, final Date start) {
 		if (end != null && start != null) {
 			final long secondInMilli = 1000;
 			final long secondsInHour = 3600;
@@ -120,7 +120,7 @@ public final class Utils {
 	 * @param plainText
 	 * @return An hexadecimal string hash
 	 */
-	public static String hexSHA1(String plainText) {
+	public static String hexSHA1(final String plainText) {
 		if (null == plainText) {
 			return "";
 		}

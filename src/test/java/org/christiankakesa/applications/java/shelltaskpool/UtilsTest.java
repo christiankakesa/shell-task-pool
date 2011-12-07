@@ -4,11 +4,33 @@ package org.christiankakesa.applications.java.shelltaskpool;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-//import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
 
 import org.junit.Test;
 
 public class UtilsTest {
+	@Test
+	public void testBuildDurationFromDates() {
+		final String defaultDuration = "00:00:00";
+		assertEquals(Utils.buildDurationFromDates(null, null), defaultDuration);
+		final java.util.Date begin = Calendar.getInstance().getTime();
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		final java.util.Date end = Calendar.getInstance().getTime();
+		assertFalse(Utils.buildDurationFromDates(end, begin) == defaultDuration);
+	}
+	
+	@Test
+	public void testParseCommandLineToStringArray(){
+		final String commandLine = "'-p xx-xx-xx' \"-x toto\" '-42 -42' --Tester testerSize";
+		final int nbTokens = 5;
+		assertEquals(Utils.parseCommandLineToStringArray(commandLine).length, nbTokens);
+	}
 	
 	@Test
 	public void testFalseStringToSHA1() {
