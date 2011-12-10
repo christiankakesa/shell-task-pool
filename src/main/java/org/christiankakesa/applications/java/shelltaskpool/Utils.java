@@ -16,21 +16,37 @@ import org.apache.commons.logging.LogFactory;
  * Shell Task Pool utility class
  */
 public final class Utils {
+	/**
+	 * Static logger
+	 */
 	private static final Log LOG = LogFactory.getLog(Utils.class.getName());
 	
+	/**
+	 * private constructor
+	 */
 	private Utils() {
 	}
 
+	/**
+	 * Print help screen
+	 */
 	public static void printHelp() {
 		System.out.printf("%s", getHelp());
 		System.out.flush();
 	}
 
+	/**
+	 * Print help screen and exit the program
+	 */
 	public static void printHelpAndExit() {
 		printHelp();
 		System.exit(0);
 	}
 
+	/**
+	 * Application help string
+	 * @return string of the help screen
+	 */
 	public static String getHelp() {
 		final String dynamicSpaceAppend = getSpace(Main.APP_NAME.length() + "Usage: ".length());
 		String result = "Usage: " + Main.APP_NAME + " [-h,--help]\n"
@@ -57,6 +73,11 @@ public final class Utils {
 		return result;
 	}
 
+	/**
+	 * Build string of number space in parameter
+	 * @param nbSpace
+	 * @return string of space
+	 */
 	public static String getSpace(final int nbSpace) {
 		if (nbSpace <= 0) {
 			return "";
