@@ -52,18 +52,31 @@ public class UtilsTest {
 		assertEquals(Utils.parseCommandLineToStringArray(commandLine).length, nbTokens);
 	}
 	
-	@Test
-	public void testHexSHA1() {
-		assertFalse(Utils.hexSHA1("toto").equals("11112625dc21ef05f6ad4ddf47c5f203837a1111"));
-		assertEquals(Utils.hexSHA1("toto"), "0b9c2625dc21ef05f6ad4ddf47c5f203837aa32c");
-	}
+//	@Test
+//	public void testHexSHA1() {
+//		assertFalse(Utils.hexSHA1("toto").equals("11112625dc21ef05f6ad4ddf47c5f203837a1111"));
+//		assertEquals(Utils.hexSHA1("toto"), "0b9c2625dc21ef05f6ad4ddf47c5f203837aa32c");
+//	}
 	
 	@Test
 	public void testUUID() {
-		assertNotNull(Utils.buildUUID());
+		final int uuidLength = 32;
 		final int testTime = 10;
 		for(int i = 0; i < testTime; ++i) {
 			assertFalse(Utils.buildUUID().isEmpty());
+			assertNotNull(Utils.buildUUID());
+			assertEquals(Utils.buildUUID().length(), uuidLength);
 		}
+	}
+	
+	@Test
+	public void testRemoveChar() {
+		final String oneS = "titi-toto";
+		final String twoS = "titi!toto";
+		final String threeS = "titiçtoto";
+		final String result = "tititoto";
+		assertEquals(Utils.removeChar(oneS, '-'), result);
+		assertEquals(Utils.removeChar(twoS, '!'), result);
+		assertEquals(Utils.removeChar(threeS, 'ç'), result);
 	}
 }

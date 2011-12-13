@@ -1,7 +1,7 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+//import java.security.MessageDigest;
+//import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +20,7 @@ public final class Utils {
 	 * Static logger
 	 */
 	private static final Log LOG = LogFactory.getLog(Utils.class.getName());
-	
+
 	/**
 	 * private constructor
 	 */
@@ -45,36 +45,54 @@ public final class Utils {
 
 	/**
 	 * Application help string
+	 * 
 	 * @return string of the help screen
 	 */
 	public static String getHelp() {
-		final String dynamicSpaceAppend = getSpace(Main.APP_NAME.length() + "Usage: ".length());
-		String result = "Usage: " + Main.APP_NAME + " [-h,--help]\n"
-				+ dynamicSpaceAppend + "\tShow this help screen\n\n"
-				+ dynamicSpaceAppend + " [-n,--batchname=]\n"
-				+ dynamicSpaceAppend + "\tSet the name of the entire batch\n"
-				+ dynamicSpaceAppend	+ "\texample : -n \"Alimentation différentiel des omes\"\n\n"
-				+ dynamicSpaceAppend + " [-c,--corepoolsize=]\n"
-				+ dynamicSpaceAppend + "\tSet number of thread processor\n"
-				+ dynamicSpaceAppend + "\texample : -c5\n\n"
-				+ dynamicSpaceAppend + " [-j,--jobslist=]\n"
-				+ dynamicSpaceAppend + "\tList of jobs seperated by ';'\n"
-				+ dynamicSpaceAppend	+ "\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n"
-				+ dynamicSpaceAppend + " [-f,--jobsfile=]\n"
-				+ dynamicSpaceAppend	+ "\tPath to the jobs plain text file. Jobs are separated by new line\n"
+		final String dynamicSpaceAppend = getSpace(Main.APP_NAME.length()
+				+ "Usage: ".length());
+		String result = "Usage: "
+				+ Main.APP_NAME
+				+ " [-h,--help]\n"
+				+ dynamicSpaceAppend
+				+ "\tShow this help screen\n\n"
+				+ dynamicSpaceAppend
+				+ " [-n,--batchname=]\n"
+				+ dynamicSpaceAppend
+				+ "\tSet the name of the entire batch\n"
+				+ dynamicSpaceAppend
+				+ "\texample : -n \"Alimentation différentiel des omes\"\n\n"
+				+ dynamicSpaceAppend
+				+ " [-c,--corepoolsize=]\n"
+				+ dynamicSpaceAppend
+				+ "\tSet number of thread processor\n"
+				+ dynamicSpaceAppend
+				+ "\texample : -c5\n\n"
+				+ dynamicSpaceAppend
+				+ " [-j,--jobslist=]\n"
+				+ dynamicSpaceAppend
+				+ "\tList of jobs seperated by ';'\n"
+				+ dynamicSpaceAppend
+				+ "\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n"
+				+ dynamicSpaceAppend
+				+ " [-f,--jobsfile=]\n"
+				+ dynamicSpaceAppend
+				+ "\tPath to the jobs plain text file. Jobs are separated by new line\n"
 				+ dynamicSpaceAppend + "\texample : -f /home/me/test.job\n\n"
 				+ dynamicSpaceAppend + " [-p,--jobsparam=]\n"
-				+ dynamicSpaceAppend	+ "\tSet global params to add for each job\n"
-				+ dynamicSpaceAppend + "\texample : -p'-x 2011/05/05 -m 1024'\n"
-				+ "--------------\n"
-				+ "Author name  : " + Main.AUTHOR_NAME + "\n"
-				+ "Author email : " + Main.AUTHOR_EMAIL + "\n"
+				+ dynamicSpaceAppend
+				+ "\tSet global params to add for each job\n"
+				+ dynamicSpaceAppend
+				+ "\texample : -p'-x 2011/05/05 -m 1024'\n"
+				+ "--------------\n" + "Author name  : " + Main.AUTHOR_NAME
+				+ "\n" + "Author email : " + Main.AUTHOR_EMAIL + "\n"
 				+ "Copyright    : " + Main.APP_COPYRIGHT + "\n\n";
 		return result;
 	}
 
 	/**
 	 * Build string of number space in parameter
+	 * 
 	 * @param nbSpace
 	 * @return string of space
 	 */
@@ -123,6 +141,7 @@ public final class Utils {
 
 	/**
 	 * Build String Array of command line.
+	 * 
 	 * @param commandLine
 	 * @return String[] of the string command line
 	 */
@@ -137,40 +156,54 @@ public final class Utils {
 		return tokens.toArray(new String[tokens.size()]);
 	}
 
-	/**
-	 * Build an hexadecimal SHA1 hash for string.
-	 * @param plainText
-	 * @return An hexadecimal string hash
-	 */
-	public static String hexSHA1(final String plainText) {
-		/**
-		 * Exit the method when parameter is <code>null</code> or empty.
-		 */
-		if (plainText == null || plainText.isEmpty()) {
-			return "";
-		}
-		final StringBuilder sb = new StringBuilder();
-		try {
+//	/**
+//	 * Build an hexadecimal SHA1 hash for string.
+//	 * 
+//	 * @param plainText
+//	 * @return An hexadecimal string hash
+//	 */
+//	public static String hexSHA1(final String plainText) {
+//		/**
+//		 * Exit the method when parameter is <code>null</code> or empty.
+//		 */
+//		if (plainText == null || plainText.isEmpty()) {
+//			return "";
+//		}
+//		final StringBuilder sb = new StringBuilder();
+//		try {
+//
+//			final MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+//			byte[] digest = sha1.digest((plainText).getBytes());
+//			String hexString;
+//			final int hexPadSHA1 = 0x00FF;
+//			for (byte b : digest) {
+//				hexString = Integer.toHexString(hexPadSHA1 & b);
+//				sb.append(hexString.length() == 1 ? "0" + hexString : hexString);
+//			}
+//		} catch (NoSuchAlgorithmException e) {
+//			LOG.error("Can't build a SHA1 MessageDigest object", e);
+//		}
+//		return sb.toString();
+//	}
 
-			final MessageDigest sha1 = MessageDigest.getInstance("SHA1");
-			byte[] digest = sha1.digest((plainText).getBytes());
-			String hexString;
-			final int hexPadSHA1 = 0x00FF;
-			for (byte b : digest) {
-				hexString = Integer.toHexString(hexPadSHA1 & b);
-				sb.append(hexString.length() == 1 ? "0" + hexString : hexString);
-			}
-		} catch (NoSuchAlgorithmException e) {
-			LOG.error("Can't build a SHA1 MessageDigest object", e);
-		}
-		return sb.toString();
-	}
-
 	/**
-	 * Generate UUID string.
-	 * @return an UUID String
+	 * Generate UUID string without '-' character.
+	 * @return string UUID without '-'
 	 */
 	public static String buildUUID() {
-		return UUID.randomUUID().toString();
+		return Utils.removeChar(UUID.randomUUID().toString(), '-');
+	}
+
+	public static String removeChar(final String s, final char c) {
+		final StringBuffer r = new StringBuffer(s.length());
+		r.setLength(s.length());
+		int current = 0;
+		char cur;
+		for (int i = 0; i < s.length(); i++) {
+			cur = s.charAt(i);
+			if (cur != c)
+				r.setCharAt(current++, cur);
+		}
+		return r.toString();
 	}
 }

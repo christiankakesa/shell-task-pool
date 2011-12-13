@@ -53,7 +53,8 @@ public final class Batch {
 		 */
 		if (this.batchName == null) {
 			this.batchName = batchName;
-			this.batchId = Utils.hexSHA1(this.batchName);
+			//this.batchId = Utils.hexSHA1(this.batchName);
+			this.batchId = Utils.buildUUID();
 		}
 	}
 
