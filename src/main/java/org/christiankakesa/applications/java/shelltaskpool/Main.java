@@ -172,10 +172,17 @@ public final class Main {
 		 */
 		public void addJob(String jobCommandLine) {
 			String jcl = jobCommandLine;
+			/**
+			 * Exit the method if jobCommandLine is empty
+			 */
 			if (jcl.isEmpty()) {
 				LOG.error("Cannot add empty job");
 				return;
 			}
+			/**
+			 * Add global job parameter if <code>jobsParam</code> is not null
+			 * and <code>jobsParam</code> contains parameter.
+			 */
 			if (jobsParam != null && jobsParam.length() > 0) {
 				jcl = jcl + " " + jobsParam;
 			}

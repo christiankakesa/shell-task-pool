@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Store all informations about Batch and Jobs
@@ -23,9 +24,9 @@ public final class Batch {
 	private volatile Date batchStartDate;
 	private volatile Date batchEndDate;
 	private volatile BatchStatus batchStatus = BatchStatus.NONE;
-	private volatile long jobCounterId = 0;
-	private volatile long jobSuccess = 0;
-	private volatile long jobFailed = 0;
+	private AtomicLong jobCounterId = new AtomicLong();
+	private AtomicLong jobSuccess = new AtomicLong();
+	private AtomicLong jobFailed = new AtomicLong();
 	private List<JobExecution> jobExecutionList = (List<JobExecution>) Collections
 			.synchronizedList(new ArrayList<JobExecution>());
 
@@ -41,10 +42,15 @@ public final class Batch {
 	}
 
 	public void setBatchName(final String batchName) {
-		if (batchName == null) {
+		/**
+		 * Exit the method when parameter is <code>null</code> or empty.
+		 */
+		if (batchName == null || batchName.isEmpty()) {
 			return;
 		}
-		/** Set the batch name and batch id only if no name given */
+		/**
+		 *  Set the batch name and batch id only if no name given before
+		 */
 		if (this.batchName == null) {
 			this.batchName = batchName;
 			this.batchId = Utils.hexSHA1(this.batchName);
@@ -95,48 +101,42 @@ public final class Batch {
 
 	/**
 	 * Look at the jobSuccess and jobFailed to determine last Batch status.
-	 * 
 	 * @return void
 	 */
 	public void setBatchStatusWithJobStatus() {
-		if (this.jobFailed == 0 && this.jobSuccess >= 1) {
-			/** Batch completed success full */
+		/** Batch completed success full. */
+		if (this.jobFailed.get() == 0 && this.jobSuccess.get() >= 1) {
 			this.setBatchStatus(BatchStatus.COMPLETED);
-		} else if (this.jobFailed > 0 && this.jobSuccess >= 1) {
-			/** Batch completed but there are job failed */
+		} /** Batch completed but there are job failed */
+		else if (this.jobFailed.get() > 0 && this.jobSuccess.get() >= 1) {
 			this.setBatchStatus(BatchStatus.COMPLETED_WITH_ERROR);
-		} else {
-			/** All jobs failed */
+		} else {/** Means that all jobs failed or unknown problem. */
 			this.setBatchStatus(BatchStatus.FAILED);
 		}
 	}
 
 	public long getJobSuccess() {
-		return jobSuccess;
+		return jobSuccess.get();
 	}
 
 	public void setJobSuccess(long jobSuccess) {
-		this.jobSuccess = jobSuccess;
+		this.jobSuccess.set(jobSuccess);
 	}
 
 	public void incrementJobSuccess() {
-		synchronized (Batch.class) {
-			this.jobSuccess++;
-		}
+			this.jobSuccess.incrementAndGet();
 	}
 
 	public long getJobFailed() {
-		return jobFailed;
+		return jobFailed.get();
 	}
 
 	public void setJobFailed(long jobFailed) {
-		this.jobFailed = jobFailed;
+		this.jobFailed.set(jobFailed);
 	}
 
 	public void incrementJobFailed() {
-		synchronized (Batch.class) {
-			this.jobFailed++;
-		}
+		this.jobFailed.incrementAndGet();
 	}
 
 	/**
@@ -144,14 +144,18 @@ public final class Batch {
 	 * @param je
 	 */
 	public void addJobToExecute(final JobExecution je) {
+		/**
+		 * Add a job and test if adding job is successful.
+		 */
 		if (jobExecutionList.add(je)) {
-			if (this.jobExecutionList.size() == 1) {
+			/**
+			 * Set Batch status to running if not set to BatchStatus.RUNNING
+			 */
+			if (this.batchStatus != BatchStatus.RUNNING) {
 				this.batchStatus = BatchStatus.RUNNING;
 			}
-			synchronized (Batch.class) {
-				this.jobCounterId++;
-				je.setId(this.jobCounterId);
-			}
+			this.jobCounterId.incrementAndGet();
+			je.setId(this.jobCounterId.get());
 		}
 	}
 
@@ -159,6 +163,10 @@ public final class Batch {
 		return jobExecutionList;
 	}
 
+	/**
+	 * Enum of all the BatchStatus.
+	 * @author christian
+	 */
 	public static enum BatchStatus {
 		NONE, STARTED, RUNNING, FAILED, COMPLETED_WITH_ERROR, COMPLETED
 	}

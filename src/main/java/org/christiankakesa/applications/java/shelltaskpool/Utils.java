@@ -79,6 +79,9 @@ public final class Utils {
 	 * @return string of space
 	 */
 	public static String getSpace(final int nbSpace) {
+		/**
+		 * If parameter nbSpace is lesser than zero, return empty string
+		 */
 		if (nbSpace <= 0) {
 			return "";
 		}
@@ -90,7 +93,7 @@ public final class Utils {
 	}
 
 	/**
-	 * Build string duration between two dates
+	 * Build string duration between two dates :
 	 * <ul>
 	 * <li>format : HH:MM:SS</li>
 	 * </ul>
@@ -119,8 +122,7 @@ public final class Utils {
 	}
 
 	/**
-	 * Build String Array of command line
-	 * 
+	 * Build String Array of command line.
 	 * @param commandLine
 	 * @return String[] of the string command line
 	 */
@@ -136,13 +138,15 @@ public final class Utils {
 	}
 
 	/**
-	 * Build an hexadecimal SHA1 hash for string
-	 * 
+	 * Build an hexadecimal SHA1 hash for string.
 	 * @param plainText
 	 * @return An hexadecimal string hash
 	 */
 	public static String hexSHA1(final String plainText) {
-		if (null == plainText) {
+		/**
+		 * Exit the method when parameter is <code>null</code> or empty.
+		 */
+		if (plainText == null || plainText.isEmpty()) {
 			return "";
 		}
 		final StringBuilder sb = new StringBuilder();
@@ -163,8 +167,7 @@ public final class Utils {
 	}
 
 	/**
-	 * Generate UUID string
-	 * 
+	 * Generate UUID string.
 	 * @return an UUID String
 	 */
 	public static String buildUUID() {

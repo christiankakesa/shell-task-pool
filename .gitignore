@@ -1,5 +1,7 @@
-bin
-target
-.settings
-.classpath
+*~
 *.log
+.classpath
+bin/
+target/
+.settings/
+.idea/
