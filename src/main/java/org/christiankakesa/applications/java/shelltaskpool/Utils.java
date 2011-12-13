@@ -122,11 +122,11 @@ public final class Utils {
 	 */
 	public static String buildDurationFromDates(final Date end, final Date start) {
 		if (end != null && start != null) {
-			final long secondInMilli = 1000;
+			final long milliInSecond = 1000;
 			final long secondsInHour = 3600;
 			final long secondsInMinute = 60;
 			final long tsTime = (end.getTime() - start.getTime())
-					/ secondInMilli;
+					/ milliInSecond;
 			/**
 			 * tsTime / 3600, (tsTime % 3600) / 60, (tsTime % 60)
 			 */
