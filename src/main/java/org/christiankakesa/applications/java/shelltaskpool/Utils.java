@@ -194,6 +194,12 @@ public final class Utils {
 		return Utils.removeChar(UUID.randomUUID().toString(), '-');
 	}
 
+	/**
+	 * Remove character from given string
+	 * @param s
+	 * @param c
+	 * @return string without given character
+	 */
 	public static String removeChar(final String s, final char c) {
 		final StringBuffer r = new StringBuffer(s.length());
 		r.setLength(s.length());
@@ -204,6 +210,6 @@ public final class Utils {
 			if (cur != c)
 				r.setCharAt(current++, cur);
 		}
-		return r.toString();
+		return r.toString().trim();
 	}
 }

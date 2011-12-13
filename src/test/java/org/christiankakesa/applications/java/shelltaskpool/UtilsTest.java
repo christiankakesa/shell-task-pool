@@ -62,6 +62,7 @@ public class UtilsTest {
 	public void testUUID() {
 		final int uuidLength = 32;
 		final int testTime = 10;
+		LOG.debug(Utils.buildUUID());
 		for(int i = 0; i < testTime; ++i) {
 			assertFalse(Utils.buildUUID().isEmpty());
 			assertNotNull(Utils.buildUUID());
@@ -73,10 +74,10 @@ public class UtilsTest {
 	public void testRemoveChar() {
 		final String oneS = "titi-toto";
 		final String twoS = "titi!toto";
-		final String threeS = "titiçtoto";
+		final String threeS = "titi+toto";
 		final String result = "tititoto";
 		assertEquals(Utils.removeChar(oneS, '-'), result);
 		assertEquals(Utils.removeChar(twoS, '!'), result);
-		assertEquals(Utils.removeChar(threeS, 'ç'), result);
+		assertEquals(Utils.removeChar(threeS, '+'), result);
 	}
 }
