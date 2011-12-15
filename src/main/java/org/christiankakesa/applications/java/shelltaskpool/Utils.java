@@ -31,7 +31,7 @@ public final class Utils {
 	 * Print help screen
 	 */
 	public static void printHelp() {
-		System.out.printf("%s", getHelp());
+		System.out.printf("%s", Utils.getHelp());
 		System.out.flush();
 	}
 
@@ -39,17 +39,16 @@ public final class Utils {
 	 * Print help screen and exit the program
 	 */
 	public static void printHelpAndExit() {
-		printHelp();
+		Utils.printHelp();
 		System.exit(0);
 	}
 
 	/**
 	 * Application help string
-	 * 
-	 * @return string of the help screen
+	 * @return Help screen string content
 	 */
 	public static String getHelp() {
-		final String dynamicSpaceAppend = getSpace(Main.APP_NAME.length()
+		final String dynamicSpaceAppend = Utils.getSpace(Main.APP_NAME.length()
 				+ "Usage: ".length());
 		String result = "Usage: "
 				+ Main.APP_NAME
@@ -92,14 +91,10 @@ public final class Utils {
 
 	/**
 	 * Build string of number space in parameter
-	 * 
 	 * @param nbSpace
-	 * @return string of space
+	 * @return String of space
 	 */
 	public static String getSpace(final int nbSpace) {
-		/**
-		 * If parameter nbSpace is lesser than zero, return empty string
-		 */
 		if (nbSpace <= 0) {
 			return "";
 		}
@@ -115,21 +110,18 @@ public final class Utils {
 	 * <ul>
 	 * <li>format : HH:MM:SS</li>
 	 * </ul>
-	 * 
 	 * @param end
 	 * @param start
-	 * @return string representation of the duration
+	 * @return String representation of the duration
 	 */
 	public static String buildDurationFromDates(final Date end, final Date start) {
-		if (end != null && start != null) {
+		if (end != null && start != null) {//Build the duration only if both parameters are not null
 			final long milliInSecond = 1000;
 			final long secondsInHour = 3600;
 			final long secondsInMinute = 60;
 			final long tsTime = (end.getTime() - start.getTime())
 					/ milliInSecond;
-			/**
-			 * tsTime / 3600, (tsTime % 3600) / 60, (tsTime % 60)
-			 */
+			//tsTime / 3600, (tsTime % 3600) / 60, (tsTime % 60)
 			return String.format("%02d:%02d:%02d", tsTime / secondsInHour,
 					(tsTime % secondsInHour) / secondsInMinute,
 					(tsTime % secondsInMinute));
@@ -141,9 +133,8 @@ public final class Utils {
 
 	/**
 	 * Build String Array of command line.
-	 * 
 	 * @param commandLine
-	 * @return String[] of the string command line
+	 * @return String array of the command line string
 	 */
 	public static String[] parseCommandLineToStringArray(
 			final String commandLine) {
@@ -188,25 +179,26 @@ public final class Utils {
 
 	/**
 	 * Generate UUID string without '-' character.
-	 * @return string UUID without '-'
+	 * @return String UUID without '-'
 	 */
 	public static String buildUUID() {
-		return Utils.removeChar(UUID.randomUUID().toString(), '-');
+		UUID newUUID = UUID.randomUUID();
+		return Utils.removeCharFromString(newUUID.toString(), '-');
 	}
 
 	/**
 	 * Remove character from given string
-	 * @param s
+	 * @param givenString
 	 * @param c
-	 * @return string without given character
+	 * @return String without given character
 	 */
-	public static String removeChar(final String s, final char c) {
-		final StringBuffer r = new StringBuffer(s.length());
-		r.setLength(s.length());
+	public static String removeCharFromString(final String givenString, final char c) {
+		final StringBuffer r = new StringBuffer(givenString.length());
+		r.setLength(givenString.length());
 		int current = 0;
 		char cur;
-		for (int i = 0; i < s.length(); i++) {
-			cur = s.charAt(i);
+		for (int i = 0; i < givenString.length(); i++) {
+			cur = givenString.charAt(i);
 			if (cur != c)
 				r.setCharAt(current++, cur);
 		}

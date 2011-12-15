@@ -52,10 +52,9 @@ public class JobExecution {
 			process = processBuilder.start();
 			this.setStatus(JobStatus.RUNNING);
 			LOG.debug(getProcessOutput(process));
-			/** Log the output of the process */
 			this.setExitCode(process.waitFor());
 			this.setEndDate(Calendar.getInstance().getTime());
-			if (this.exitCode == 0) {
+			if (this.getExitCode() == 0) {
 				this.setStatus(JobStatus.COMPLETED);
 			} else {
 				this.setStatus(JobStatus.FAILED);
@@ -164,6 +163,6 @@ public class JobExecution {
 	}
 
 	public static enum JobStatus {
-		NONE, RUNNING, FAILED, COMPLETED
+		NONE, RUNNING, FAILED, COMPLETED;
 	}
 }

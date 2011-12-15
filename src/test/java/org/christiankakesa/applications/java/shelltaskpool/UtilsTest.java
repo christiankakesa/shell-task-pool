@@ -33,13 +33,14 @@ public class UtilsTest {
 	
 	@Test
 	public void testBuildDurationFromDates() {
+		final int sleepTime = 1000;
 		final String defaultDuration = "00:00:00";
 		assertEquals(Utils.buildDurationFromDates(null, null), defaultDuration);
 		final java.util.Date begin = Calendar.getInstance().getTime();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
-			LOG.error("Can invoque Thread.sleep(5000) in UtilsTest.testBuildDurationFromDates()", e);
+			LOG.error("Can invoque Thread.sleep(" + String.valueOf(sleepTime) + ") in UtilsTest.testBuildDurationFromDates()", e);
 		}
 		final java.util.Date end = Calendar.getInstance().getTime();
 		assertFalse(Utils.buildDurationFromDates(end, begin) == defaultDuration);
@@ -60,14 +61,13 @@ public class UtilsTest {
 	
 	@Test
 	public void testUUID() {
-		final int uuidLength = 32;
-		final int testTime = 10;
-		LOG.debug(Utils.buildUUID());
-		for(int i = 0; i < testTime; ++i) {
-			assertFalse(Utils.buildUUID().isEmpty());
-			assertNotNull(Utils.buildUUID());
-			assertEquals(Utils.buildUUID().length(), uuidLength);
-		}
+		final int uuidLength = 32; //Type 4 UUID is 36 chars but we removes the 4 '-' separator characters.
+		assertFalse(Utils.buildUUID().isEmpty());
+		assertNotNull(Utils.buildUUID());
+		assertEquals(Utils.buildUUID().length(), uuidLength);
+		final String uuid1 = Utils.buildUUID();
+		final String uuid2 = Utils.buildUUID();
+		assertFalse(uuid1.equals(uuid2));
 	}
 	
 	@Test
@@ -76,8 +76,8 @@ public class UtilsTest {
 		final String twoS = "titi!toto";
 		final String threeS = "titi+toto";
 		final String result = "tititoto";
-		assertEquals(Utils.removeChar(oneS, '-'), result);
-		assertEquals(Utils.removeChar(twoS, '!'), result);
-		assertEquals(Utils.removeChar(threeS, '+'), result);
+		assertEquals(Utils.removeCharFromString(oneS, '-'), result);
+		assertEquals(Utils.removeCharFromString(twoS, '!'), result);
+		assertEquals(Utils.removeCharFromString(threeS, '+'), result);
 	}
 }
