@@ -101,27 +101,27 @@ public final class Main {
 				case 'c':
 					arg = g.getOptarg();
 					try {
-						corePoolSize = Integer.valueOf(arg);
+						Main.corePoolSize = Integer.valueOf(arg);
 					} catch (NumberFormatException e) {
 						LOG.error("Numeric value expected", e);
-						corePoolSize = DEFAULT_CORE_POOL_SIZE;
+						Main.corePoolSize = DEFAULT_CORE_POOL_SIZE;
 					}
-					LOG.debug("Param [corepoolsize]: " + corePoolSize);
+					LOG.debug("Param [corepoolsize]: " + Main.corePoolSize);
 					break;
 				case 'j':
 					arg = g.getOptarg();
-					jobsList = arg;
-					LOG.debug("Param [jobslist]: " + jobsList);
+					Main.jobsList = arg;
+					LOG.debug("Param [jobslist]: " + Main.jobsList);
 					break;
 				case 'f':
 					arg = g.getOptarg();
-					jobsFile = arg;
-					LOG.debug("Param [jobsfile]: " + jobsFile);
+					Main.jobsFile = arg;
+					LOG.debug("Param [jobsfile]: " + Main.jobsFile);
 					break;
 				case 'p':
 					arg = g.getOptarg();
-					jobsParam = arg;
-					LOG.debug("Param [jobsparam]: " + jobsParam);
+					Main.jobsParam = arg;
+					LOG.debug("Param [jobsparam]: " + Main.jobsParam);
 					break;
 				default:
 					LOG.error("Unknown parameter : " + Character.toString((char) c));
@@ -137,28 +137,28 @@ public final class Main {
 		}
 
 		private void prepareJobListToExecute() {
-			if (jobsFile == null && jobsList == null) {
+			if (Main.jobsFile == null && Main.jobsList == null) {
 				LOG.error("No jobs specified.");
 				Utils.printHelpAndExit();
 			}
-			if (jobsList != null) {
-				String[] jl = StringUtils.split(jobsList, JOB_SEPARATOR);
+			if (Main.jobsList != null) {
+				String[] jl = StringUtils.split(Main.jobsList, Main.JOB_SEPARATOR);
 				for (String s : jl) {
 					addJob(s.trim());
 				}
 			}
-			if (jobsFile != null) {
+			if (Main.jobsFile != null) {
 				try {
-					BufferedReader br = new BufferedReader(new FileReader(jobsFile));
+					BufferedReader br = new BufferedReader(new FileReader(Main.jobsFile));
 					String jobsFileLine;
 					while ((jobsFileLine = br.readLine()) != null) {
 						addJob(jobsFileLine.trim());
 					}
 					br.close();
 				} catch (FileNotFoundException e) {
-					LOG.error("jobsFile not exists : " + jobsFile, e);
+					LOG.error("jobsFile not exists : " + Main.jobsFile, e);
 				} catch (IOException e) {
-					LOG.error("Problem whith the jobs file : " + jobsFile, e);
+					LOG.error("Problem whith the jobs file : " + Main.jobsFile, e);
 				}
 			}
 		}
@@ -166,35 +166,29 @@ public final class Main {
 		/**
 		 * Add job in the list of the jobs <b>Main.allJobs</b>. If jobsParam is set,
 		 * jobsParam is added to the jobCommandLine.
-		 * 
 		 * @param jobCommandLine
 		 * @return true if job is correctly added
 		 */
-		public void addJob(String jobCommandLine) {
+		public void addJob(final String jobCommandLine) {
 			String jcl = jobCommandLine;
-			/**
-			 * Exit the method if jobCommandLine is empty
-			 */
-			if (jcl.isEmpty()) {
+			if (jcl.isEmpty()) { //Exit the method if jobCommandLine is empty
 				LOG.error("Cannot add empty job");
 				return;
 			}
-			/**
-			 * Add global job parameter if <code>jobsParam</code> is not null
-			 * and <code>jobsParam</code> contains parameter.
-			 */
-			if (jobsParam != null && jobsParam.length() > 0) {
-				jcl = jcl + " " + jobsParam;
+			if (Main.jobsParam != null && Main.jobsParam.length() > 0) { //Add global job parameter if <code>jobsParam</code> is not null and <code>jobsParam</code> contains parameter.
+				jcl = jcl + " " + Main.jobsParam;
 			}
-			if (JOBS_ARRAY_LIST.size() < MAX_JOBS) {
-				if (jcl.length() < MAX_LINE_LENGTH) {
-					JOBS_ARRAY_LIST.add(jcl);
+			if (Main.JOBS_ARRAY_LIST.size() < Main.MAX_JOBS) {
+				if (jcl.length() < Main.MAX_LINE_LENGTH) {
+					Main.JOBS_ARRAY_LIST.add(jcl);
 				} else {
-					LOG.error("Length of the jobs command line is too high : "
-							+ jcl.length() + "!!!. Maximum is " + MAX_LINE_LENGTH);
+					LOG.error("Length of the jobs command line is too high : \n"
+							+ "           Command line: " + jcl + "\n"
+							+ "    Command line length: " + jcl.length()
+							+ "             Maximum is: " + Main.MAX_LINE_LENGTH + " !!!");
 				}
 			} else {
-				LOG.error("Maximum of jobs is " + MAX_JOBS);
+				LOG.error("Maximum of jobs is " + Main.MAX_JOBS);
 				LOG.error("Reduce the number of jobs");
 			}
 		}
