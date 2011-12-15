@@ -85,7 +85,7 @@ public final class Utils {
 				+ "\texample : -p'-x 2011/05/05 -m 1024'\n"
 				+ "--------------\n" + "Author name  : " + Main.AUTHOR_NAME
 				+ "\n" + "Author email : " + Main.AUTHOR_EMAIL + "\n"
-				+ "Copyright    : " + Main.APP_COPYRIGHT + "\n\n";
+				+ "Copyright    : " + Main.APP_COPYRIGHT + "\n";
 		return result;
 	}
 
@@ -145,6 +145,14 @@ public final class Utils {
 			tokens.add(m.group(1));
 		}
 		return tokens.toArray(new String[tokens.size()]);
+	}
+	
+	/**
+	 * Detect and return the number of the available Processor
+	 * @return Number of available cores
+	 */
+	public static int defaultCorePoolSize(){
+		return Runtime.getRuntime().availableProcessors();
 	}
 
 //	/**

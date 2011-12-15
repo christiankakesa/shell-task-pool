@@ -24,7 +24,6 @@ public final class Main {
 	public static final String AUTHOR_EMAIL = "christian.kakesa@gmail.com";
 	public static final String APP_COPYRIGHT = "Christian Kakesa (c) "
 			+ Calendar.getInstance().get(Calendar.YEAR);
-	public static final int DEFAULT_CORE_POOL_SIZE = 2;
 	public static final long THREAD_KEEP_ALIVE_TIME = 30L;
 	public static final int MAX_JOBS = 5120;
 	public static final int MAX_LINE_LENGTH = 2048;
@@ -34,7 +33,7 @@ public final class Main {
 	private static final List<String> JOBS_ARRAY_LIST = new ArrayList<String>(
 			MAX_JOBS);
 
-	private static int corePoolSize = DEFAULT_CORE_POOL_SIZE;
+	private static int corePoolSize = Utils.defaultCorePoolSize();
 	private static String jobsFile;
 	private static String jobsList;
 	private static String jobsParam;
@@ -103,8 +102,8 @@ public final class Main {
 					try {
 						Main.corePoolSize = Integer.valueOf(arg);
 					} catch (NumberFormatException e) {
-						LOG.error("Numeric value expected", e);
-						Main.corePoolSize = DEFAULT_CORE_POOL_SIZE;
+						LOG.error("Wrong corePoolSize set in parameter", e);
+						Main.corePoolSize = Utils.defaultCorePoolSize(); //Ensure that corePoolSize is set
 					}
 					LOG.debug("Param [corepoolsize]: " + Main.corePoolSize);
 					break;

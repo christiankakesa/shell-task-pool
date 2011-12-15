@@ -53,6 +53,12 @@ public class UtilsTest {
 		assertEquals(Utils.parseCommandLineToStringArray(commandLine).length, nbTokens);
 	}
 	
+	@Test
+	public void testDefaultCorePoolSize(){
+		final int minimumCore = 1;
+		assertTrue(Utils.defaultCorePoolSize() >= minimumCore);
+	}
+	
 //	@Test
 //	public void testHexSHA1() {
 //		assertFalse(Utils.hexSHA1("toto").equals("11112625dc21ef05f6ad4ddf47c5f203837a1111"));
