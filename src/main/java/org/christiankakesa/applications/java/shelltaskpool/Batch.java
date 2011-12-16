@@ -18,7 +18,7 @@ public final class Batch {
 	 * 
 	 * @link http://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom
 	 */
-	public static final Batch INSTANCE = new Batch();
+	private static final Batch INSTANCE = new Batch();
 	private volatile String name;
 	private volatile String id;
 	private volatile Date startDate;
@@ -77,7 +77,6 @@ public final class Batch {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-		this.setStatusWithJobsState();
 	}
 
 	/**
@@ -104,14 +103,13 @@ public final class Batch {
 	 * Look at the jobSuccess and jobFailed to determine last Batch status.
 	 * @return void
 	 */
-	public void setStatusWithJobsState() {
-		/** Batch completed success full. */
-		if (this.jobFailed.get() == 0 && this.jobSuccess.get() >= 1) {
+	public void setGlobalBatchStatus() {
+		if (this.jobFailed.get() == 0 && this.jobSuccess.get() >= 1) { //Batch completed success full
 			this.setStatus(BatchStatus.COMPLETED);
-		} /** Batch completed but there are job failed */
-		else if (this.jobFailed.get() > 0 && this.jobSuccess.get() >= 1) {
+		} 
+		else if (this.jobFailed.get() > 0 && this.jobSuccess.get() >= 1) { //Batch completed but there are job failed
 			this.setStatus(BatchStatus.COMPLETED_WITH_ERROR);
-		} else {/** Means that all jobs failed or unknown problem. */
+		} else { //Means that all jobs failed or unknown problem
 			this.setStatus(BatchStatus.FAILED);
 		}
 	}
@@ -155,8 +153,7 @@ public final class Batch {
 			if (this.status != BatchStatus.RUNNING) {
 				this.status = BatchStatus.RUNNING;
 			}
-			this.jobCounterId.incrementAndGet();
-			je.setId(this.jobCounterId.get());
+			je.setId(this.jobCounterId.incrementAndGet());
 		}
 	}
 
