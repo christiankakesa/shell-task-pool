@@ -79,18 +79,6 @@ public final class Batch {
 		this.endDate = endDate;
 	}
 
-	/**
-	 * Get the string representation of batch duration.
-	 * <ul>
-	 * <li>format : "00:00:00" - "hours:minutes:seconds"</li>
-	 * </ul>
-	 * @return string duration formated
-	 */
-	public String getDuration() {
-		return Utils.buildDurationFromDates(this.getEndDate(),
-				this.getStartDate());
-	}
-
 	public BatchStatus getStatus() {
 		return status;
 	}
@@ -99,58 +87,29 @@ public final class Batch {
 		this.status = batchStatus;
 	}
 
-	/**
-	 * Look at the jobSuccess and jobFailed to determine last Batch status.
-	 * @return void
-	 */
-	public void setGlobalBatchStatus() {
-		if (this.jobFailed.get() == 0 && this.jobSuccess.get() >= 1) { //Batch completed success full
-			this.setStatus(BatchStatus.COMPLETED);
-		} 
-		else if (this.jobFailed.get() > 0 && this.jobSuccess.get() >= 1) { //Batch completed but there are job failed
-			this.setStatus(BatchStatus.COMPLETED_WITH_ERROR);
-		} else { //Means that all jobs failed or unknown problem
-			this.setStatus(BatchStatus.FAILED);
-		}
+	public AtomicLong getJobSuccess() {
+		return jobSuccess;
 	}
 
-	public long getJobSuccess() {
-		return jobSuccess.get();
+	public void setJobSuccess(AtomicLong jobSuccess) {
+		this.jobSuccess = jobSuccess;
 	}
 
-	public void setJobSuccess(long jobSuccess) {
-		this.jobSuccess.set(jobSuccess);
+	public AtomicLong getJobFailed() {
+		return jobFailed;
 	}
 
-	public void incrementJobSuccess() {
-			this.jobSuccess.incrementAndGet();
+	public void setJobFailed(AtomicLong jobFailed) {
+		this.jobFailed = jobFailed;
 	}
-
-	public long getJobFailed() {
-		return jobFailed.get();
-	}
-
-	public void setJobFailed(long jobFailed) {
-		this.jobFailed.set(jobFailed);
-	}
-
-	public void incrementJobFailed() {
-		this.jobFailed.incrementAndGet();
-	}
-
+	
 	/**
 	 * Add job to the jobExecutionList and set a job ID.
 	 * @param je
 	 */
-	public void addJobToExecute(final JobExecution je) {
-		/**
-		 * Add a job and test if adding job is successful.
-		 */
-		if (jobExecutionList.add(je)) {
-			/**
-			 * Set Batch status to running if not set to BatchStatus.RUNNING
-			 */
-			if (this.status != BatchStatus.RUNNING) {
+	public void addJobExecution(final JobExecution je) {
+		if (jobExecutionList.add(je)) { //Add a job and test if adding job is successful
+			if (this.status != BatchStatus.RUNNING) { //Set Batch status to running if not set to BatchStatus.RUNNING
 				this.status = BatchStatus.RUNNING;
 			}
 			je.setId(this.jobCounterId.incrementAndGet());

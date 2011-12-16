@@ -35,7 +35,7 @@ public class JobExecution {
 	public JobExecution(final String commandLine) {
 		this.commandLine = commandLine;
 		/** Add the job to the Batch.jobExecutionList and set a jobId */
-		Batch.getInstance().addJobToExecute(this);
+		Batch.getInstance().addJobExecution(this);
 	}
 
 	public void start() {
@@ -72,9 +72,9 @@ public class JobExecution {
 			LOG.error(e);
 		}
 		if (this.getStatus() == JobStatus.COMPLETED) {
-			Batch.getInstance().incrementJobSuccess();
+			Batch.getInstance().getJobSuccess().incrementAndGet();
 		} else {
-			Batch.getInstance().incrementJobFailed();
+			Batch.getInstance().getJobFailed().incrementAndGet();
 		}
 	}
 
