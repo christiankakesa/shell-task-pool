@@ -15,7 +15,6 @@ public final class Batch {
 	// LogFactory.getLog(Batch.class.getName());
 	/**
 	 * Static singleton idiom
-	 * 
 	 * @link http://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom
 	 */
 	private static final Batch INSTANCE = new Batch();
@@ -66,7 +65,7 @@ public final class Batch {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(final Date startDate) {
 		this.setStatus(BatchStatus.STARTED);
 		this.startDate = startDate;
 	}
@@ -75,7 +74,7 @@ public final class Batch {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(final Date endDate) {
 		this.endDate = endDate;
 	}
 
@@ -83,7 +82,7 @@ public final class Batch {
 		return status;
 	}
 
-	public void setStatus(BatchStatus batchStatus) {
+	public void setStatus(final BatchStatus batchStatus) {
 		this.status = batchStatus;
 	}
 
@@ -91,7 +90,7 @@ public final class Batch {
 		return jobSuccess;
 	}
 
-	public void setJobSuccess(AtomicLong jobSuccess) {
+	public void setJobSuccess(final AtomicLong jobSuccess) {
 		this.jobSuccess = jobSuccess;
 	}
 
@@ -99,25 +98,36 @@ public final class Batch {
 		return jobFailed;
 	}
 
-	public void setJobFailed(AtomicLong jobFailed) {
+	public void setJobFailed(final AtomicLong jobFailed) {
 		this.jobFailed = jobFailed;
 	}
 	
 	/**
-	 * Add job to the jobExecutionList and set a job ID.
+	 * Add job to the jobExecutionList.
 	 * @param je
+	 * @return 
 	 */
-	public void addJobExecution(final JobExecution je) {
-		if (jobExecutionList.add(je)) { //Add a job and test if adding job is successful
+	public boolean addJobExecution(final JobExecution jobExecution) {
+		boolean result = false;
+		if (this.jobExecutionList.add(jobExecution)) { //Add a job and test if adding job is successful
+			result = true;
 			if (this.status != BatchStatus.RUNNING) { //Set Batch status to running if not set to BatchStatus.RUNNING
 				this.status = BatchStatus.RUNNING;
 			}
-			je.setId(this.jobCounterId.incrementAndGet());
 		}
+		return result;
 	}
 
-	public List<JobExecution> getJobExecutionList() {
-		return jobExecutionList;
+//	public List<JobExecution> getJobExecutionList() {
+//		return jobExecutionList;
+//	}
+
+	public AtomicLong getJobCounterId() {
+		return jobCounterId;
+	}
+
+	public void setJobCounterId(final AtomicLong jobCounterId) {
+		this.jobCounterId = jobCounterId;
 	}
 
 	/**

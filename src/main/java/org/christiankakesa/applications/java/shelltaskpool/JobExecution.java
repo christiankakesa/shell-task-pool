@@ -35,7 +35,10 @@ public class JobExecution {
 	public JobExecution(final String commandLine) {
 		this.commandLine = commandLine;
 		/** Add the job to the Batch.jobExecutionList and set a jobId */
-		Batch.getInstance().addJobExecution(this);
+		if (Batch.getInstance().addJobExecution(this)){
+			this.setId(Batch.getInstance().getJobCounterId().incrementAndGet());
+		}
+		
 	}
 
 	public void start() {

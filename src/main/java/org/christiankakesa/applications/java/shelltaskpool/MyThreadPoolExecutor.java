@@ -52,11 +52,16 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	@Override
 	public void terminated() {
 		try {
-			if (Batch.getInstance().getJobFailed().get() == 0 && Batch.getInstance().getJobSuccess().get() >= 1) { //Batch completed success full
+			if (Batch.getInstance().getJobFailed().get() == 0
+					&& Batch.getInstance().getJobSuccess().get() >= 1) {
+				// Batch completed success full
 				Batch.getInstance().setStatus(BatchStatus.COMPLETED);
-			} else if (Batch.getInstance().getJobFailed().get() > 0 && Batch.getInstance().getJobSuccess().get() >= 1) { //Batch completed but there are job failed
+			} else if (Batch.getInstance().getJobFailed().get() > 0
+					&& Batch.getInstance().getJobSuccess().get() >= 1) {
+				// Batch completed but there are job failed
 				Batch.getInstance().setStatus(BatchStatus.COMPLETED_WITH_ERROR);
-			} else { //Means that all jobs failed or unknown problem
+			} else {
+				// Means that all jobs failed or unknown problem
 				Batch.getInstance().setStatus(BatchStatus.FAILED);
 			}
 			Batch.getInstance().setEndDate(Calendar.getInstance().getTime());
