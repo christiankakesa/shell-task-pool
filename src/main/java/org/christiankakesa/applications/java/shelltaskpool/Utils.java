@@ -205,10 +205,11 @@ public final class Utils {
 		r.setLength(givenString.length());
 		int current = 0;
 		char cur;
-		for (int i = 0; i < givenString.length(); i++) {
+		for (int i = 0; i < givenString.length(); ++i) {
 			cur = givenString.charAt(i);
-			if (cur != c)
+			if (cur != c) {
 				r.setCharAt(current++, cur);
+			}
 		}
 		return r.toString().trim();
 	}

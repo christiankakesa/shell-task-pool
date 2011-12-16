@@ -30,11 +30,11 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     }
     
     private void myInit() {
-    	Batch.getInstance().setBatchStartDate(Calendar.getInstance().getTime());
-    	LOG.info("[BATCH_START] BatchId: " + Batch.getInstance().getBatchId()
-				+ " | BatchName: " + Batch.getInstance().getBatchName()
-				+ " | BatchStartDate: " + Batch.getInstance().getBatchStartDate()
-				+ " | BatchStatus: " + Batch.getInstance().getBatchStatus());
+    	Batch.getInstance().setStartDate(Calendar.getInstance().getTime());
+    	LOG.info("[BATCH_START] BatchId: " + Batch.getInstance().getId()
+				+ " | BatchName: " + Batch.getInstance().getName()
+				+ " | BatchStartDate: " + Batch.getInstance().getStartDate()
+				+ " | BatchStatus: " + Batch.getInstance().getStatus());
     }
 
     public void addTask(Runnable r) {
@@ -45,13 +45,13 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
     @Override
     public void terminated() {
     	try {
-    	Batch.getInstance().setBatchEndDate(Calendar.getInstance().getTime());
-    	LOG.info("[BATCH_END] - BatchId: " + Batch.getInstance().getBatchId()
-				+ " | BatchName: " + Batch.getInstance().getBatchName()
-				+ " | BatchStartDate: " + Batch.getInstance().getBatchStartDate()
-				+ " | BatchEndDate: " + Batch.getInstance().getBatchEndDate()
-				+ " | BatchDuration: " + Batch.getInstance().getBatchDuration()
-				+ " | BatchStatus: " + Batch.getInstance().getBatchStatus());
+    	Batch.getInstance().setEndDate(Calendar.getInstance().getTime());
+    	LOG.info("[BATCH_END] - BatchId: " + Batch.getInstance().getId()
+				+ " | BatchName: " + Batch.getInstance().getName()
+				+ " | BatchStartDate: " + Batch.getInstance().getStartDate()
+				+ " | BatchEndDate: " + Batch.getInstance().getEndDate()
+				+ " | BatchDuration: " + Batch.getInstance().getDuration()
+				+ " | BatchStatus: " + Batch.getInstance().getStatus());
     	} finally {
     		super.terminated();
     	}

@@ -46,8 +46,8 @@ public final class Main {
 	public static void main(String[] args) {
 		Main.CmdLineParser clp = new Main.CmdLineParser(args);
 		clp.parse();
-		LOG.info("[BATCH_PARAMETER] BatchId: " + Batch.getInstance().getBatchId()
-				+ " | BatchName: " + Batch.getInstance().getBatchName()
+		LOG.info("[BATCH_PARAMETER] BatchId: " + Batch.getInstance().getId()
+				+ " | BatchName: " + Batch.getInstance().getName()
 				+ " | BatchParameter: " + StringUtils.join(args, " "));
 		MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(corePoolSize,
 				corePoolSize, THREAD_KEEP_ALIVE_TIME);
@@ -93,9 +93,9 @@ public final class Main {
 					Utils.printHelpAndExit();
 				case 'n':
 					arg = g.getOptarg();
-					Batch.getInstance().setBatchName(arg);
+					Batch.getInstance().setName(arg);
 					LOG.debug("Param [batchname]: "
-							+ Batch.getInstance().getBatchName());
+							+ Batch.getInstance().getName());
 					break;
 				case 'c':
 					arg = g.getOptarg();
@@ -127,7 +127,7 @@ public final class Main {
 					break;
 				}
 			}
-			if (Batch.getInstance().getBatchName() == null) {
+			if (Batch.getInstance().getName() == null) {
 				LOG.error("Name of the batch are required. Set the \"n\" parameter");
 				Utils.printHelpAndExit();
 			}

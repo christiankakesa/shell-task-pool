@@ -19,11 +19,11 @@ public final class Batch {
 	 * @link http://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom
 	 */
 	public static final Batch INSTANCE = new Batch();
-	private volatile String batchName;
-	private volatile String batchId;
-	private volatile Date batchStartDate;
-	private volatile Date batchEndDate;
-	private volatile BatchStatus batchStatus = BatchStatus.NONE;
+	private volatile String name;
+	private volatile String id;
+	private volatile Date startDate;
+	private volatile Date endDate;
+	private volatile BatchStatus status = BatchStatus.NONE;
 	private AtomicLong jobCounterId = new AtomicLong();
 	private AtomicLong jobSuccess = new AtomicLong();
 	private AtomicLong jobFailed = new AtomicLong();
@@ -37,47 +37,47 @@ public final class Batch {
 		return INSTANCE;
 	}
 
-	public String getBatchName() {
-		return batchName;
+	public String getName() {
+		return name;
 	}
 
-	public void setBatchName(final String batchName) {
+	public void setName(final String name) {
 		/**
 		 * Exit the method when parameter is <code>null</code> or empty.
 		 */
-		if (batchName == null || batchName.isEmpty()) {
+		if (name == null || name.isEmpty()) {
 			return;
 		}
 		/**
 		 *  Set the batch name and batch id only if no name given before
 		 */
-		if (this.batchName == null) {
-			this.batchName = batchName;
+		if (this.name == null) {
+			this.name = name;
 			//this.batchId = Utils.hexSHA1(this.batchName);
-			this.batchId = Utils.buildUUID();
+			this.id = Utils.buildUUID();
 		}
 	}
 
-	public String getBatchId() {
-		return batchId;
+	public String getId() {
+		return id;
 	}
 
-	public Date getBatchStartDate() {
-		return batchStartDate;
+	public Date getStartDate() {
+		return startDate;
 	}
 
-	public void setBatchStartDate(Date batchStartDate) {
-		this.setBatchStatus(BatchStatus.STARTED);
-		this.batchStartDate = batchStartDate;
+	public void setStartDate(Date startDate) {
+		this.setStatus(BatchStatus.STARTED);
+		this.startDate = startDate;
 	}
 
-	public Date getBatchEndDate() {
-		return batchEndDate;
+	public Date getEndDate() {
+		return endDate;
 	}
 
-	public void setBatchEndDate(Date batchEndDate) {
-		this.batchEndDate = batchEndDate;
-		this.setBatchStatusWithJobStatus();
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+		this.setStatusWithJobsState();
 	}
 
 	/**
@@ -87,32 +87,32 @@ public final class Batch {
 	 * </ul>
 	 * @return string duration formated
 	 */
-	public String getBatchDuration() {
-		return Utils.buildDurationFromDates(this.getBatchEndDate(),
-				this.getBatchStartDate());
+	public String getDuration() {
+		return Utils.buildDurationFromDates(this.getEndDate(),
+				this.getStartDate());
 	}
 
-	public BatchStatus getBatchStatus() {
-		return batchStatus;
+	public BatchStatus getStatus() {
+		return status;
 	}
 
-	public void setBatchStatus(BatchStatus batchStatus) {
-		this.batchStatus = batchStatus;
+	public void setStatus(BatchStatus batchStatus) {
+		this.status = batchStatus;
 	}
 
 	/**
 	 * Look at the jobSuccess and jobFailed to determine last Batch status.
 	 * @return void
 	 */
-	public void setBatchStatusWithJobStatus() {
+	public void setStatusWithJobsState() {
 		/** Batch completed success full. */
 		if (this.jobFailed.get() == 0 && this.jobSuccess.get() >= 1) {
-			this.setBatchStatus(BatchStatus.COMPLETED);
+			this.setStatus(BatchStatus.COMPLETED);
 		} /** Batch completed but there are job failed */
 		else if (this.jobFailed.get() > 0 && this.jobSuccess.get() >= 1) {
-			this.setBatchStatus(BatchStatus.COMPLETED_WITH_ERROR);
+			this.setStatus(BatchStatus.COMPLETED_WITH_ERROR);
 		} else {/** Means that all jobs failed or unknown problem. */
-			this.setBatchStatus(BatchStatus.FAILED);
+			this.setStatus(BatchStatus.FAILED);
 		}
 	}
 
@@ -152,8 +152,8 @@ public final class Batch {
 			/**
 			 * Set Batch status to running if not set to BatchStatus.RUNNING
 			 */
-			if (this.batchStatus != BatchStatus.RUNNING) {
-				this.batchStatus = BatchStatus.RUNNING;
+			if (this.status != BatchStatus.RUNNING) {
+				this.status = BatchStatus.RUNNING;
 			}
 			this.jobCounterId.incrementAndGet();
 			je.setId(this.jobCounterId.get());
@@ -165,7 +165,7 @@ public final class Batch {
 	}
 
 	/**
-	 * Enum of all the BatchStatus.
+	 * Batch status enumeration.
 	 * @author christian
 	 */
 	public static enum BatchStatus {

@@ -59,8 +59,8 @@ public class JobExecution {
 			} else {
 				this.setStatus(JobStatus.FAILED);
 			}
-			LOG.info("[JOB_EXECUTION] BatchId: " + Batch.getInstance().getBatchId()
-					+ " | BatchName: " + Batch.getInstance().getBatchName()
+			LOG.info("[JOB_EXECUTION] BatchId: " + Batch.getInstance().getId()
+					+ " | BatchName: " + Batch.getInstance().getName()
 					+ " | JobId: " + this.getId()
 					+ " | JobCommandLine:" + this.getCommandLine()
 					+ " | JobDuration: " + this.getDuration()
