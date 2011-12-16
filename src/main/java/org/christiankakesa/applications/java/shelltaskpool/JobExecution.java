@@ -34,23 +34,28 @@ public class JobExecution {
 	 */
 	public JobExecution(final String commandLine) {
 		this.commandLine = commandLine;
-		/** Add the job to the Batch.jobExecutionList and set a jobId */
-		if (Batch.getInstance().addJobExecution(this)){
-			this.setId(Batch.getInstance().getJobCounterId().incrementAndGet());
-		}
+		
 		
 	}
 
 	public void start() {
-		ProcessBuilder processBuilder = new ProcessBuilder(
-				Utils.parseCommandLineToStringArray(this.commandLine));
+		/** Add the job to the Batch.jobExecutionList and set a jobId - TODO: perhaps for statistics */
+		if (Batch.getInstance().addJobExecution(this)){
+			this.setId(Batch.getInstance().getJobCounterId().incrementAndGet());
+		}
 		/** Start a job only when job status is NONE */
 		if (this.getStatus() != JobStatus.NONE) {
 			LOG.warn("JobId: " + this.getId() + " with status: "
 					+ this.getStatus() + " couldn't be started");
 			return;
 		}
+		this.run();
+	}
+
+	private void run() {
 		this.setStartDate(Calendar.getInstance().getTime());
+		ProcessBuilder processBuilder = new ProcessBuilder(
+				Utils.parseCommandLineToStringArray(this.commandLine));
 		try {
 			process = processBuilder.start();
 			this.setStatus(JobStatus.RUNNING);
@@ -66,7 +71,7 @@ public class JobExecution {
 					+ " | BatchName: " + Batch.getInstance().getName()
 					+ " | JobId: " + this.getId()
 					+ " | JobCommandLine:" + this.getCommandLine()
-					+ " | JobDuration: " + this.getDuration()
+					+ " | JobDuration: " + Utils.buildDurationFromDates(this.getEndDate(), this.getStartDate())
 					+ " | JobStatus: " + this.getStatus()
 					+ " | JobExitCode: " + this.getExitCode());
 		} catch (IOException e) {
@@ -97,7 +102,7 @@ public class JobExecution {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(final long id) {
 		if (id > 0) {
 			this.id = id;
 		}
@@ -107,7 +112,7 @@ public class JobExecution {
 		return startDate;
 	}
 
-	private void setStartDate(Date startDate) {
+	private void setStartDate(final Date startDate) {
 		this.startDate = startDate;
 	}
 
@@ -115,7 +120,7 @@ public class JobExecution {
 		return endDate;
 	}
 
-	private void setEndDate(Date endDate) {
+	private void setEndDate(final Date endDate) {
 		this.endDate = endDate;
 	}
 
@@ -123,19 +128,8 @@ public class JobExecution {
 		return status;
 	}
 
-	private void setStatus(JobStatus running) {
+	private void setStatus(final JobStatus running) {
 		this.status = running;
-	}
-
-	/**
-	 * Get the string representation of job duration. - format : "00:00:00" <==>
-	 * "hours:minutes:seconds"
-	 * 
-	 * @return
-	 */
-	public String getDuration() {
-		return Utils.buildDurationFromDates(this.getEndDate(),
-				this.getStartDate());
 	}
 
 	public int getExitCode() {
