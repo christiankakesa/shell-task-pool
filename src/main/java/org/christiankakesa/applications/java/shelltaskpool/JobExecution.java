@@ -87,9 +87,9 @@ public class JobExecution {
 			LOG.info("[JOB_EXECUTION] BatchId: " + Batch.getInstance().getId()
 					+ " | BatchName: " + Batch.getInstance().getName()
 					+ " | JobId: " + this.getId()
-					+ " | JobCommandLine:" + this.getCommandLine()
-					+ " | JobStartDate:" + this.getStartDate()
-					+ " | JobEndDate:" + this.getEndDate()
+					+ " | JobCommandLine: " + this.getCommandLine()
+					+ " | JobStartDate: " + this.getStartDate()
+					+ " | JobEndDate: " + this.getEndDate()
 					+ " | JobDuration: " + Utils.buildDurationFromDates(this.getEndDate(), this.getStartDate())
 					+ " | JobStatus: " + this.getStatus()
 					+ " | JobExitCode: " + this.getExitCode());
