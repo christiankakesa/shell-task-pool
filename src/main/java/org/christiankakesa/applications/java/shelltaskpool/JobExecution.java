@@ -16,7 +16,7 @@ import org.apache.commons.logging.LogFactory;
 public class JobExecution {
 	private static final org.apache.commons.logging.Log LOG = LogFactory
 			.getLog(JobExecution.class.getName());
-
+	
 	/**
 	 * Job command line string
 	 */
@@ -56,7 +56,7 @@ public class JobExecution {
 
 	
 	public void start() {
-		this.setId(Batch.getInstance().incrementAndGetTotalJOb());
+		this.setId(Batch.getInstance().getStatus().incrementAndGetTotalJOb());
 		if (this.getStatus().equals(JobStatus.NONE)) { //Run the job only if job status is NONE (no state)
 			this.run();
 		} else {
@@ -79,10 +79,10 @@ public class JobExecution {
 			this.setEndDate(Calendar.getInstance().getTime());
 			if (this.getExitCode() == 0) {
 				this.setStatus(JobStatus.COMPLETED);
-				Batch.getInstance().incrementSuccessJob();
+				Batch.getInstance().getStatus().incrementSuccessJob();
 			} else {
 				this.setStatus(JobStatus.FAILED);
-				Batch.getInstance().incrementFailedJob();
+				Batch.getInstance().getStatus().incrementFailedJob();
 			}
 			LOG.info("[JOB_EXECUTION] BatchId: " + Batch.getInstance().getId()
 					+ " | BatchName: " + Batch.getInstance().getName()

@@ -1,14 +1,12 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
 import static org.junit.Assert.assertEquals;
-//import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-//import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
-import org.christiankakesa.applications.java.shelltaskpool.Batch.BatchStatus;
+import org.christiankakesa.applications.java.shelltaskpool.BatchStatus.BatchStates;
 import org.junit.Test;
 
 public class BatchTest {
@@ -33,17 +31,17 @@ public class BatchTest {
 	
 	@Test
 	public void testSetStatus() {
-		Batch.getInstance().setStatus(BatchStatus.NONE);
-		assertEquals(BatchStatus.NONE, Batch.getInstance().getStatus());
-		Batch.getInstance().setStatus(BatchStatus.STARTED);
-		assertEquals(BatchStatus.STARTED, Batch.getInstance().getStatus());
-		Batch.getInstance().setStatus(BatchStatus.RUNNING);
-		assertEquals(BatchStatus.RUNNING, Batch.getInstance().getStatus());
-		Batch.getInstance().setStatus(BatchStatus.FAILED);
-		assertEquals(BatchStatus.FAILED, Batch.getInstance().getStatus());
-		Batch.getInstance().setStatus(BatchStatus.COMPLETED_WITH_ERROR);
-		assertEquals(BatchStatus.COMPLETED_WITH_ERROR, Batch.getInstance().getStatus());
-		Batch.getInstance().setStatus(BatchStatus.COMPLETED);
-		assertEquals(BatchStatus.COMPLETED, Batch.getInstance().getStatus());
+		Batch.getInstance().getStatus().setState(BatchStates.NONE);
+		assertEquals(BatchStates.NONE, Batch.getInstance().getStatus().getState());
+		Batch.getInstance().getStatus().setState(BatchStates.STARTED);
+		assertEquals(BatchStates.STARTED, Batch.getInstance().getStatus().getState());
+		Batch.getInstance().getStatus().setState(BatchStates.RUNNING);
+		assertEquals(BatchStates.RUNNING, Batch.getInstance().getStatus().getState());
+		Batch.getInstance().getStatus().setState(BatchStates.FAILED);
+		assertEquals(BatchStates.FAILED, Batch.getInstance().getStatus().getState());
+		Batch.getInstance().getStatus().setState(BatchStates.COMPLETED_WITH_ERROR);
+		assertEquals(BatchStates.COMPLETED_WITH_ERROR, Batch.getInstance().getStatus().getState());
+		Batch.getInstance().getStatus().setState(BatchStates.COMPLETED);
+		assertEquals(BatchStates.COMPLETED, Batch.getInstance().getStatus().getState());
 	}
 }

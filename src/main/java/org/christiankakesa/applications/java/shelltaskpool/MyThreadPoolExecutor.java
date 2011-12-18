@@ -2,7 +2,7 @@ package org.christiankakesa.applications.java.shelltaskpool;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.christiankakesa.applications.java.shelltaskpool.Batch.BatchStatus;
+import org.christiankakesa.applications.java.shelltaskpool.BatchStatus.BatchStates;
 
 import java.util.Calendar;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -36,17 +36,12 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	}
 
 	private void myInit() {
-		Batch.getInstance().setStatus(BatchStatus.STARTED); // Set Batch.status
-															// to
-															// BatchStatus.STARTED
-															// when
-															// Batch.startDate
-															// is set
+		Batch.getInstance().getStatus().setState(BatchStates.STARTED);
 		Batch.getInstance().setStartDate(Calendar.getInstance().getTime());
 		LOG.info("[BATCH_START] BatchId: " + Batch.getInstance().getId()
 				+ " | BatchName: " + Batch.getInstance().getName()
 				+ " | BatchStartDate: " + Batch.getInstance().getStartDate()
-				+ " | BatchStatus: " + Batch.getInstance().getStatus());
+				+ " | BatchStatus: " + Batch.getInstance().getStatus().getState());
 	}
 
 	public void addTask(Runnable r) {
@@ -57,7 +52,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	@Override
 	public void terminated() {
 		Batch.getInstance().setEndDate(Calendar.getInstance().getTime());
-		Batch.getInstance().onTerminated();
+		Batch.getInstance().getStatus().onBatchEnd();
 		LOG.info("[BATCH_END] - BatchId: "
 				+ Batch.getInstance().getId()
 				+ " | BatchName: "
@@ -70,7 +65,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 				+ Utils.buildDurationFromDates(
 						Batch.getInstance().getEndDate(), Batch.getInstance()
 								.getStartDate()) + " | BatchStatus: "
-				+ Batch.getInstance().getStatus());
+				+ Batch.getInstance().getStatus().getState());
 		super.terminated();
 	}
 
@@ -87,8 +82,8 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	@Override
 	protected void beforeExecute(Thread t, Runnable r) {
 		super.beforeExecute(t, r);
-		if (Batch.getInstance().getStatus() != BatchStatus.RUNNING) { //Ensure that Batch state is set to Batch.RUNNING 
-			Batch.getInstance().setStatus(BatchStatus.RUNNING);
+		if (Batch.getInstance().getStatus().getState() != BatchStates.RUNNING) { //Ensure that Batch state is set to Batch.RUNNING 
+			Batch.getInstance().getStatus().setState(BatchStates.RUNNING);
 		}
 	}
 
