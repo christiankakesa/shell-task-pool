@@ -52,7 +52,7 @@ public class BatchStatus {
 		return this.totalJOb;
 	}
 	
-	protected void onBatchEnd() {
+	protected void doEndStatus() {
 		final BatchStates endStatus;
 		if (this.failedJob == 0 && this.successJob >= 1) { //Batch completed success full (at least one job has started)
 			endStatus = BatchStates.COMPLETED;

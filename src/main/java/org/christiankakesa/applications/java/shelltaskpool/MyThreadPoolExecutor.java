@@ -52,7 +52,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	@Override
 	public void terminated() {
 		Batch.getInstance().setEndDate(Calendar.getInstance().getTime());
-		Batch.getInstance().getStatus().onBatchEnd();
+		Batch.getInstance().getStatus().doEndStatus();
 		LOG.info("[BATCH_END] - BatchId: "
 				+ Batch.getInstance().getId()
 				+ " | BatchName: "
