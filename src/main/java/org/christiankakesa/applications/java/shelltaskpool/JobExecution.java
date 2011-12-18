@@ -21,35 +21,48 @@ public class JobExecution {
 	 * Job command line string
 	 */
 	private String commandLine;
-	private long id = 0;
+	/**
+	 * Job id
+	 */
+	private int id = 0;
+	/**
+	 * Job start date
+	 */
 	private Date startDate;
+	/**
+	 * Job end date
+	 */
 	private Date endDate;
+	/**
+	 * Job status
+	 */
 	private JobStatus status = JobStatus.NONE;
+	/**
+	 * Job exit status code
+	 */
 	private int exitCode = Main.DEFAULT_ERROR_CODE;
+	/**
+	 * Job process
+	 */
 	private Process process;
 
 	/**
-	 * 
+	 * JobExecution constructor
 	 * @param commandLine
 	 */
 	public JobExecution(final String commandLine) {
 		this.commandLine = commandLine;
-		
-		
 	}
 
+	
 	public void start() {
-		/** Add the job to the Batch.jobExecutionList and set a jobId - TODO: perhaps for statistics */
-		if (Batch.getInstance().addJobExecution(this)){
-			this.setId(Batch.getInstance().getJobCounterId().incrementAndGet());
-		}
-		/** Start a job only when job status is NONE */
-		if (this.getStatus() != JobStatus.NONE) {
+		this.setId(Batch.getInstance().incrementAndGetTotalJOb());
+		if (this.getStatus().equals(JobStatus.NONE)) { //Run the job only if job status is NONE (no state)
+			this.run();
+		} else {
 			LOG.warn("JobId: " + this.getId() + " with status: "
 					+ this.getStatus() + " couldn't be started");
-			return;
 		}
-		this.run();
 	}
 
 	private void run() {
@@ -59,18 +72,24 @@ public class JobExecution {
 		try {
 			process = processBuilder.start();
 			this.setStatus(JobStatus.RUNNING);
-			LOG.debug(getProcessOutput(process));
+			if(LOG.isDebugEnabled()) {
+				LOG.debug(getProcessOutput(process));
+			}
 			this.setExitCode(process.waitFor());
 			this.setEndDate(Calendar.getInstance().getTime());
 			if (this.getExitCode() == 0) {
 				this.setStatus(JobStatus.COMPLETED);
+				Batch.getInstance().incrementSuccessJob();
 			} else {
 				this.setStatus(JobStatus.FAILED);
+				Batch.getInstance().incrementFailedJob();
 			}
 			LOG.info("[JOB_EXECUTION] BatchId: " + Batch.getInstance().getId()
 					+ " | BatchName: " + Batch.getInstance().getName()
 					+ " | JobId: " + this.getId()
 					+ " | JobCommandLine:" + this.getCommandLine()
+					+ " | JobStartDate:" + this.getStartDate()
+					+ " | JobEndDate:" + this.getEndDate()
 					+ " | JobDuration: " + Utils.buildDurationFromDates(this.getEndDate(), this.getStartDate())
 					+ " | JobStatus: " + this.getStatus()
 					+ " | JobExitCode: " + this.getExitCode());
@@ -79,18 +98,11 @@ public class JobExecution {
 		} catch (InterruptedException e) {
 			LOG.error(e);
 		}
-		if (this.getStatus() == JobStatus.COMPLETED) {
-			Batch.getInstance().getJobSuccess().incrementAndGet();
-		} else {
-			Batch.getInstance().getJobFailed().incrementAndGet();
-		}
 	}
 
 	public void destroy() {
-		if (process != null) {
-			synchronized (JobExecution.class) {
-				process.destroy();
-			}
+		if (this.process != null) { //Destroy JobExecution.process if not destroyed
+			this.process.destroy();
 		}
 	}
 
@@ -98,14 +110,12 @@ public class JobExecution {
 		return commandLine;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(final long id) {
-		if (id > 0) {
-			this.id = id;
-		}
+	public void setId(final int id) {
+		this.id = id;
 	}
 
 	public Date getStartDate() {
@@ -140,6 +150,43 @@ public class JobExecution {
 		this.exitCode = exitCode;
 	}
 
+	/**
+	 * Get the job process object
+	 * @return job process object
+	 */
+	public Process getProcess() {
+		return process;
+	}
+
+	/**
+	 * Job status enumeration : NONE, RUNNING, FAILED, COMPLETED
+	 */
+	public static enum JobStatus {
+		NONE, RUNNING, FAILED, COMPLETED;
+	}
+	
+	/**
+	 * Return string representation of the object
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		final String separator = " - ";
+		sb.append("JobExecution: ");
+		sb.append(separator).append(this.getCommandLine());
+		sb.append(separator).append(this.getId());
+		sb.append(separator).append(this.getStartDate());
+		sb.append(separator).append(this.getEndDate());
+		sb.append(separator).append(this.getStatus());
+		sb.append(separator).append(this.getExitCode());
+		return sb.toString();
+	}
+	
+	/**
+	 * Get the output of a process
+	 * @param process
+	 * @return String representation of the process output
+	 */
 	private String getProcessOutput(final Process process) {
 		final StringBuilder sb = new StringBuilder();
 		final InputStreamReader tempReader = new InputStreamReader(
@@ -157,9 +204,5 @@ public class JobExecution {
 			line = null;
 		}
 		return sb.toString();
-	}
-
-	public static enum JobStatus {
-		NONE, RUNNING, FAILED, COMPLETED;
 	}
 }

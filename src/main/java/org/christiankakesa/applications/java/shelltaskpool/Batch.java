@@ -1,34 +1,25 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
 //import org.apache.commons.logging.LogFactory;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Store all informations about Batch and Jobs
  */
 public final class Batch {
-	// private static final org.apache.commons.logging.Log LOG =
-	// LogFactory.getLog(Batch.class.getName());
-	/**
-	 * Static singleton idiom
-	 * @link http://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom
-	 */
-	private static final Batch INSTANCE = new Batch();
+	//private static final org.apache.commons.logging.Log LOG = LogFactory.getLog(Batch.class.getName());
+	public static final String DEFAULT_BATCH_NAME = "NO NAME";
+	
+	private static final Batch INSTANCE = new Batch(); //NOSONAR
 	private volatile String name;
 	private volatile String id;
 	private volatile Date startDate;
 	private volatile Date endDate;
 	private volatile BatchStatus status = BatchStatus.NONE;
-	private AtomicLong jobCounterId = new AtomicLong();
-	private AtomicLong jobSuccess = new AtomicLong();
-	private AtomicLong jobFailed = new AtomicLong();
-	private List<JobExecution> jobExecutionList = (List<JobExecution>) Collections
-			.synchronizedList(new ArrayList<JobExecution>());
-
+	private volatile int successJob = 0;
+	private volatile int failedJob = 0;
+	private volatile int totalJOb = 0;
+	
 	private Batch() {
 	}
 
@@ -41,24 +32,20 @@ public final class Batch {
 	}
 
 	public void setName(final String name) {
-		/**
-		 * Exit the method when parameter is <code>null</code> or empty.
-		 */
-		if (name == null || name.isEmpty()) {
-			return;
-		}
-		/**
-		 *  Set the batch name and batch id only if no name given before
-		 */
-		if (this.name == null) {
+		if (name != null && !name.isEmpty()) { //Test in name is not null and not empty
 			this.name = name;
-			//this.batchId = Utils.hexSHA1(this.batchName);
-			this.id = Utils.buildUUID();
+		} else {
+			this.name = Batch.DEFAULT_BATCH_NAME;
 		}
+		this.setId(Utils.buildUUID()); //Set the Batch Id when name is set
 	}
 
 	public String getId() {
 		return id;
+	}
+	
+	private void setId(final String id) {
+		this.id = id;
 	}
 
 	public Date getStartDate() {
@@ -66,7 +53,6 @@ public final class Batch {
 	}
 
 	public void setStartDate(final Date startDate) {
-		this.setStatus(BatchStatus.STARTED);
 		this.startDate = startDate;
 	}
 
@@ -86,55 +72,49 @@ public final class Batch {
 		this.status = batchStatus;
 	}
 
-	public AtomicLong getJobSuccess() {
-		return jobSuccess;
+	public int getSuccessJob() {
+		return successJob;
 	}
 
-	public void setJobSuccess(final AtomicLong jobSuccess) {
-		this.jobSuccess = jobSuccess;
+	public synchronized void incrementSuccessJob() { //Synchronized because Add operator is not thread safe
+		++(this.successJob);
 	}
 
-	public AtomicLong getJobFailed() {
-		return jobFailed;
+	public int getFailedJob() {
+		return failedJob;
 	}
 
-	public void setJobFailed(final AtomicLong jobFailed) {
-		this.jobFailed = jobFailed;
+	public synchronized void incrementFailedJob() { //Synchronized because Add operator is not thread safe
+		++(this.failedJob);
+	}
+
+	public int getTotalJOb() {
+		return totalJOb;
+	}
+
+	public synchronized void incrementTotalJOb() { //Synchronized because Add operator is not thread safe
+		++(this.totalJOb);
 	}
 	
-	/**
-	 * Add job to the jobExecutionList.
-	 * @param je
-	 * @return 
-	 */
-	public boolean addJobExecution(final JobExecution jobExecution) {
-		boolean result = false;
-		if (this.jobExecutionList.add(jobExecution)) { //Add a job and test if adding job is successful
-			result = true;
-			if (this.status != BatchStatus.RUNNING) { //Set Batch status to running if not set to BatchStatus.RUNNING
-				this.status = BatchStatus.RUNNING;
-			}
-		}
-		return result;
-	}
-
-//	public List<JobExecution> getJobExecutionList() {
-//		return jobExecutionList;
-//	}
-
-	public AtomicLong getJobCounterId() {
-		return jobCounterId;
-	}
-
-	public void setJobCounterId(final AtomicLong jobCounterId) {
-		this.jobCounterId = jobCounterId;
+	public synchronized int incrementAndGetTotalJOb() {//Synchronized because Add operator is not thread safe
+		++(this.totalJOb);
+		return this.totalJOb;
 	}
 
 	/**
-	 * Batch status enumeration.
-	 * @author christian
+	 * Batch status enumeration : NONE, STARTED, RUNNING, FAILED, COMPLETED_WITH_ERROR, COMPLETED.
 	 */
 	public static enum BatchStatus {
-		NONE, STARTED, RUNNING, FAILED, COMPLETED_WITH_ERROR, COMPLETED
+		NONE, STARTED, RUNNING, FAILED, COMPLETED_WITH_ERROR, COMPLETED;
+	}
+
+	protected void onTerminated() {
+		if (this.failedJob == 0 && this.successJob >= 1) { //Batch completed success full (at least one job has started)
+			this.setStatus(BatchStatus.COMPLETED);
+		} else if (this.failedJob > 0 && this.successJob >= 1) { //Batch completed (at least one job has started) but there are job failed
+			this.setStatus(BatchStatus.COMPLETED_WITH_ERROR);
+		} else { //Means that all jobs failed, Batch not complete or unknown problem
+			this.setStatus(BatchStatus.FAILED);
+		}
 	}
 }

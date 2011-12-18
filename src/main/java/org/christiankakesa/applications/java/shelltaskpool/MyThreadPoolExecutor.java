@@ -36,8 +36,13 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	}
 
 	private void myInit() {
+		Batch.getInstance().setStatus(BatchStatus.STARTED); // Set Batch.status
+															// to
+															// BatchStatus.STARTED
+															// when
+															// Batch.startDate
+															// is set
 		Batch.getInstance().setStartDate(Calendar.getInstance().getTime());
-		Batch.getInstance().setStatus(BatchStatus.STARTED);
 		LOG.info("[BATCH_START] BatchId: " + Batch.getInstance().getId()
 				+ " | BatchName: " + Batch.getInstance().getName()
 				+ " | BatchStartDate: " + Batch.getInstance().getStartDate()
@@ -51,46 +56,48 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 
 	@Override
 	public void terminated() {
-		try {
-			if (Batch.getInstance().getJobFailed().get() == 0
-					&& Batch.getInstance().getJobSuccess().get() >= 1) {
-				// Batch completed success full
-				Batch.getInstance().setStatus(BatchStatus.COMPLETED);
-			} else if (Batch.getInstance().getJobFailed().get() > 0
-					&& Batch.getInstance().getJobSuccess().get() >= 1) {
-				// Batch completed but there are job failed
-				Batch.getInstance().setStatus(BatchStatus.COMPLETED_WITH_ERROR);
-			} else {
-				// Means that all jobs failed or unknown problem
-				Batch.getInstance().setStatus(BatchStatus.FAILED);
-			}
-			Batch.getInstance().setEndDate(Calendar.getInstance().getTime());
-			LOG.info("[BATCH_END] - BatchId: "
-					+ Batch.getInstance().getId()
-					+ " | BatchName: "
-					+ Batch.getInstance().getName()
-					+ " | BatchStartDate: "
-					+ Batch.getInstance().getStartDate()
-					+ " | BatchEndDate: "
-					+ Batch.getInstance().getEndDate()
-					+ " | BatchDuration: "
-					+ Utils.buildDurationFromDates(Batch.getInstance()
-							.getEndDate(), Batch.getInstance().getStartDate())
-					+ " | BatchStatus: " + Batch.getInstance().getStatus());
-		} finally {
-			super.terminated();
+		Batch.getInstance().setEndDate(Calendar.getInstance().getTime());
+		Batch.getInstance().onTerminated();
+		LOG.info("[BATCH_END] - BatchId: "
+				+ Batch.getInstance().getId()
+				+ " | BatchName: "
+				+ Batch.getInstance().getName()
+				+ " | BatchStartDate: "
+				+ Batch.getInstance().getStartDate()
+				+ " | BatchEndDate: "
+				+ Batch.getInstance().getEndDate()
+				+ " | BatchDuration: "
+				+ Utils.buildDurationFromDates(
+						Batch.getInstance().getEndDate(), Batch.getInstance()
+								.getStartDate()) + " | BatchStatus: "
+				+ Batch.getInstance().getStatus());
+		super.terminated();
+	}
+
+	
+//	@Override
+//	public void shutdown() {
+//		try {
+//			LOG.debug("ThreadPool shutdown. All pool is working !!!");
+//		} finally {
+//			super.shutdown();
+//		} 
+//	}
+ 
+	@Override
+	protected void beforeExecute(Thread t, Runnable r) {
+		super.beforeExecute(t, r);
+		if (Batch.getInstance().getStatus() != BatchStatus.RUNNING) { //Ensure that Batch state is set to Batch.RUNNING 
+			Batch.getInstance().setStatus(BatchStatus.RUNNING);
 		}
 	}
 
-	/*
-	 * @Override public void shutdown() { try {
-	 * LOG.debug("ThreadPool shutdown. All pool is working !!!"); } finally {
-	 * super.shutdown(); } }
-	 * 
-	 * @Override protected void beforeExecute(Thread t, Runnable r) {
-	 * super.beforeExecute(t, r); //TODO: What to do here }
-	 * 
-	 * @Override protected void afterExecute(Runnable r, Throwable t) { try {
-	 * //TODO: What to do here } finally { super.afterExecute(r, t); } }
-	 */
+//	@Override
+//	protected void afterExecute(Runnable r, Throwable t) {
+//		try {
+//			//TODO: What to do here
+//		} finally {
+//			super.afterExecute(r, t);
+//		}
+//	 }
 }

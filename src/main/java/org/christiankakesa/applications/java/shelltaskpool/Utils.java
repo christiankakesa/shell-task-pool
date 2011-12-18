@@ -3,6 +3,7 @@ package org.christiankakesa.applications.java.shelltaskpool;
 //import java.security.MessageDigest;
 //import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -20,6 +21,12 @@ public final class Utils {
 	 * Static logger
 	 */
 	private static final Log LOG = LogFactory.getLog(Utils.class.getName());
+	public static final String APP_NAME = "shelltaskpool.jar";
+	public static final String AUTHOR_NAME = "Christian Kakesa";
+	public static final String AUTHOR_EMAIL = "christian.kakesa@gmail.com";
+	public static final String APP_COPYRIGHT = "Christian Kakesa (c) "
+			+ Calendar.getInstance().get(Calendar.YEAR);
+	
 
 	/**
 	 * private constructor
@@ -48,10 +55,10 @@ public final class Utils {
 	 * @return Help screen string content
 	 */
 	public static String getHelp() {
-		final String dynamicSpaceAppend = Utils.getSpace(Main.APP_NAME.length()
+		final String dynamicSpaceAppend = Utils.getSpace(Utils.APP_NAME.length()
 				+ "Usage: ".length());
 		String result = "Usage: "
-				+ Main.APP_NAME
+				+ Utils.APP_NAME
 				+ " [-h,--help]\n"
 				+ dynamicSpaceAppend
 				+ "\tShow this help screen\n\n"
@@ -83,9 +90,9 @@ public final class Utils {
 				+ "\tSet global params to add for each job\n"
 				+ dynamicSpaceAppend
 				+ "\texample : -p'-x 2011/05/05 -m 1024'\n"
-				+ "--------------\n" + "Author name  : " + Main.AUTHOR_NAME
-				+ "\n" + "Author email : " + Main.AUTHOR_EMAIL + "\n"
-				+ "Copyright    : " + Main.APP_COPYRIGHT + "\n";
+				+ "--------------\n" + "Author name  : " + Utils.AUTHOR_NAME
+				+ "\n" + "Author email : " + Utils.AUTHOR_EMAIL + "\n"
+				+ "Copyright    : " + Utils.APP_COPYRIGHT + "\n";
 		return result;
 	}
 

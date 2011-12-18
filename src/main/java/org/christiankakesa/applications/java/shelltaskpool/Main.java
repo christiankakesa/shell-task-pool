@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -19,11 +18,6 @@ import org.apache.commons.logging.LogFactory;
  * Main class of <b>Shell Task Pool</b>
  */
 public final class Main {
-	public static final String APP_NAME = "shelltaskpool.jar";
-	public static final String AUTHOR_NAME = "Christian Kakesa";
-	public static final String AUTHOR_EMAIL = "christian.kakesa@gmail.com";
-	public static final String APP_COPYRIGHT = "Christian Kakesa (c) "
-			+ Calendar.getInstance().get(Calendar.YEAR);
 	public static final long THREAD_KEEP_ALIVE_TIME = 30L;
 	public static final int MAX_JOBS = 5120;
 	public static final int MAX_LINE_LENGTH = 2048;
@@ -85,7 +79,7 @@ public final class Main {
 					new LongOpt("jobsfile", LongOpt.OPTIONAL_ARGUMENT, null, 'f'),
 					new LongOpt("jobsparam", LongOpt.OPTIONAL_ARGUMENT, null, 'p'),
 			};
-			Getopt g = new Getopt(APP_NAME, params, "hn:c::j::f::p::", opts, false);
+			Getopt g = new Getopt(Utils.APP_NAME, params, "hn:c::j::f::p::", opts, false);
 			g.setOpterr(true);
 			while ((c = g.getopt()) != -1) {
 				switch (c) {
