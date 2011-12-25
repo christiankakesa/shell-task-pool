@@ -16,11 +16,11 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Shell Task Pool utility class
  */
-public final class Utils {
+public final class Util {
 	/**
 	 * Static logger
 	 */
-	private static final Log LOG = LogFactory.getLog(Utils.class.getName());
+	private static final Log LOG = LogFactory.getLog(Util.class.getName());
 	public static final String APP_NAME = "shelltaskpool.jar";
 	public static final String AUTHOR_NAME = "Christian Kakesa";
 	public static final String AUTHOR_EMAIL = "christian.kakesa@gmail.com";
@@ -31,14 +31,14 @@ public final class Utils {
 	/**
 	 * private constructor
 	 */
-	private Utils() {
+	private Util() {
 	}
 
 	/**
 	 * Print help screen
 	 */
 	public static void printHelp() {
-		System.out.printf("%s", Utils.getHelp());
+		System.out.printf("%s", Util.getHelp());
 		System.out.flush();
 	}
 
@@ -46,7 +46,7 @@ public final class Utils {
 	 * Print help screen and exit the program
 	 */
 	public static void printHelpAndExit() {
-		Utils.printHelp();
+		Util.printHelp();
 		System.exit(0);
 	}
 
@@ -55,10 +55,10 @@ public final class Utils {
 	 * @return Help screen string content
 	 */
 	public static String getHelp() {
-		final String dynamicSpaceAppend = Utils.getSpace(Utils.APP_NAME.length()
+		final String dynamicSpaceAppend = Util.getSpace(Util.APP_NAME.length()
 				+ "Usage: ".length());
 		String result = "Usage: "
-				+ Utils.APP_NAME
+				+ Util.APP_NAME
 				+ " [-h,--help]\n"
 				+ dynamicSpaceAppend
 				+ "\tShow this help screen\n\n"
@@ -90,9 +90,9 @@ public final class Utils {
 				+ "\tSet global params to add for each job\n"
 				+ dynamicSpaceAppend
 				+ "\texample : -p'-x 2011/05/05 -m 1024'\n"
-				+ "--------------\n" + "Author name  : " + Utils.AUTHOR_NAME
-				+ "\n" + "Author email : " + Utils.AUTHOR_EMAIL + "\n"
-				+ "Copyright    : " + Utils.APP_COPYRIGHT + "\n";
+				+ "--------------\n" + "Author name  : " + Util.AUTHOR_NAME
+				+ "\n" + "Author email : " + Util.AUTHOR_EMAIL + "\n"
+				+ "Copyright    : " + Util.APP_COPYRIGHT + "\n";
 		return result;
 	}
 
@@ -198,7 +198,7 @@ public final class Utils {
 	 */
 	public static String buildUUID() {
 		UUID newUUID = UUID.randomUUID();
-		return Utils.removeCharFromString(newUUID.toString(), '-');
+		return Util.removeCharFromString(newUUID.toString(), '-');
 	}
 
 	/**

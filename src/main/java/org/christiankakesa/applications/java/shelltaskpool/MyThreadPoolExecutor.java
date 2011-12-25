@@ -1,13 +1,13 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.christiankakesa.applications.java.shelltaskpool.BatchStatus.BatchStates;
-
 import java.util.Calendar;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.christiankakesa.applications.java.shelltaskpool.BatchStatus.BatchStates;
 
 /**
  * 
@@ -62,7 +62,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 				+ " | BatchEndDate: "
 				+ Batch.getInstance().getEndDate()
 				+ " | BatchDuration: "
-				+ Utils.buildDurationFromDates(
+				+ Util.buildDurationFromDates(
 						Batch.getInstance().getEndDate(), Batch.getInstance()
 								.getStartDate()) + " | BatchStatus: "
 				+ Batch.getInstance().getStatus().getState());

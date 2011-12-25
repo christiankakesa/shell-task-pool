@@ -35,7 +35,7 @@ public final class Batch {
 		} else {
 			this.name = Batch.DEFAULT_BATCH_NAME;
 		}
-		this.setId(Utils.buildUUID()); //Set the Batch Id when name is set
+		this.setId(Util.buildUUID()); //Set the Batch Id when name is set
 	}
 
 	public String getId() {

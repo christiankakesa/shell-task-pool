@@ -27,7 +27,7 @@ public final class Main {
 	private static final List<String> JOBS_ARRAY_LIST = new ArrayList<String>(
 			MAX_JOBS);
 
-	private static int corePoolSize = Utils.defaultCorePoolSize();
+	private static int corePoolSize = Util.defaultCorePoolSize();
 	private static String jobsFile;
 	private static String jobsList;
 	private static String jobsParam;
@@ -61,7 +61,7 @@ public final class Main {
 		private void parse() {
 			if (this.pParams == null || this.pParams.length == 0) {
 				LOG.error("No argument found");
-				Utils.printHelpAndExit();
+				Util.printHelpAndExit();
 			}
 			this.parseCmdLine();
 		}
@@ -79,12 +79,12 @@ public final class Main {
 					new LongOpt("jobsfile", LongOpt.OPTIONAL_ARGUMENT, null, 'f'),
 					new LongOpt("jobsparam", LongOpt.OPTIONAL_ARGUMENT, null, 'p'),
 			};
-			Getopt g = new Getopt(Utils.APP_NAME, params, "hn:c::j::f::p::", opts, false);
+			Getopt g = new Getopt(Util.APP_NAME, params, "hn:c::j::f::p::", opts, false);
 			g.setOpterr(true);
 			while ((c = g.getopt()) != -1) {
 				switch (c) {
 				case 'h':
-					Utils.printHelpAndExit();
+					Util.printHelpAndExit();
 				case 'n':
 					arg = g.getOptarg();
 					Batch.getInstance().setName(arg);
@@ -97,7 +97,7 @@ public final class Main {
 						Main.corePoolSize = Integer.valueOf(arg);
 					} catch (NumberFormatException e) {
 						LOG.error("Wrong corePoolSize set in parameter", e);
-						Main.corePoolSize = Utils.defaultCorePoolSize(); //Ensure that corePoolSize is set
+						Main.corePoolSize = Util.defaultCorePoolSize(); //Ensure that corePoolSize is set
 					}
 					LOG.debug("Param [corepoolsize]: " + Main.corePoolSize);
 					break;
@@ -123,7 +123,7 @@ public final class Main {
 			}
 			if (Batch.getInstance().getName() == null) {
 				LOG.error("Name of the batch are required. Set the \"n\" parameter");
-				Utils.printHelpAndExit();
+				Util.printHelpAndExit();
 			}
 			/** Add job in <b>JOBS_ARRAY_LIST<b> */
 			prepareJobListToExecute();
@@ -132,7 +132,7 @@ public final class Main {
 		private void prepareJobListToExecute() {
 			if (Main.jobsFile == null && Main.jobsList == null) {
 				LOG.error("No jobs specified.");
-				Utils.printHelpAndExit();
+				Util.printHelpAndExit();
 			}
 			if (Main.jobsList != null) {
 				String[] jl = StringUtils.split(Main.jobsList, Main.JOB_SEPARATOR);

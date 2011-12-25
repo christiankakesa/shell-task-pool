@@ -17,8 +17,8 @@ public class UtilsTest {
 	
 	@Test
 	public void testGetHelp() {
-		assertNotNull(Utils.getHelp());
-		assertTrue(Utils.getHelp().length() > 0);
+		assertNotNull(Util.getHelp());
+		assertTrue(Util.getHelp().length() > 0);
 	}
 	
 	@Test
@@ -26,16 +26,16 @@ public class UtilsTest {
 		int noSpace = 0;
 		int negativeSpace = -42;
 		int positiveSpace = 42;
-		assertTrue(Utils.getSpace(noSpace).equals(""));
-		assertTrue(Utils.getSpace(negativeSpace).equals(""));
-		assertEquals(Utils.getSpace(positiveSpace).length(), positiveSpace);
+		assertTrue(Util.getSpace(noSpace).equals(""));
+		assertTrue(Util.getSpace(negativeSpace).equals(""));
+		assertEquals(Util.getSpace(positiveSpace).length(), positiveSpace);
 	}
 	
 	@Test
 	public void testBuildDurationFromDates() {
 		final int sleepTime = 1000;
 		final String defaultDuration = "00:00:00";
-		assertEquals(Utils.buildDurationFromDates(null, null), defaultDuration);
+		assertEquals(Util.buildDurationFromDates(null, null), defaultDuration);
 		final java.util.Date begin = Calendar.getInstance().getTime();
 		try {
 			Thread.sleep(sleepTime);
@@ -43,20 +43,20 @@ public class UtilsTest {
 			LOG.error("Can invoque Thread.sleep(" + String.valueOf(sleepTime) + ") in UtilsTest.testBuildDurationFromDates()", e);
 		}
 		final java.util.Date end = Calendar.getInstance().getTime();
-		assertFalse(Utils.buildDurationFromDates(end, begin) == defaultDuration);
+		assertFalse(Util.buildDurationFromDates(end, begin) == defaultDuration);
 	}
 	
 	@Test
 	public void testParseCommandLineToStringArray(){
 		final String commandLine = "'-p xx-xx-xx' \"-x toto\" '-42 -42' --Tester testerSize";
 		final int nbTokens = 5;
-		assertEquals(Utils.parseCommandLineToStringArray(commandLine).length, nbTokens);
+		assertEquals(Util.parseCommandLineToStringArray(commandLine).length, nbTokens);
 	}
 	
 	@Test
 	public void testDefaultCorePoolSize(){
 		final int minimumCore = 1;
-		assertTrue(Utils.defaultCorePoolSize() >= minimumCore);
+		assertTrue(Util.defaultCorePoolSize() >= minimumCore);
 	}
 	
 //	@Test
@@ -68,11 +68,11 @@ public class UtilsTest {
 	@Test
 	public void testUUID() {
 		final int uuidLength = 32; //Type 4 UUID is 36 chars but we removes the 4 '-' separator characters.
-		assertFalse(Utils.buildUUID().isEmpty());
-		assertNotNull(Utils.buildUUID());
-		assertEquals(Utils.buildUUID().length(), uuidLength);
-		final String uuid1 = Utils.buildUUID();
-		final String uuid2 = Utils.buildUUID();
+		assertFalse(Util.buildUUID().isEmpty());
+		assertNotNull(Util.buildUUID());
+		assertEquals(Util.buildUUID().length(), uuidLength);
+		final String uuid1 = Util.buildUUID();
+		final String uuid2 = Util.buildUUID();
 		assertFalse(uuid1.equals(uuid2));
 	}
 	
@@ -82,8 +82,8 @@ public class UtilsTest {
 		final String twoS = "titi!toto";
 		final String threeS = "titi+toto";
 		final String result = "tititoto";
-		assertEquals(Utils.removeCharFromString(oneS, '-'), result);
-		assertEquals(Utils.removeCharFromString(twoS, '!'), result);
-		assertEquals(Utils.removeCharFromString(threeS, '+'), result);
+		assertEquals(Util.removeCharFromString(oneS, '-'), result);
+		assertEquals(Util.removeCharFromString(twoS, '!'), result);
+		assertEquals(Util.removeCharFromString(threeS, '+'), result);
 	}
 }

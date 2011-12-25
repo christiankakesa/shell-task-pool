@@ -68,7 +68,7 @@ public class JobExecution {
 	private void run() {
 		this.setStartDate(Calendar.getInstance().getTime());
 		ProcessBuilder processBuilder = new ProcessBuilder(
-				Utils.parseCommandLineToStringArray(this.commandLine));
+				Util.parseCommandLineToStringArray(this.commandLine));
 		try {
 			process = processBuilder.start();
 			this.setStatus(JobStatus.RUNNING);
@@ -90,7 +90,7 @@ public class JobExecution {
 					+ " | JobCommandLine: " + this.getCommandLine()
 					+ " | JobStartDate: " + this.getStartDate()
 					+ " | JobEndDate: " + this.getEndDate()
-					+ " | JobDuration: " + Utils.buildDurationFromDates(this.getEndDate(), this.getStartDate())
+					+ " | JobDuration: " + Util.buildDurationFromDates(this.getEndDate(), this.getStartDate())
 					+ " | JobStatus: " + this.getStatus()
 					+ " | JobExitCode: " + this.getExitCode());
 		} catch (IOException e) {
