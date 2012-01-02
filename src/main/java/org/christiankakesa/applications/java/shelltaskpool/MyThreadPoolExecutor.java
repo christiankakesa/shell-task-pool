@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.christiankakesa.applications.java.shelltaskpool.BatchStatus.BatchStates;
 
 /**
  * 
@@ -36,12 +35,12 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	}
 
 	private void myInit() {
-		Batch.getInstance().getStatus().setState(BatchStates.STARTED);
+		Batch.getInstance().getStatus().setStatus(Batch.Status.STARTED);
 		Batch.getInstance().setStartDate(Calendar.getInstance().getTime());
 		LOG.info("[BATCH_START] BatchId: " + Batch.getInstance().getId()
 				+ " | BatchName: " + Batch.getInstance().getName()
 				+ " | BatchStartDate: " + Batch.getInstance().getStartDate()
-				+ " | BatchStatus: " + Batch.getInstance().getStatus().getState());
+				+ " | BatchStatus: " + Batch.getInstance().getStatus().getStatus());
 	}
 
 	public void addTask(Runnable r) {
@@ -65,7 +64,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 				+ Util.buildDurationFromDates(
 						Batch.getInstance().getEndDate(), Batch.getInstance()
 								.getStartDate()) + " | BatchStatus: "
-				+ Batch.getInstance().getStatus().getState());
+				+ Batch.getInstance().getStatus().getStatus());
 		super.terminated();
 	}
 
@@ -82,8 +81,8 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	@Override
 	protected void beforeExecute(Thread t, Runnable r) {
 		super.beforeExecute(t, r);
-		if (Batch.getInstance().getStatus().getState() != BatchStates.RUNNING) { //Ensure that Batch state is set to Batch.RUNNING 
-			Batch.getInstance().getStatus().setState(BatchStates.RUNNING);
+		if (Batch.getInstance().getStatus().getStatus() != Batch.Status.RUNNING) { //Ensure that Batch state is set to Batch.RUNNING 
+			Batch.getInstance().getStatus().setStatus(Batch.Status.RUNNING);
 		}
 	}
 

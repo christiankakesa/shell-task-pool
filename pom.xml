@@ -24,7 +24,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
+                    <source>1.7</source>
                     <target>1.6</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
@@ -122,10 +122,10 @@
             <id>christiankakesa</id>
             <name>Christian Kakesa</name>
             <email>christian.kakesa@gmail.com</email>
-            <organization>FenicksFactory</organization>
+            <organization>Christian Kakesa</organization>
             <organizationUrl>http://www.kakesa.net</organizationUrl>
             <roles>
-                <role>Développeur</role>
+                <role>Developer</role>
             </roles>
             <timezone>+1</timezone>
         </developer>
@@ -140,5 +140,5 @@
         <name>Christian Kakesa</name>
         <url>http://www.kakesa.net</url>
     </organization>
-    <description>Thread Pool Executor for concurrent shell command line .</description>
+    <description>Thread Pool Executor, run shell command line in parallel.</description>
 </project>

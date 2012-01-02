@@ -15,7 +15,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Main class of <b>Shell Task Pool</b>
+ * Main class of <b>Shell Task Pool</b>.
+ * 
+ * @author Christian Kakesa (christian.kakesa@gmail.com)
  */
 public final class Main {
 	public static final long THREAD_KEEP_ALIVE_TIME = 30L;
@@ -79,7 +81,7 @@ public final class Main {
 					new LongOpt("jobsfile", LongOpt.OPTIONAL_ARGUMENT, null, 'f'),
 					new LongOpt("jobsparam", LongOpt.OPTIONAL_ARGUMENT, null, 'p'),
 			};
-			Getopt g = new Getopt(Util.APP_NAME, params, "hn:c::j::f::p::", opts, false);
+			Getopt g = new Getopt(AppInfo.APP_NAME, params, "hn:c::j::f::p::", opts, false);
 			g.setOpterr(true);
 			while ((c = g.getopt()) != -1) {
 				switch (c) {
@@ -90,6 +92,9 @@ public final class Main {
 					Batch.getInstance().setName(arg);
 					LOG.debug("Param [batchname]: "
 							+ Batch.getInstance().getName());
+					Batch.getInstance().setId(Util.buildUUID());
+					LOG.debug("         Batch Id: "
+							+ Batch.getInstance().getId());
 					break;
 				case 'c':
 					arg = g.getOptarg();

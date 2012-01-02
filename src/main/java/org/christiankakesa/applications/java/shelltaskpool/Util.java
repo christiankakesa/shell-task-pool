@@ -3,12 +3,11 @@ package org.christiankakesa.applications.java.shelltaskpool;
 //import java.security.MessageDigest;
 //import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,22 +19,16 @@ public final class Util {
 	/**
 	 * Static logger
 	 */
-	private static final Log LOG = LogFactory.getLog(Util.class.getName());
-	public static final String APP_NAME = "shelltaskpool.jar";
-	public static final String AUTHOR_NAME = "Christian Kakesa";
-	public static final String AUTHOR_EMAIL = "christian.kakesa@gmail.com";
-	public static final String APP_COPYRIGHT = "Christian Kakesa (c) "
-			+ Calendar.getInstance().get(Calendar.YEAR);
-	
+	private static final Log LOG = LogFactory.getLog(Util.class);	
 
 	/**
-	 * private constructor
+	 * Util private constructor.
 	 */
 	private Util() {
 	}
 
 	/**
-	 * Print help screen
+	 * Print help screen.
 	 */
 	public static void printHelp() {
 		System.out.printf("%s", Util.getHelp());
@@ -55,10 +48,10 @@ public final class Util {
 	 * @return Help screen string content
 	 */
 	public static String getHelp() {
-		final String dynamicSpaceAppend = Util.getSpace(Util.APP_NAME.length()
+		final String dynamicSpaceAppend = Util.getSpace(AppInfo.APP_NAME.length()
 				+ "Usage: ".length());
 		String result = "Usage: "
-				+ Util.APP_NAME
+				+ AppInfo.APP_NAME
 				+ " [-h,--help]\n"
 				+ dynamicSpaceAppend
 				+ "\tShow this help screen\n\n"
@@ -90,9 +83,9 @@ public final class Util {
 				+ "\tSet global params to add for each job\n"
 				+ dynamicSpaceAppend
 				+ "\texample : -p'-x 2011/05/05 -m 1024'\n"
-				+ "--------------\n" + "Author name  : " + Util.AUTHOR_NAME
-				+ "\n" + "Author email : " + Util.AUTHOR_EMAIL + "\n"
-				+ "Copyright    : " + Util.APP_COPYRIGHT + "\n";
+				+ "--------------\n" + "Author name  : " + AppInfo.AUTHOR_NAME
+				+ "\n" + "Author email : " + AppInfo.AUTHOR_EMAIL + "\n"
+				+ "Copyright    : " + AppInfo.APP_COPYRIGHT + "\n";
 		return result;
 	}
 
@@ -193,8 +186,9 @@ public final class Util {
 //	}
 
 	/**
-	 * Generate UUID string without '-' character.
-	 * @return String UUID without '-'
+	 * Generate UUID string without all '-' characters.
+	 * 
+	 * @return UUID without all '-' characters
 	 */
 	public static String buildUUID() {
 		UUID newUUID = UUID.randomUUID();
