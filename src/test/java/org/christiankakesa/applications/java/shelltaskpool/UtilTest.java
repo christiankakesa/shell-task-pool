@@ -12,8 +12,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
-public class UtilsTest {
-	private static final Log LOG = LogFactory.getLog(UtilsTest.class.getName());
+public class UtilTest {
+	private static final Log LOG = LogFactory.getLog(UtilTest.class.getName());
 	
 	@Test
 	public void testGetHelp() {
@@ -58,12 +58,6 @@ public class UtilsTest {
 		final int minimumCore = 1;
 		assertTrue(Util.defaultCorePoolSize() >= minimumCore);
 	}
-	
-//	@Test
-//	public void testHexSHA1() {
-//		assertFalse(Utils.hexSHA1("toto").equals("11112625dc21ef05f6ad4ddf47c5f203837a1111"));
-//		assertEquals(Utils.hexSHA1("toto"), "0b9c2625dc21ef05f6ad4ddf47c5f203837aa32c");
-//	}
 	
 	@Test
 	public void testUUID() {

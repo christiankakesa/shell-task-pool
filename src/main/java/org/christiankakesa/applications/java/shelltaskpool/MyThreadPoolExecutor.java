@@ -12,8 +12,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  */
 public class MyThreadPoolExecutor extends ThreadPoolExecutor {
-	private static final Log LOG = LogFactory.getLog(MyThreadPoolExecutor.class
-			.getName());
+	private static final Log LOG = LogFactory.getLog(MyThreadPoolExecutor.class);
 
 	public MyThreadPoolExecutor(int poolSize) {
 		super(poolSize, poolSize, 0L, TimeUnit.SECONDS,

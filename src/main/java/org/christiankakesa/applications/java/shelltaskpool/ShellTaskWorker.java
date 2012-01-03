@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  */
 public class ShellTaskWorker implements Runnable {
-	private static final Log LOG = LogFactory.getLog(ShellTaskWorker.class.getName());
+	private static final Log LOG = LogFactory.getLog(ShellTaskWorker.class);
 	private final String commandLine;
 
 	public ShellTaskWorker(String commandLine) {

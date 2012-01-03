@@ -15,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JobExecution {
 	private static final org.apache.commons.logging.Log LOG = LogFactory
-			.getLog(JobExecution.class.getName());
+			.getLog(JobExecution.class);
 	
 	/**
 	 * Job command line string

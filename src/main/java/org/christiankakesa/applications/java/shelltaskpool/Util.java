@@ -1,7 +1,5 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
-//import java.security.MessageDigest;
-//import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,15 +9,20 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Shell Task Pool utility class
  */
 public final class Util {
 	/**
-	 * Static logger
+	 * Static logger.
 	 */
-	private static final Log LOG = LogFactory.getLog(Util.class);	
+	private static final Log LOG = LogFactory.getLog(Util.class);
+	/**
+	 * Standard output logger.
+	 */
+	private static final Logger STDOUT_LOG = Logger.getLogger("STDOUT_LOG");
 
 	/**
 	 * Util private constructor.
@@ -31,8 +34,7 @@ public final class Util {
 	 * Print help screen.
 	 */
 	public static void printHelp() {
-		System.out.printf("%s", Util.getHelp());
-		System.out.flush();
+		STDOUT_LOG.info(Util.getHelp());
 	}
 
 	/**
@@ -72,7 +74,7 @@ public final class Util {
 				+ dynamicSpaceAppend
 				+ "\tList of jobs seperated by ';'\n"
 				+ dynamicSpaceAppend
-				+ "\texample : -l'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n"
+				+ "\texample : -j'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n"
 				+ dynamicSpaceAppend
 				+ " [-f,--jobsfile=]\n"
 				+ dynamicSpaceAppend
@@ -154,36 +156,6 @@ public final class Util {
 	public static int defaultCorePoolSize(){
 		return Runtime.getRuntime().availableProcessors();
 	}
-
-//	/**
-//	 * Build an hexadecimal SHA1 hash for string.
-//	 * 
-//	 * @param plainText
-//	 * @return An hexadecimal string hash
-//	 */
-//	public static String hexSHA1(final String plainText) {
-//		/**
-//		 * Exit the method when parameter is <code>null</code> or empty.
-//		 */
-//		if (plainText == null || plainText.isEmpty()) {
-//			return "";
-//		}
-//		final StringBuilder sb = new StringBuilder();
-//		try {
-//
-//			final MessageDigest sha1 = MessageDigest.getInstance("SHA1");
-//			byte[] digest = sha1.digest((plainText).getBytes());
-//			String hexString;
-//			final int hexPadSHA1 = 0x00FF;
-//			for (byte b : digest) {
-//				hexString = Integer.toHexString(hexPadSHA1 & b);
-//				sb.append(hexString.length() == 1 ? "0" + hexString : hexString);
-//			}
-//		} catch (NoSuchAlgorithmException e) {
-//			LOG.error("Can't build a SHA1 MessageDigest object", e);
-//		}
-//		return sb.toString();
-//	}
 
 	/**
 	 * Generate UUID string without all '-' characters.

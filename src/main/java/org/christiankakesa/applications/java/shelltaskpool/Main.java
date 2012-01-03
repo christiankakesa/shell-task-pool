@@ -44,7 +44,8 @@ public final class Main {
 		clp.parse();
 		LOG.info("[BATCH_PARAMETER] BatchId: " + Batch.getInstance().getId()
 				+ " | BatchName: " + Batch.getInstance().getName()
-				+ " | BatchParameter: " + StringUtils.join(args, " "));
+				+ " | BatchParameter: " + StringUtils.join(args, " ")
+				+ " | BatchCorePoolSize: " + corePoolSize);
 		MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(corePoolSize,
 				corePoolSize, THREAD_KEEP_ALIVE_TIME);
 		for (String cmd : JOBS_ARRAY_LIST) {
