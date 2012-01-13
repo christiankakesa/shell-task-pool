@@ -14,7 +14,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
- * Main class of <b>Shell Task Pool</b>.
+ * <b>Shell Task Pool</b>.
+ * 
+ * This is the main class of the program.
+ * This project aims to parallelize shell command execution efficiently and safely.
+ * All the task are logged and could be parsed by a reporting tool.
  * 
  * @author Christian Kakesa (christian.kakesa@gmail.com)
  */
@@ -33,7 +37,7 @@ public final class Main {
 	private static String jobsList;
 	private static String jobsParam;
 
-	private static final Logger LOG = Logger.getLogger(Main.class.getName());
+	private static final Logger LOG = Logger.getLogger(Main.class);
 
 	private Main() {
 	}
@@ -184,7 +188,8 @@ public final class Main {
 				LOG.warn("Can't add empty job");
 				return;
 			}
-			if (Main.jobsParam != null && Main.jobsParam.length() > 0) { //Add global job parameter if <code>jobsParam</code> is not null and <code>jobsParam</code> contains parameter.
+			if (Main.jobsParam != null && Main.jobsParam.length() > 0) {
+				//Add global job parameter if <code>jobsParam</code> is not null and <code>jobsParam</code> contains parameter.
 				jcl = jcl + " " + Main.jobsParam;
 			}
 			if (Main.JOBS_ARRAY_LIST.size() < Main.MAX_JOBS) {
