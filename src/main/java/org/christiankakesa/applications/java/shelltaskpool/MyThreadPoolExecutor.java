@@ -5,14 +5,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * 
  */
 public class MyThreadPoolExecutor extends ThreadPoolExecutor {
-	private static final Log LOG = LogFactory.getLog(MyThreadPoolExecutor.class);
+	private static final Logger LOG = Logger.getLogger(MyThreadPoolExecutor.class);
 
 	public MyThreadPoolExecutor(int poolSize) {
 		super(poolSize, poolSize, 0L, TimeUnit.SECONDS,

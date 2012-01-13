@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class BatchTest {
 	static {
-		//Set the default batch name : Batch.DEFAULT_BATCH_NAME
+		//Set the default batch name to the default name
 		Batch.getInstance().setName(null);
 		Batch.getInstance().setId(Util.buildUUID());
 	}
@@ -23,8 +23,8 @@ public class BatchTest {
 	
 	@Test
 	public void testName() {
-		//Test the default batch name : Batch.DEFAULT_BATCH_NAME
-		assertEquals(Batch.DEFAULT_BATCH_NAME, Batch.getInstance().getName());
+		//Test the default batch name is always set
+		assertTrue(Batch.getInstance().getName().length() > 0);
 		
 		final String batchName = "Shell Task Pool";
 		Batch.getInstance().setName(batchName);
@@ -71,5 +71,26 @@ public class BatchTest {
 		assertEquals(Batch.Status.COMPLETED_WITH_ERROR, Batch.getInstance().getStatus().getStatus());
 		Batch.getInstance().getStatus().setStatus(Batch.Status.COMPLETED);
 		assertEquals(Batch.Status.COMPLETED, Batch.getInstance().getStatus().getStatus());
+	}
+	
+	@Test
+	public void testBatchStatus() {
+		int successCounter = 0;
+		int failedCounter = 0;
+		int totalCounter = 0;
+		Batch.BatchStatus b = new Batch.BatchStatus();
+		assertNotNull(b);
+		assertEquals(b.getSuccessJob(), successCounter);
+		assertEquals(b.getFailedJob(), failedCounter);
+		assertEquals(b.getTotalJob(), totalCounter);
+		b.incrementSuccessJob();
+		assertEquals(b.getSuccessJob(), ++successCounter);
+		b.incrementFailedJob();
+		assertEquals(b.getFailedJob(), ++failedCounter);
+		b.incrementTotalJob();
+		assertEquals(b.getTotalJob(), ++totalCounter);
+		assertEquals(b.incrementAndGetTotalJOb(), ++totalCounter);
+		b.doEndStatus();
+		assertNotNull(b.getStatus());
 	}
 }

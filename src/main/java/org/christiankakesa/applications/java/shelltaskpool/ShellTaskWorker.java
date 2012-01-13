@@ -1,13 +1,12 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * 
  */
 public class ShellTaskWorker implements Runnable {
-	private static final Log LOG = LogFactory.getLog(ShellTaskWorker.class);
+	private static final Logger LOG = Logger.getLogger(ShellTaskWorker.class);
 	private final String commandLine;
 
 	public ShellTaskWorker(String commandLine) {

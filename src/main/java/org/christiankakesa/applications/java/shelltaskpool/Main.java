@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Main class of <b>Shell Task Pool</b>.
@@ -34,7 +33,7 @@ public final class Main {
 	private static String jobsList;
 	private static String jobsParam;
 
-	private static final Log LOG = LogFactory.getLog(Main.class.getName());
+	private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
 	private Main() {
 	}
@@ -45,10 +44,10 @@ public final class Main {
 		LOG.info("[BATCH_PARAMETER] BatchId: " + Batch.getInstance().getId()
 				+ " | BatchName: " + Batch.getInstance().getName()
 				+ " | BatchParameter: " + StringUtils.join(args, " ")
-				+ " | BatchCorePoolSize: " + corePoolSize);
-		MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(corePoolSize,
-				corePoolSize, THREAD_KEEP_ALIVE_TIME);
-		for (String cmd : JOBS_ARRAY_LIST) {
+				+ " | BatchCorePoolSize: " + Main.corePoolSize);
+		MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(Main.corePoolSize,
+				Main.corePoolSize, Main.THREAD_KEEP_ALIVE_TIME);
+		for (String cmd : Main.JOBS_ARRAY_LIST) {
 			mtpe.addTask(new ShellTaskWorker(cmd));
 		}
 		mtpe.shutdown();
@@ -88,6 +87,7 @@ public final class Main {
 				switch (c) {
 				case 'h':
 					Util.printHelpAndExit();
+					break;
 				case 'n':
 					arg = g.getOptarg();
 					Batch.getInstance().setName(arg);
@@ -148,16 +148,26 @@ public final class Main {
 			}
 			if (Main.jobsFile != null) {
 				try {
-					BufferedReader br = new BufferedReader(new FileReader(Main.jobsFile));
-					String jobsFileLine;
-					while ((jobsFileLine = br.readLine()) != null) {
-						addJob(jobsFileLine.trim());
+					FileReader fr = new FileReader(Main.jobsFile);
+					BufferedReader br = new BufferedReader(fr);
+					try {
+						String jobsFileLine;
+						while ((jobsFileLine = br.readLine()) != null) {
+							addJob(jobsFileLine.trim());
+						}
+					} catch (IOException e) {
+						LOG.error("Problem whith the jobs file : " + Main.jobsFile, e);
+					} finally {
+						try {
+							br.close();
+						} catch(IOException e) {
+							LOG.warn("Can't close jobsFile reader stream : " + e.getLocalizedMessage());
+						}
+						fr = null;
 					}
-					br.close();
-				} catch (FileNotFoundException e) {
-					LOG.error("jobsFile not exists : " + Main.jobsFile, e);
-				} catch (IOException e) {
-					LOG.error("Problem whith the jobs file : " + Main.jobsFile, e);
+				} catch (FileNotFoundException fne) {
+					LOG.error("jobsFile not exists : " + Main.jobsFile, fne);
+					Util.printHelpAndExit();
 				}
 			}
 		}
@@ -171,7 +181,7 @@ public final class Main {
 		public void addJob(final String jobCommandLine) {
 			String jcl = jobCommandLine;
 			if (jcl.isEmpty()) { //Exit the method if jobCommandLine is empty
-				LOG.error("Cannot add empty job");
+				LOG.warn("Can't add empty job");
 				return;
 			}
 			if (Main.jobsParam != null && Main.jobsParam.length() > 0) { //Add global job parameter if <code>jobsParam</code> is not null and <code>jobsParam</code> contains parameter.
@@ -181,14 +191,15 @@ public final class Main {
 				if (jcl.length() < Main.MAX_LINE_LENGTH) {
 					Main.JOBS_ARRAY_LIST.add(jcl);
 				} else {
-					LOG.error("Length of the jobs command line is too high : \n"
+					LOG.warn("Length of the jobs command line is too long: \n"
 							+ "           Command line: " + jcl + "\n"
-							+ "    Command line length: " + jcl.length()
+							+ "    Command line length: " + jcl.length() + "\n"
 							+ "             Maximum is: " + Main.MAX_LINE_LENGTH + " !!!");
 				}
 			} else {
 				LOG.error("Maximum of jobs is " + Main.MAX_JOBS);
 				LOG.error("Reduce the number of jobs");
+				Util.printHelpAndExit();
 			}
 		}
 	}

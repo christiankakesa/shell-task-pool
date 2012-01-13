@@ -4,23 +4,24 @@ import java.util.Calendar;
 
 public final class AppInfo {
 	/**
-	 * Application name
+	 * Application name.
+	 * TODO: Try to retrieve dynamically the program name.
 	 */
 	public static final String APP_NAME = "shelltaskpool.jar";
 	/**
-	 * Author name
+	 * Application author name.
 	 */
 	public static final String AUTHOR_NAME = "Christian Kakesa";
 	/**
-	 * Author email
+	 * Application author email.
 	 */
 	public static final String AUTHOR_EMAIL = "christian.kakesa@gmail.com";
 	/**
-	 * Copyright
+	 * Application copyright.
 	 */
 	public static final String APP_COPYRIGHT = "Christian Kakesa (c) "
 			+ Calendar.getInstance().get(Calendar.YEAR);
-	
+
 	/**
 	 * Private default constructor
 	 */

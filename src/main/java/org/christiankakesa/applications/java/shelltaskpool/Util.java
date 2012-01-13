@@ -7,22 +7,18 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * Shell Task Pool utility class
+ * Shell Task Pool utility class.
+ * This class implements helpers methods.
  */
 public final class Util {
 	/**
 	 * Static logger.
 	 */
-	private static final Log LOG = LogFactory.getLog(Util.class);
-	/**
-	 * Standard output logger.
-	 */
-	private static final Logger STDOUT_LOG = Logger.getLogger("STDOUT_LOG");
+	private static final Logger LOG = Logger.getLogger(Util.class);
 
 	/**
 	 * Util private constructor.
@@ -34,7 +30,7 @@ public final class Util {
 	 * Print help screen.
 	 */
 	public static void printHelp() {
-		STDOUT_LOG.info(Util.getHelp());
+		LOG.log(Level.INFO, Util.getHelp());
 	}
 
 	/**

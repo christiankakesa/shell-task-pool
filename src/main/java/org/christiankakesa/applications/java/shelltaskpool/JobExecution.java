@@ -7,15 +7,15 @@ import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Representing the job to execute
  * 
  */
 public class JobExecution {
-	private static final org.apache.commons.logging.Log LOG = LogFactory
-			.getLog(JobExecution.class);
+	private static final Logger LOG = Logger
+			.getLogger(JobExecution.class);
 	
 	/**
 	 * Job command line string
@@ -119,7 +119,7 @@ public class JobExecution {
 	}
 
 	public Date getStartDate() {
-		return startDate;
+		return new Date(startDate.getTime());
 	}
 
 	private void setStartDate(final Date startDate) {
@@ -127,7 +127,7 @@ public class JobExecution {
 	}
 
 	public Date getEndDate() {
-		return endDate;
+		return new Date(endDate.getTime());
 	}
 
 	private void setEndDate(final Date endDate) {
@@ -197,11 +197,15 @@ public class JobExecution {
 			while ((line = reader.readLine()) != null) {
 				sb.append(line + "\n");
 			}
-			reader.close();
 		} catch (IOException e) {
 			LOG.error(e);
 		} finally {
 			line = null;
+			try {
+				reader.close();
+			} catch (IOException e) {
+				LOG.warn("Can't close the proccess output stream : " + e);
+			}
 		}
 		return sb.toString();
 	}
