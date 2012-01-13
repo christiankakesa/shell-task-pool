@@ -40,7 +40,7 @@ public class JobExecution {
 	/**
 	 * Job exit status code
 	 */
-	private int exitCode = Main.DEFAULT_ERROR_CODE;
+	private int exitCode = -42;
 	/**
 	 * Job process
 	 */
