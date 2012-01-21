@@ -75,7 +75,7 @@ public final class Util {
 				+ " [-f,--jobsfile=]\n"
 				+ dynamicSpaceAppend
 				+ "\tPath to the jobs plain text file. Jobs are separated by new line\n"
-				+ dynamicSpaceAppend + "\texample : -f /home/me/test.job\n\n"
+				+ dynamicSpaceAppend + "\texample : -f/home/me/test.job\n\n"
 				+ dynamicSpaceAppend + " [-p,--jobsparam=]\n"
 				+ dynamicSpaceAppend
 				+ "\tSet global params to add for each job\n"
