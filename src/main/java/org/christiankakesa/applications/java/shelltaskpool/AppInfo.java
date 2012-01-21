@@ -23,7 +23,7 @@ public final class AppInfo {
 			+ Calendar.getInstance().get(Calendar.YEAR);
 
 	/**
-	 * Private default constructor
+	 * Private default constructor.
 	 */
 	private AppInfo(){
 	}
