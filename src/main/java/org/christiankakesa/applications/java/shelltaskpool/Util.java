@@ -30,7 +30,7 @@ public final class Util {
 	 * Print help screen.
 	 */
 	public static void printHelp() {
-		LOG.log(Level.INFO, Util.getHelp());
+		Logger.getLogger("STDOUT").log(Level.INFO, Util.getHelp());
 	}
 
 	/**
