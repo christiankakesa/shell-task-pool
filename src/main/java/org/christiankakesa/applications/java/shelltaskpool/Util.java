@@ -46,33 +46,35 @@ public final class Util {
 	 * @return Help screen string content
 	 */
 	public static String getHelp() {
-		final String dynamicSpaceAppend = Util.getSpace(AppInfo.APP_NAME.length()
-				+ "Usage: ".length());
-		String result = "Usage: "
-				+ AppInfo.APP_NAME
-				+ " [-h,--help]\n"
+		String dynamicSpaceAppend = Util.getSpace("Usage: ".length() + AppInfo.APP_NAME.length());
+		String result = "Usage: " + AppInfo.APP_NAME + " -n \"Batch name\" -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]\n"
+				+ "   or: " + AppInfo.APP_NAME + " -n \"Batch name\" -f/path/to/file.job [OPTIONS]\n"
+				+ "   or: " + AppInfo.APP_NAME + " -h\n";
+		dynamicSpaceAppend = Util.getSpace("   ".length());
+		result += dynamicSpaceAppend
+				+ "[-h,--help]\n"
 				+ dynamicSpaceAppend
 				+ "\tShow this help screen\n\n"
 				+ dynamicSpaceAppend
-				+ " [-n,--batchname=]\n"
+				+ "[-n,--batchname=]\n"
 				+ dynamicSpaceAppend
 				+ "\tSet the name of the entire batch\n"
 				+ dynamicSpaceAppend
 				+ "\texample : -n \"Alimentation différentiel des omes\"\n\n"
 				+ dynamicSpaceAppend
-				+ " [-c,--corepoolsize=]\n"
+				+ "[-c,--corepoolsize=]\n"
 				+ dynamicSpaceAppend
 				+ "\tSet number of thread processor\n"
 				+ dynamicSpaceAppend
 				+ "\texample : -c5\n\n"
 				+ dynamicSpaceAppend
-				+ " [-j,--jobslist=]\n"
+				+ "[-j,--jobslist=]\n"
 				+ dynamicSpaceAppend
 				+ "\tList of jobs seperated by ';'\n"
 				+ dynamicSpaceAppend
 				+ "\texample : -j'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n"
 				+ dynamicSpaceAppend
-				+ " [-f,--jobsfile=]\n"
+				+ "[-f,--jobsfile=]\n"
 				+ dynamicSpaceAppend
 				+ "\tPath to the jobs plain text file. Jobs are separated by new line\n"
 				+ dynamicSpaceAppend + "\texample : -f/home/me/test.job\n\n"
