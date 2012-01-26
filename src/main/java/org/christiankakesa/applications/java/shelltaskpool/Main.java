@@ -23,10 +23,9 @@ import org.apache.log4j.Logger;
  * @author Christian Kakesa (christian.kakesa@gmail.com)
  */
 public final class Main {
-	public static final long THREAD_KEEP_ALIVE_TIME = 30L;
-	public static final int MAX_JOBS = 5120;
-	public static final int MAX_LINE_LENGTH = 2048;
-	public static final char JOB_SEPARATOR = ';';
+	private static final int MAX_JOBS = 5120;
+	private static final int MAX_LINE_LENGTH = 2048;
+	private static final char JOB_SEPARATOR = ';';
 	
 	private static final List<String> JOBS_ARRAY_LIST = new ArrayList<String>(
 			MAX_JOBS);
@@ -47,9 +46,9 @@ public final class Main {
 		LOG.info("[BATCH_PARAMETER] BatchId: " + Batch.getInstance().getId()
 				+ " | BatchName: " + Batch.getInstance().getName()
 				+ " | BatchParameter: " + StringUtils.join(args, " ")
-				+ " | BatchCorePoolSize: " + Main.corePoolSize);
-		MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(Main.corePoolSize,
-				Main.corePoolSize, Main.THREAD_KEEP_ALIVE_TIME);
+				+ " | BatchCorePoolSize: " + Main.corePoolSize
+				+ " | Batch-TotalJobs: " + Main.JOBS_ARRAY_LIST.size());
+		MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(Main.corePoolSize,	Main.corePoolSize);
 		for (String cmd : Main.JOBS_ARRAY_LIST) {
 			mtpe.addTask(new ShellTaskWorker(cmd));
 		}
@@ -183,7 +182,7 @@ public final class Main {
 		 */
 		public void addJob(final String jobCommandLine) {
 			String jcl = jobCommandLine;
-			if (jcl.isEmpty()) { //Exit the method if jobCommandLine is empty
+			if (jcl.length() == 0) { //Exit the method if jobCommandLine is empty
 				LOG.warn("Can't add empty job");
 				return;
 			}

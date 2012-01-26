@@ -2,8 +2,6 @@ package org.christiankakesa.applications.java.shelltaskpool;
 
 import java.util.Date;
 
-import javax.annotation.PostConstruct;
-
 /**
  * Store all informations about Batch.
  *
@@ -18,22 +16,22 @@ public enum Batch {
     /**
      * The batch name.
      */
-    private String name = "NO BATCH NAME";
+    private volatile String name = "NO BATCH NAME";
 
     /**
      * The batch id.
      */
-    private String id;
+    private volatile String id;
 
     /**
      * Start date of the batch.
      */
-    private Date startDate;
+    private volatile Date startDate;
 
     /**
      * End date of the batch.
      */
-    private Date endDate;
+    private volatile Date endDate;
 
     /**
      * Status of the batch.
@@ -55,11 +53,10 @@ public enum Batch {
      *
      * @param Batch name
      */
-    @PostConstruct
     public void setName(final String name) {
-	if (name != null && !name.isEmpty()) {
-	    this.name = name;
-	}
+		if (name != null && (name.length() > 0)) {
+		    this.name = name;
+		}
     }
 
     /**
@@ -78,7 +75,6 @@ public enum Batch {
      *
      * @param Batch id
      */
-    @PostConstruct
     public void setId(final String id) {
 	this.id = id;
     }
@@ -151,7 +147,7 @@ public enum Batch {
 	/**
 	 * Status of the batch.
 	 */
-	private Status status;
+	private volatile Status status;
 
 	/**
 	 * BatchStatus constructor.
@@ -248,14 +244,14 @@ public enum Batch {
 	protected void doEndStatus() {
 	    final Status endStatus;
 	    if (this.failedJob == 0 && this.successJob >= 1) {
-		//Batch completed success full (at least one job has started)
-		endStatus = Status.COMPLETED;
+			//Batch completed success full (at least one job has started)
+			endStatus = Status.COMPLETED;
 	    } else if (this.failedJob > 0 && this.successJob >= 1) {
-		//Batch completed (at least one job has started) but there are job failed
-		endStatus = Status.COMPLETED_WITH_ERROR;
+			//Batch completed (at least one job has started) but there are job failed
+			endStatus = Status.COMPLETED_WITH_ERROR;
 	    } else {
-		//Means that all jobs failed, Batch not complete or unknown problem
-		endStatus = Status.FAILED;
+			//Means that all jobs failed, Batch not complete or unknown problem
+			endStatus = Status.FAILED;
 	    }
 	    this.setStatus(endStatus);
 	}

@@ -62,7 +62,7 @@ public class UtilTest {
 	@Test
 	public void testUUID() {
 		final int uuidLength = 32; //Type 4 UUID is 36 chars but we removes the 4 '-' separator characters.
-		assertFalse(Util.buildUUID().isEmpty());
+		assertFalse(Util.buildUUID().length() == 0);
 		assertNotNull(Util.buildUUID());
 		assertEquals(Util.buildUUID().length(), uuidLength);
 		final String uuid1 = Util.buildUUID();

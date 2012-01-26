@@ -72,9 +72,6 @@ public class JobExecution {
 		try {
 			process = processBuilder.start();
 			this.setStatus(JobStatus.RUNNING);
-			if(LOG.isDebugEnabled()) {
-				LOG.debug(getProcessOutput(process));
-			}
 			this.setExitCode(process.waitFor());
 			this.setEndDate(Calendar.getInstance().getTime());
 			if (this.getExitCode() == 0) {
@@ -93,6 +90,9 @@ public class JobExecution {
 					+ " | JobDuration: " + Util.buildDurationFromDates(this.getEndDate(), this.getStartDate())
 					+ " | JobStatus: " + this.getStatus()
 					+ " | JobExitCode: " + this.getExitCode());
+			if(LOG.isDebugEnabled()) {
+				LOG.debug(getProcessOutput(process));
+			}
 		} catch (IOException e) {
 			LOG.error(e);
 		} catch (InterruptedException e) {
@@ -188,14 +188,16 @@ public class JobExecution {
 	 * @return String representation of the process output
 	 */
 	private String getProcessOutput(final Process process) {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sbResult = new StringBuilder();
+		sbResult.append("JobId: ").append(this.getId()).append(" - STDOUT: ");
+		final StringBuilder sbLine = new StringBuilder();
 		final InputStreamReader tempReader = new InputStreamReader(
 				new BufferedInputStream(process.getInputStream()));
 		final BufferedReader reader = new BufferedReader(tempReader);
 		String line;
 		try {
 			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
+				sbLine.append(line);
 			}
 		} catch (IOException e) {
 			LOG.error(e);
@@ -207,6 +209,11 @@ public class JobExecution {
 				LOG.warn("Can't close the proccess output stream : " + e);
 			}
 		}
-		return sb.toString();
+		if (sbLine.toString().trim().length() > 0) {
+			sbResult.append(sbLine);
+			return sbResult.toString();
+		} else {
+			return "";
+		}
 	}
 }
