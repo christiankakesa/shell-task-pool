@@ -72,9 +72,9 @@ public class UtilTest {
 	
 	@Test
 	public void testRemoveChar() {
-		final String oneS = "titi-toto";
-		final String twoS = "titi!toto";
-		final String threeS = "titi+toto";
+		final String oneS = "-titi-toto-";
+		final String twoS = "!titi!toto!";
+		final String threeS = "+titi+toto+";
 		final String result = "tititoto";
 		assertEquals(Util.removeCharFromString(oneS, '-'), result);
 		assertEquals(Util.removeCharFromString(twoS, '!'), result);

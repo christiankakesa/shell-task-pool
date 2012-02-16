@@ -4,265 +4,270 @@ import java.util.Date;
 
 /**
  * Store all informations about Batch.
- *
+ * 
  * @author Christian Kakesa (christian.kakesa@gmail.com)
  */
 public enum Batch {
-    /**
-     * Unique instance of batch statically construct.
-     */
-    INSTANCE;
-
-    /**
-     * The batch name.
-     */
-    private volatile String name = "NO BATCH NAME";
-
-    /**
-     * The batch id.
-     */
-    private volatile String id;
-
-    /**
-     * Start date of the batch.
-     */
-    private volatile Date startDate;
-
-    /**
-     * End date of the batch.
-     */
-    private volatile Date endDate;
-
-    /**
-     * Status of the batch.
-     */
-    private volatile BatchStatus status = new BatchStatus();
-
-    /**
-     * Get the name of the batch.
-     *
-     * @return Batch name
-     */
-    public String getName() {
-	return name;
-    }
-
-    /**
-     * Set the batch name.
-     * If empty or null, Batch.DEFAULT_BATCH_NAME is set.
-     *
-     * @param Batch name
-     */
-    public void setName(final String name) {
-		if (name != null && (name.length() > 0)) {
-		    this.name = name;
-		}
-    }
-
-    /**
-     * Get the batch id.
-     *
-     * @return Unique string representation of bath.
-     *
-     * @see Util.buildUUID
-     */
-    public String getId() {
-	return id;
-    }
-
-    /**
-     * Set the batch id.
-     *
-     * @param Batch id
-     */
-    public void setId(final String id) {
-	this.id = id;
-    }
-
-    /**
-     * Get the date of batch start.
-     *
-     * @return Date of batch start
-     */
-    public Date getStartDate() {
-	return new Date(startDate.getTime());
-    }
-
-    /**
-     * Set the date of batch start.
-     *
-     * @param Date of batch start
-     */
-    public void setStartDate(final Date startDate) {
-	this.startDate = new Date(startDate.getTime());
-    }
-
-    /**
-     * Get the date of batch end.
-     *
-     * @return Date of batch end
-     */
-    public Date getEndDate() {
-	return new Date(endDate.getTime());
-    }
-
-    /**
-     * Set the date of batch end.
-     *
-     * @param Date of batch end
-     */
-    public void setEndDate(final Date endDate) {
-	this.endDate = new Date(endDate.getTime());
-    }
-
-    /**
-     * Get the batch status.
-     *
-     * @return Batch status
-     */
-    public BatchStatus getStatus() {
-	return status;
-    }
-
-    /**
-     * Batch status enumeration : NONE, STARTED, RUNNING, FAILED, COMPLETED_WITH_ERROR, COMPLETED.
-     */
-    public static enum Status {
-	NONE, STARTED, RUNNING, FAILED, COMPLETED_WITH_ERROR, COMPLETED;
-    }
-
-    public static class BatchStatus {
 	/**
-	 * Number of job success.
+	 * Unique instance of batch statically construct.
 	 */
-	private volatile int successJob;
+	INSTANCE;
+
 	/**
-	 * Number of job failed.
+	 * The batch name.
 	 */
-	private volatile int failedJob;
+	private volatile String name = "NO BATCH NAME";
+
 	/**
-	 * Number of total job.
+	 * The batch id.
 	 */
-	private volatile int totalJob;
+	private volatile String id;
+
+	/**
+	 * Start date of the batch.
+	 */
+	private volatile Date startDate;
+
+	/**
+	 * End date of the batch.
+	 */
+	private volatile Date endDate;
+
 	/**
 	 * Status of the batch.
 	 */
-	private volatile Status status;
+	private volatile BatchStatus status = new BatchStatus();
 
 	/**
-	 * BatchStatus constructor.
+	 * Get the name of the batch.
+	 * 
+	 * @return Batch name
 	 */
-	public BatchStatus() {
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * Return the number of successfull job.
-	 *
-	 * @return Number of successful job.
+	 * Set the batch name. If empty or null, Batch.DEFAULT_BATCH_NAME is set.
+	 * 
+	 * @param Batch
+	 *            name
 	 */
-	public int getSuccessJob() {
-	    return successJob;
+	public void setName(final String name) {
+		if (name != null && (name.length() > 0)) {
+			this.name = name;
+		}
 	}
 
 	/**
-	 * Increment <code>successJob</code> by 1.
+	 * Get the batch id.
+	 * 
+	 * @return Unique string representation of bath.
+	 * 
+	 * @see Util.buildUUID
 	 */
-	public synchronized void incrementSuccessJob() {
-	    //Synchronized because Add operator is not thread safe
-	    ++(this.successJob);
+	public String getId() {
+		return id;
 	}
 
 	/**
-	 * Return the number of failing job.
-	 *
-	 * @return Number of failed job.
+	 * Set the batch id.
+	 * 
+	 * @param Batch
+	 *            id
 	 */
-	public int getFailedJob() {
-	    return failedJob;
+	public void setId(final String id) {
+		this.id = id;
 	}
 
 	/**
-	 * Increment <code>failedJob</code> by 1.
+	 * Get the date of batch start.
+	 * 
+	 * @return Date of batch start
 	 */
-	public synchronized void incrementFailedJob() {
-	    //Synchronized because Add operator is not thread safe
-	    ++(this.failedJob);
+	public Date getStartDate() {
+		return new Date(startDate.getTime());
 	}
 
 	/**
-	 * Return the number of total job.
-	 *
-	 * @return Number of total job.
+	 * Set the date of batch start.
+	 * 
+	 * @param Date
+	 *            of batch start
 	 */
-	public int getTotalJob() {
-	    return totalJob;
+	public void setStartDate(final Date startDate) {
+		this.startDate = new Date(startDate.getTime());
 	}
 
 	/**
-	 * Return the status of BatchStatus.
-	 *
-	 * @return Status of BatchStatus
+	 * Get the date of batch end.
+	 * 
+	 * @return Date of batch end
 	 */
-	public Status getStatus() {
-	    return status;
+	public Date getEndDate() {
+		return new Date(endDate.getTime());
 	}
 
 	/**
-	 * Set the status of BatchStatus.
-	 *
-	 * @param status
+	 * Set the date of batch end.
+	 * 
+	 * @param Date
+	 *            of batch end
 	 */
-	public void setStatus(final Status status) {
-	    this.status = status;
+	public void setEndDate(final Date endDate) {
+		this.endDate = new Date(endDate.getTime());
 	}
 
 	/**
-	 * Increment <code>totalJob</code> by 1.
+	 * Get the batch status.
+	 * 
+	 * @return Batch status
 	 */
-	public synchronized void incrementTotalJob() {
-	    //Synchronized because Add operator is not thread safe
-	    ++(this.totalJob);
+	public BatchStatus getStatus() {
+		return status;
 	}
 
 	/**
-	 * Increment and return the number of total jobs.
-	 *
-	 * @return total jobs number.
+	 * Batch status enumeration : NONE, STARTED, RUNNING, FAILED,
+	 * COMPLETED_WITH_ERROR, COMPLETED.
 	 */
-	public int incrementAndGetTotalJOb() {
-	    //Synchronized because Add operator is not thread safe
-	    this.incrementTotalJob();
-	    return this.totalJob;
+	public static enum Status {
+		NONE, STARTED, RUNNING, FAILED, COMPLETED_WITH_ERROR, COMPLETED;
+	}
+
+	public static class BatchStatus {
+		/**
+		 * Number of job success.
+		 */
+		private volatile int successJob;
+		/**
+		 * Number of job failed.
+		 */
+		private volatile int failedJob;
+		/**
+		 * Number of total job.
+		 */
+		private volatile int totalJob;
+		/**
+		 * Status of the batch.
+		 */
+		private volatile Status status;
+
+		/**
+		 * BatchStatus constructor.
+		 */
+		public BatchStatus() {
+		}
+
+		/**
+		 * Return the number of successfull job.
+		 * 
+		 * @return Number of successful job.
+		 */
+		public int getSuccessJob() {
+			return successJob;
+		}
+
+		/**
+		 * Increment <code>successJob</code> by 1.
+		 */
+		public synchronized void incrementSuccessJob() {
+			// Synchronized because Add operator is not thread safe
+			++(this.successJob);
+		}
+
+		/**
+		 * Return the number of failing job.
+		 * 
+		 * @return Number of failed job.
+		 */
+		public int getFailedJob() {
+			return failedJob;
+		}
+
+		/**
+		 * Increment <code>failedJob</code> by 1.
+		 */
+		public synchronized void incrementFailedJob() {
+			// Synchronized because Add operator is not thread safe
+			++(this.failedJob);
+		}
+
+		/**
+		 * Return the number of total job.
+		 * 
+		 * @return Number of total job.
+		 */
+		public int getTotalJob() {
+			return totalJob;
+		}
+
+		/**
+		 * Return the status of BatchStatus.
+		 * 
+		 * @return Status of BatchStatus
+		 */
+		public Status getStatus() {
+			return status;
+		}
+
+		/**
+		 * Set the status of BatchStatus.
+		 * 
+		 * @param status
+		 */
+		public void setStatus(final Status status) {
+			this.status = status;
+		}
+
+		/**
+		 * Increment <code>totalJob</code> by 1.
+		 */
+		public synchronized void incrementTotalJob() {
+			// Synchronized because Add operator is not thread safe
+			++(this.totalJob);
+		}
+
+		/**
+		 * Increment and return the number of total jobs.
+		 * 
+		 * @return total jobs number.
+		 */
+		public int incrementAndGetTotalJOb() {
+			this.incrementTotalJob();
+			return this.totalJob;
+		}
+
+		/**
+		 * Determine the end of batch status.
+		 * 
+		 * Try to determine end batch status inspecting <code>failedJob</code>
+		 * and <code>successJob</code>.
+		 */
+		protected void doEndStatus() {
+			final Status endStatus;
+			if (this.failedJob == 0 && this.successJob >= 1) {
+				// Batch completed success full (at least one job has started)
+				endStatus = Status.COMPLETED;
+			} else if (this.failedJob > 0 && this.successJob >= 1) {
+				// Batch completed (at least one job finished successfully) but
+				// there are failed jobs
+				endStatus = Status.COMPLETED_WITH_ERROR;
+			} else {
+				// Means that all jobs failed, Batch not complete or unknown
+				// problem
+				endStatus = Status.FAILED;
+			}
+			this.setStatus(endStatus);
+		}
 	}
 
 	/**
-	 * Determine the end of batch status.
-	 *
-	 * Try to determine end batch status inspecting <code>failedJob</code>
-	 * and <code>successJob</code>.
+	 * Get the unique batch instance.
+	 * 
+	 * @return Batch unique instance
 	 */
-	protected void doEndStatus() {
-	    final Status endStatus;
-	    if (this.failedJob == 0 && this.successJob >= 1) {
-			//Batch completed success full (at least one job has started)
-			endStatus = Status.COMPLETED;
-	    } else if (this.failedJob > 0 && this.successJob >= 1) {
-			//Batch completed (at least one job has started) but there are job failed
-			endStatus = Status.COMPLETED_WITH_ERROR;
-	    } else {
-			//Means that all jobs failed, Batch not complete or unknown problem
-			endStatus = Status.FAILED;
-	    }
-	    this.setStatus(endStatus);
+	public static Batch getInstance() {
+		return Batch.INSTANCE;
 	}
-    }
-
-    /**
-     * Get the unique batch instance.
-     *
-     * @return Batch unique instance
-     */
-    public static Batch getInstance() {
-	return Batch.INSTANCE;
-    }
 }

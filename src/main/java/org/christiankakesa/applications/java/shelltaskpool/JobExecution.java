@@ -14,9 +14,8 @@ import org.apache.log4j.Logger;
  * 
  */
 public class JobExecution {
-	private static final Logger LOG = Logger
-			.getLogger(JobExecution.class);
-	
+	private static final Logger LOG = Logger.getLogger(JobExecution.class);
+
 	/**
 	 * Job command line string
 	 */
@@ -48,16 +47,18 @@ public class JobExecution {
 
 	/**
 	 * JobExecution constructor
+	 * 
 	 * @param commandLine
 	 */
 	public JobExecution(final String commandLine) {
 		this.commandLine = commandLine;
 	}
 
-	
 	public void start() {
 		this.setId(Batch.getInstance().getStatus().incrementAndGetTotalJOb());
-		if (this.getStatus().equals(JobStatus.NONE)) { //Run the job only if job status is NONE (no state)
+		if (this.getStatus().equals(JobStatus.NONE)) { // Run the job only if
+														// job status is NONE
+														// (no state)
 			this.run();
 		} else {
 			LOG.warn("JobId: " + this.getId() + " with status: "
@@ -81,17 +82,27 @@ public class JobExecution {
 				this.setStatus(JobStatus.FAILED);
 				Batch.getInstance().getStatus().incrementFailedJob();
 			}
-			LOG.info("[JOB_EXECUTION] BatchId: " + Batch.getInstance().getId()
-					+ " | BatchName: " + Batch.getInstance().getName()
-					+ " | JobId: " + this.getId()
-					+ " | JobCommandLine: " + this.getCommandLine()
-					+ " | JobStartDate: " + this.getStartDate()
-					+ " | JobEndDate: " + this.getEndDate()
-					+ " | JobDuration: " + Util.buildDurationFromDates(this.getEndDate(), this.getStartDate())
-					+ " | JobStatus: " + this.getStatus()
-					+ " | JobExitCode: " + this.getExitCode());
-			if(LOG.isDebugEnabled()) {
-				LOG.debug(getProcessOutput(process));
+			synchronized (this.getClass()) {
+				LOG.info("[JOB_EXECUTION] BatchId: "
+						+ Batch.getInstance().getId()
+						+ " | BatchName: "
+						+ Batch.getInstance().getName()
+						+ " | JobId: "
+						+ this.getId()
+						+ " | JobCommandLine: "
+						+ this.getCommandLine()
+						+ " | JobStartDate: "
+						+ this.getStartDate()
+						+ " | JobEndDate: "
+						+ this.getEndDate()
+						+ " | JobDuration: "
+						+ Util.buildDurationFromDates(this.getEndDate(),
+								this.getStartDate()) + " | JobStatus: "
+						+ this.getStatus() + " | JobExitCode: "
+						+ this.getExitCode());
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(getProcessOutput(process));
+				}
 			}
 		} catch (IOException e) {
 			LOG.error(e);
@@ -101,7 +112,8 @@ public class JobExecution {
 	}
 
 	public void destroy() {
-		if (this.process != null) { //Destroy JobExecution.process if not destroyed
+		if (this.process != null) { // Destroy JobExecution.process if not
+									// destroyed
 			this.process.destroy();
 		}
 	}
@@ -152,6 +164,7 @@ public class JobExecution {
 
 	/**
 	 * Get the job process object
+	 * 
 	 * @return job process object
 	 */
 	public Process getProcess() {
@@ -164,7 +177,7 @@ public class JobExecution {
 	public static enum JobStatus {
 		NONE, RUNNING, FAILED, COMPLETED;
 	}
-	
+
 	/**
 	 * Return string representation of the object
 	 */
@@ -181,9 +194,10 @@ public class JobExecution {
 		sb.append(separator).append(this.getExitCode());
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Get the output of a process
+	 * 
 	 * @param process
 	 * @return String representation of the process output
 	 */
