@@ -155,7 +155,10 @@ public final class Main {
 					try {
 						String jobsFileLine;
 						while ((jobsFileLine = br.readLine()) != null) {
-							addJob(jobsFileLine.trim());
+							// Test if line is not a comment (starting with "#") or not empty
+							if ((jobsFileLine.trim().length() > 0) && !jobsFileLine.trim().startsWith("#")) {
+								addJob(jobsFileLine.trim());
+							}
 						}
 					} catch (IOException e) {
 						LOG.error("Problem whith the jobs file : " + Main.jobsFile, e);
