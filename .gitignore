@@ -5,3 +5,9 @@ bin/
 target/
 .settings/
 .idea/
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
