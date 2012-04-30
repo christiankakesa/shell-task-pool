@@ -56,9 +56,7 @@ public class JobExecution {
 
 	public void start() {
 		this.setId(Batch.getInstance().getStatus().incrementAndGetTotalJOb());
-		if (this.getStatus().equals(JobStatus.NONE)) { // Run the job only if
-														// job status is NONE
-														// (no state)
+		if (this.getStatus().equals(JobStatus.NONE)) { // Run the job only if job status is NONE (no state)
 			this.run();
 		} else {
 			LOG.warn("JobId: " + this.getId() + " with status: "
