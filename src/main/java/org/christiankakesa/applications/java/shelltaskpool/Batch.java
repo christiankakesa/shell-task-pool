@@ -36,7 +36,7 @@ public enum Batch {
 	/**
 	 * Status of the batch.
 	 */
-	private volatile BatchStatus status = new BatchStatus();
+	private volatile BatchStatus batchStatus = new BatchStatus();
 
 	/**
 	 * Get the name of the batch.
@@ -123,8 +123,8 @@ public enum Batch {
 	 * 
 	 * @return Batch status
 	 */
-	public BatchStatus getStatus() {
-		return status;
+	public BatchStatus getBatchStatus() {
+		return batchStatus;
 	}
 
 	/**

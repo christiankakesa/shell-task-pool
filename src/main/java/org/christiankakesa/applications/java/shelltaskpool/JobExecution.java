@@ -55,7 +55,7 @@ public class JobExecution {
 	}
 
 	public void start() {
-		this.setId(Batch.getInstance().getStatus().incrementAndGetTotalJOb());
+		this.setId(Batch.getInstance().getBatchStatus().incrementAndGetTotalJOb());
 		if (this.getStatus().equals(JobStatus.NONE)) { // Run the job only if job status is NONE (no state)
 			this.run();
 		} else {
@@ -75,10 +75,10 @@ public class JobExecution {
 			this.setEndDate(Calendar.getInstance().getTime());
 			if (this.getExitCode() == 0) {
 				this.setStatus(JobStatus.COMPLETED);
-				Batch.getInstance().getStatus().incrementSuccessJob();
+				Batch.getInstance().getBatchStatus().incrementSuccessJob();
 			} else {
 				this.setStatus(JobStatus.FAILED);
-				Batch.getInstance().getStatus().incrementFailedJob();
+				Batch.getInstance().getBatchStatus().incrementFailedJob();
 			}
 			synchronized (this.getClass()) {
 				LOG.info("[JOB_EXECUTION] BatchId: "

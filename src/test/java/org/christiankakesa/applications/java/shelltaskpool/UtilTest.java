@@ -2,9 +2,9 @@ package org.christiankakesa.applications.java.shelltaskpool;
 
 //import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 
@@ -34,7 +34,7 @@ public class UtilTest {
 	@Test
 	public void testBuildDurationFromDates() {
 		final int sleepTime = 1000;
-		final String defaultDuration = "00:00:00";
+		final String defaultDuration = "00:00:00.000";
 		assertEquals(Util.buildDurationFromDates(null, null), defaultDuration);
 		final java.util.Date begin = Calendar.getInstance().getTime();
 		try {
@@ -44,6 +44,9 @@ public class UtilTest {
 		}
 		final java.util.Date end = Calendar.getInstance().getTime();
 		assertFalse(Util.buildDurationFromDates(end, begin) == defaultDuration);
+		final long elapsedTime = 9762042L; //2 hours, 42 minutes, 42 seconds, 42 milliseconds.
+		end.setTime(begin.getTime() + elapsedTime);
+		assertEquals(Util.buildDurationFromDates(end, begin), "02:42:42.042");
 	}
 	
 	@Test

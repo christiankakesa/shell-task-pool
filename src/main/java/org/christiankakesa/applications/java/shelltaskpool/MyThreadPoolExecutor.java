@@ -33,12 +33,12 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	}
 
 	private void myInit() {
-		Batch.getInstance().getStatus().setStatus(Batch.Status.STARTED);
+		Batch.getInstance().getBatchStatus().setStatus(Batch.Status.STARTED);
 		Batch.getInstance().setStartDate(Calendar.getInstance().getTime());
 		LOG.info("[BATCH_START] BatchId: " + Batch.getInstance().getId()
 				+ " | BatchName: " + Batch.getInstance().getName()
 				+ " | BatchStartDate: " + Batch.getInstance().getStartDate()
-				+ " | BatchStatus: " + Batch.getInstance().getStatus().getStatus());
+				+ " | BatchStatus: " + Batch.getInstance().getBatchStatus().getStatus());
 	}
 
 	public void addTask(Runnable r) {
@@ -49,7 +49,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	@Override
 	public void terminated() {
 		Batch.getInstance().setEndDate(Calendar.getInstance().getTime());
-		Batch.getInstance().getStatus().doEndStatus();
+		Batch.getInstance().getBatchStatus().doEndStatus();
 		LOG.info("[BATCH_END] - BatchId: "
 				+ Batch.getInstance().getId()
 				+ " | BatchName: "
@@ -62,7 +62,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 				+ Util.buildDurationFromDates(
 						Batch.getInstance().getEndDate(), Batch.getInstance()
 								.getStartDate()) + " | BatchStatus: "
-				+ Batch.getInstance().getStatus().getStatus());
+				+ Batch.getInstance().getBatchStatus().getStatus());
 		super.terminated();
 	}
 
@@ -79,8 +79,8 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 	@Override
 	protected void beforeExecute(Thread t, Runnable r) {
 		super.beforeExecute(t, r);
-		if (Batch.getInstance().getStatus().getStatus() != Batch.Status.RUNNING) { //Ensure that Batch state is set to Batch.RUNNING 
-			Batch.getInstance().getStatus().setStatus(Batch.Status.RUNNING);
+		if (Batch.getInstance().getBatchStatus().getStatus() != Batch.Status.RUNNING) { //Ensure that Batch state is set to Batch.RUNNING 
+			Batch.getInstance().getBatchStatus().setStatus(Batch.Status.RUNNING);
 		}
 	}
 

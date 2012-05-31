@@ -59,18 +59,18 @@ public class BatchTest {
 	
 	@Test
 	public void testStatus() {
-		Batch.getInstance().getStatus().setStatus(Batch.Status.NONE);
-		assertEquals(Batch.Status.NONE, Batch.getInstance().getStatus().getStatus());
-		Batch.getInstance().getStatus().setStatus(Batch.Status.STARTED);
-		assertEquals(Batch.Status.STARTED, Batch.getInstance().getStatus().getStatus());
-		Batch.getInstance().getStatus().setStatus(Batch.Status.RUNNING);
-		assertEquals(Batch.Status.RUNNING, Batch.getInstance().getStatus().getStatus());
-		Batch.getInstance().getStatus().setStatus(Batch.Status.FAILED);
-		assertEquals(Batch.Status.FAILED, Batch.getInstance().getStatus().getStatus());
-		Batch.getInstance().getStatus().setStatus(Batch.Status.COMPLETED_WITH_ERROR);
-		assertEquals(Batch.Status.COMPLETED_WITH_ERROR, Batch.getInstance().getStatus().getStatus());
-		Batch.getInstance().getStatus().setStatus(Batch.Status.COMPLETED);
-		assertEquals(Batch.Status.COMPLETED, Batch.getInstance().getStatus().getStatus());
+		Batch.getInstance().getBatchStatus().setStatus(Batch.Status.NONE);
+		assertEquals(Batch.Status.NONE, Batch.getInstance().getBatchStatus().getStatus());
+		Batch.getInstance().getBatchStatus().setStatus(Batch.Status.STARTED);
+		assertEquals(Batch.Status.STARTED, Batch.getInstance().getBatchStatus().getStatus());
+		Batch.getInstance().getBatchStatus().setStatus(Batch.Status.RUNNING);
+		assertEquals(Batch.Status.RUNNING, Batch.getInstance().getBatchStatus().getStatus());
+		Batch.getInstance().getBatchStatus().setStatus(Batch.Status.FAILED);
+		assertEquals(Batch.Status.FAILED, Batch.getInstance().getBatchStatus().getStatus());
+		Batch.getInstance().getBatchStatus().setStatus(Batch.Status.COMPLETED_WITH_ERROR);
+		assertEquals(Batch.Status.COMPLETED_WITH_ERROR, Batch.getInstance().getBatchStatus().getStatus());
+		Batch.getInstance().getBatchStatus().setStatus(Batch.Status.COMPLETED);
+		assertEquals(Batch.Status.COMPLETED, Batch.getInstance().getBatchStatus().getStatus());
 	}
 	
 	@Test

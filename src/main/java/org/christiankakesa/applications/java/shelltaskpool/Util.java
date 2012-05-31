@@ -119,16 +119,18 @@ public final class Util {
 			final long milliInSecond = 1000;
 			final long secondsInHour = 3600;
 			final long secondsInMinute = 60;
-			final long tsTime = (end.getTime() - start.getTime())
-					/ milliInSecond;
+			final long tmTime = end.getTime() - start.getTime();
+			final long tsTime = tmTime / milliInSecond;
 			//tsTime / 3600, (tsTime % 3600) / 60, (tsTime % 60)
-			return String.format("%02d:%02d:%02d", tsTime / secondsInHour,
-					(tsTime % secondsInHour) / secondsInMinute,
-					(tsTime % secondsInMinute));
+			final int hours = (int) (tsTime / secondsInHour);
+			final int minutes = (int) ((tsTime % secondsInHour) / secondsInMinute);
+			final int seconds = (int) (tsTime % secondsInMinute);
+			final int millis = (int) (tmTime % milliInSecond);
+			return String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, millis);
 		}
-		LOG.debug("Can't determine duration : endDate = " + end
+		LOG.warn("Can't determine duration : endDate = " + end
 				+ " - startDate = " + start);
-		return "00:00:00";
+		return "00:00:00.000";
 	}
 
 	/**
