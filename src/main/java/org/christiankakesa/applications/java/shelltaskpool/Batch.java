@@ -141,13 +141,25 @@ public enum Batch {
 		 */
 		private volatile int successJob;
 		/**
+		 * Synchronized monitor for successJob.
+		 */
+		private Object successJobMonitor = new Object();
+		/**
 		 * Number of job failed.
 		 */
 		private volatile int failedJob;
 		/**
+		 * Synchronized monitor for failedJob.
+		 */
+		private Object failedJobMonitor = new Object();
+		/**
 		 * Number of total job.
 		 */
 		private volatile int totalJob;
+		/**
+		 * Synchronized monitor for totalJob.
+		 */
+		private Object totalJobMonitor = new Object();
 		/**
 		 * Status of the batch.
 		 */
@@ -165,15 +177,16 @@ public enum Batch {
 		 * @return Number of successful job.
 		 */
 		public int getSuccessJob() {
-			return successJob;
+			return successJob;// No synchronization needed, successJob is volatile, not cached.
 		}
 
 		/**
 		 * Increment <code>successJob</code> by 1.
 		 */
-		public synchronized void incrementSuccessJob() {
-			// Synchronized because Add operator is not thread safe
-			++(this.successJob);
+		public void incrementSuccessJob() {
+			synchronized(successJobMonitor) {// Synchronized because Add operator is not thread safe
+				++(this.successJob);
+			}
 		}
 
 		/**
@@ -182,24 +195,16 @@ public enum Batch {
 		 * @return Number of failed job.
 		 */
 		public int getFailedJob() {
-			return failedJob;
+			return failedJob;// No synchronization needed, failedJob is volatile, not cached.
 		}
 
 		/**
 		 * Increment <code>failedJob</code> by 1.
 		 */
-		public synchronized void incrementFailedJob() {
-			// Synchronized because Add operator is not thread safe
-			++(this.failedJob);
-		}
-
-		/**
-		 * Return the number of total job.
-		 * 
-		 * @return Number of total job.
-		 */
-		public int getTotalJob() {
-			return totalJob;
+		public void incrementFailedJob() {
+			synchronized(failedJobMonitor) {// Synchronized because Add operator is not thread safe
+				++(this.failedJob);
+			}
 		}
 
 		/**
@@ -221,11 +226,21 @@ public enum Batch {
 		}
 
 		/**
+		 * Return the number of total job.
+		 * 
+		 * @return Number of total job.
+		 */
+		public int getTotalJob() {
+			return totalJob;// No synchronization needed, totalJob is volatile, not cached.
+		}
+
+		/**
 		 * Increment <code>totalJob</code> by 1.
 		 */
-		public synchronized void incrementTotalJob() {
-			// Synchronized because Add operator is not thread safe
-			++(this.totalJob);
+		public void incrementTotalJob() {
+			synchronized(totalJobMonitor) {// Synchronized because Add operator is not thread safe
+				++(this.totalJob);
+			}
 		}
 
 		/**
