@@ -156,11 +156,11 @@ public enum Batch {
 		/**
 		 * BatchStatus constructor.
 		 */
-		public BatchStatus() {
+		protected BatchStatus() {
 		}
 
 		/**
-		 * Return the number of successfull job.
+		 * Return the number of successful job.
 		 * 
 		 * @return Number of successful job.
 		 */
