@@ -1,6 +1,6 @@
 # shell-task-pool
 
-A Java tool to parallelize command lines with java ThreadPoolExecutor API.
+A Java tool to parallelize command lines with java ThreadPoolExecutor class. [![Build Status](https://secure.travis-ci.org/fenicks/shell-task-pool.png?branch=master)](http://travis-ci.org/fenicks/shell-task-pool).
 
 ## Usage
 
