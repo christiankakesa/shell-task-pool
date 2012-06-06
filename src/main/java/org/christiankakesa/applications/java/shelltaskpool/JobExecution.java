@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
  */
 public class JobExecution {
 	private static final Logger LOG = Logger.getLogger(JobExecution.class);
+	private static final int MOINS_QUARANTE_DEUX = -42;
 
 	/**
 	 * Job command line string
@@ -39,7 +40,7 @@ public class JobExecution {
 	/**
 	 * Job exit status code
 	 */
-	private int exitCode = -42;
+	private int exitCode = MOINS_QUARANTE_DEUX;
 	/**
 	 * Job process
 	 */
@@ -110,8 +111,7 @@ public class JobExecution {
 	}
 
 	public void destroy() {
-		if (this.process != null) { // Destroy JobExecution.process if not
-									// destroyed
+		if (this.process != null) { // Destroy JobExecution.process if not destroyed
 			this.process.destroy();
 		}
 	}
