@@ -76,7 +76,7 @@ public final class Main {
 		}
 
 		public final void parseCmdLine() {
-			String[] params = null;
+			String[] params = new String[this.pParams.length];
 			System.arraycopy(this.pParams, 0, params, 0, this.pParams.length);
 			int opt;
 			String arg;
