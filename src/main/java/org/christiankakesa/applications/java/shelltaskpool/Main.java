@@ -105,9 +105,9 @@ public final class Main {
 					try {
 						Main.corePoolSize = Integer.valueOf(arg);
 					} catch (NumberFormatException e) {
-						LOG.warn("Wrong corePoolSize set in parameter", e);
+						LOG.warn("Wrong corePoolSize set: " + arg);
 						Main.corePoolSize = Util.defaultCorePoolSize();
-						LOG.warn("Detected free cpu core set to parameter corePoolSize");
+						LOG.warn("Detected free cpu core set: corePoolSize=" + Main.corePoolSize);
 					}
 					LOG.debug("Param [corepoolsize]: " + Main.corePoolSize);
 					break;
