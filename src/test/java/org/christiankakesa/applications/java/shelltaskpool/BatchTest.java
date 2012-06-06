@@ -12,7 +12,6 @@ public class BatchTest {
 	static {
 		//Set the default batch name to the default name
 		Batch.getInstance().setName(null);
-		Batch.getInstance().setId(Util.buildUUID());
 	}
 	
 	@Test
