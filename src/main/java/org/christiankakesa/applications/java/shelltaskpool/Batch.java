@@ -21,7 +21,7 @@ public enum Batch {
 	/**
 	 * The batch id.
 	 */
-	private volatile String id;
+	private volatile String id = Util.buildUUID();
 
 	/**
 	 * Start date of the batch.
@@ -71,22 +71,12 @@ public enum Batch {
 	}
 
 	/**
-	 * Set the batch id.
-	 * 
-	 * @param Batch
-	 *            id
-	 */
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	/**
 	 * Get the date of batch start.
 	 * 
 	 * @return Date of batch start
 	 */
 	public Date getStartDate() {
-		return new Date(startDate.getTime());
+		return new Date(this.startDate.getTime());
 	}
 
 	/**
@@ -105,7 +95,7 @@ public enum Batch {
 	 * @return Date of batch end
 	 */
 	public Date getEndDate() {
-		return new Date(endDate.getTime());
+		return new Date(this.endDate.getTime());
 	}
 
 	/**
