@@ -99,7 +99,7 @@ public final class Util {
 			return "";
 		}
 		final StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < nbSpace; ++i) {
+		for (int i = nbSpace; i > 0; --i) {
 			sb.append(" ");
 		}
 		return sb.toString();
@@ -174,7 +174,7 @@ public final class Util {
 	 * @return String without given character
 	 */
 	public static String removeCharFromString(final String givenString, final char c) {
-		final StringBuffer r = new StringBuffer(givenString.length());
+		final StringBuilder r = new StringBuilder(givenString.length());
 		r.setLength(givenString.length());
 		int current = 0;
 		char cur;
