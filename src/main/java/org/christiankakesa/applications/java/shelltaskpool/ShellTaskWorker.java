@@ -3,7 +3,7 @@ package org.christiankakesa.applications.java.shelltaskpool;
 import org.apache.log4j.Logger;
 
 /**
- * 
+ * A runnable worker for command line JobExecution.
  */
 public class ShellTaskWorker implements Runnable {
 	private static final Logger LOG = Logger.getLogger(ShellTaskWorker.class);
