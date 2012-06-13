@@ -77,19 +77,37 @@ public class BatchTest {
 		int successCounter = 0;
 		int failedCounter = 0;
 		int totalCounter = 0;
+		
 		Batch.BatchStatus b = new Batch.BatchStatus();
 		assertNotNull(b);
 		assertEquals(b.getSuccessJob(), successCounter);
 		assertEquals(b.getFailedJob(), failedCounter);
 		assertEquals(b.getTotalJob(), totalCounter);
 		b.incrementSuccessJob();
+		b.incrementTotalJob();
 		assertEquals(b.getSuccessJob(), ++successCounter);
 		b.incrementFailedJob();
-		assertEquals(b.getFailedJob(), ++failedCounter);
 		b.incrementTotalJob();
-		assertEquals(b.getTotalJob(), ++totalCounter);
+		assertEquals(b.getFailedJob(), ++failedCounter);
+		totalCounter += 2;
+		assertEquals(b.getTotalJob(), totalCounter);
 		assertEquals(b.incrementAndGetTotalJOb(), ++totalCounter);
 		b.doEndStatus();
 		assertNotNull(b.getStatus());
+		
+		Batch.BatchStatus c = new Batch.BatchStatus();
+		c.doEndStatus();
+		assertEquals(c.getStatus(), Batch.Status.FAILED);
+		c.incrementSuccessJob();
+		c.incrementAndGetTotalJOb();
+		c.doEndStatus();
+		assertEquals(c.getStatus(), Batch.Status.COMPLETED);
+		c.incrementFailedJob();
+		c.incrementAndGetTotalJOb();
+		c.incrementSuccessJob();
+		c.incrementAndGetTotalJOb();
+		c.doEndStatus();
+		assertEquals(c.getStatus(), Batch.Status.COMPLETED_WITH_ERROR);
+		assertEquals(c.getTotalJob(), 3);
 	}
 }
