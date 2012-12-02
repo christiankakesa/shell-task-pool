@@ -5,6 +5,7 @@ bin/
 target/
 .settings/
 .idea/
+*.iml
 *.class
 
 # Package Files #
