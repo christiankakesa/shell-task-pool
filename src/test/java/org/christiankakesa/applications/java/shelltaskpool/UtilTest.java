@@ -1,16 +1,14 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
 //import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Calendar;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
+
+import java.util.Calendar;
+
+import static org.junit.Assert.*;
 
 public class UtilTest {
 	private static final Log LOG = LogFactory.getLog(UtilTest.class.getName());
@@ -43,10 +41,10 @@ public class UtilTest {
 			LOG.error("Can invoque Thread.sleep(" + String.valueOf(sleepTime) + ") in UtilsTest.testBuildDurationFromDates()", e);
 		}
 		final java.util.Date end = Calendar.getInstance().getTime();
-		assertFalse(Util.buildDurationFromDates(end, begin) == defaultDuration);
+		assertFalse(Util.buildDurationFromDates(begin, end) == defaultDuration);
 		final long elapsedTime = 9762042L; //2 hours, 42 minutes, 42 seconds, 42 milliseconds.
 		end.setTime(begin.getTime() + elapsedTime);
-		assertEquals(Util.buildDurationFromDates(end, begin), "02:42:42.042");
+		assertEquals(Util.buildDurationFromDates(begin, end), "02:42:42.042");
 	}
 	
 	@Test

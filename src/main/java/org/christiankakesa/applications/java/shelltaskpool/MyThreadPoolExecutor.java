@@ -1,11 +1,11 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
+import org.apache.log4j.Logger;
+
 import java.util.Calendar;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.log4j.Logger;
 
 /**
  * 
@@ -59,9 +59,7 @@ public class MyThreadPoolExecutor extends ThreadPoolExecutor {
 				+ " | BatchEndDate: "
 				+ Batch.getInstance().getEndDate()
 				+ " | BatchDuration: "
-				+ Util.buildDurationFromDates(
-						Batch.getInstance().getEndDate(), Batch.getInstance()
-								.getStartDate()) + " | BatchStatus: "
+				+ Util.buildDurationFromDates(Batch.getInstance().getStartDate(), Batch.getInstance().getEndDate()) + " | BatchStatus: "
 				+ Batch.getInstance().getBatchStatus().getStatus());
 		super.terminated();
 	}

@@ -16,27 +16,32 @@ public enum Batch {
 	/**
 	 * The batch name.
 	 */
-	private volatile String name = "NO BATCH NAME";
+	private String name = "NO BATCH NAME";
 
 	/**
 	 * The batch id.
 	 */
-	private volatile String id = Util.buildUUID();
+	private String id = Util.buildUUID();
 
 	/**
 	 * Start date of the batch.
 	 */
-	private volatile Date startDate;
+	private Date startDate;
 
 	/**
 	 * End date of the batch.
 	 */
-	private volatile Date endDate;
+	private Date endDate;
 
 	/**
 	 * Status of the batch.
 	 */
-	private volatile BatchStatus batchStatus = new BatchStatus();
+	private BatchStatus batchStatus = new BatchStatus();
+	
+	/**
+	 * Log directory
+	 */
+	private String logDirectory;
 
 	/**
 	 * Get the name of the batch.
@@ -50,8 +55,7 @@ public enum Batch {
 	/**
 	 * Set the batch name. If empty or null, Batch.DEFAULT_BATCH_NAME is set.
 	 * 
-	 * @param Batch
-	 *            name
+	 * @param name Batch name
 	 */
 	public void setName(final String name) {
 		if (name != null && (name.length() > 0)) {
@@ -63,8 +67,6 @@ public enum Batch {
 	 * Get the batch id.
 	 * 
 	 * @return Unique string representation of bath.
-	 * 
-	 * @see Util.buildUUID
 	 */
 	public String getId() {
 		return id;
@@ -82,8 +84,7 @@ public enum Batch {
 	/**
 	 * Set the date of batch start.
 	 * 
-	 * @param Date
-	 *            of batch start
+	 * @param startDate Date of batch start
 	 */
 	public void setStartDate(final Date startDate) {
 		this.startDate = new Date(startDate.getTime());
@@ -101,8 +102,7 @@ public enum Batch {
 	/**
 	 * Set the date of batch end.
 	 * 
-	 * @param Date
-	 *            of batch end
+	 * @param endDate Date of batch end
 	 */
 	public void setEndDate(final Date endDate) {
 		this.endDate = new Date(endDate.getTime());
@@ -122,7 +122,7 @@ public enum Batch {
 	 * COMPLETED_WITH_ERROR, COMPLETED.
 	 */
 	public static enum Status {
-		NONE, STARTED, RUNNING, FAILED, COMPLETED_WITH_ERROR, COMPLETED;
+		NONE, STARTED, RUNNING, FAILED, COMPLETED_WITH_ERROR, COMPLETED
 	}
 
 	public static class BatchStatus {
@@ -153,7 +153,7 @@ public enum Batch {
 		/**
 		 * Status of the batch.
 		 */
-		private volatile Status status;
+		private volatile Status status = Status.NONE;
 
 		/**
 		 * BatchStatus constructor.
@@ -274,5 +274,21 @@ public enum Batch {
 	 */
 	public static Batch getInstance() {
 		return Batch.INSTANCE;
+	}
+
+	/**
+	 * Set the Batch log directory
+	 * @param logDirectory
+	 */
+	public void setLogDirectory(final String logDirectory) {
+		this.logDirectory = logDirectory;
+	}
+	
+	/**
+	 * Get the Batch log directory
+	 * @return Log directory
+	 */
+	public String getLogDirectory() {
+		return logDirectory;
 	}
 }

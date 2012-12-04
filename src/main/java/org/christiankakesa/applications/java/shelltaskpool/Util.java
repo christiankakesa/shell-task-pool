@@ -1,14 +1,14 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 /**
  * Shell Task Pool utility class.
@@ -58,31 +58,36 @@ public final class Util {
 				+ dynamicSpaceAppend
 				+ "[-n,--batchname=]\n"
 				+ dynamicSpaceAppend
-				+ "\tSet the name of the entire batch\n"
+				+ "\tSet the name of the entire batch (always needed)\n"
 				+ dynamicSpaceAppend
 				+ "\texample : -n \"Alimentation différentiel des omes\"\n\n"
 				+ dynamicSpaceAppend
-				+ "[-c,--corepoolsize=]\n"
-				+ dynamicSpaceAppend
-				+ "\tSet number of thread processor\n"
-				+ dynamicSpaceAppend
-				+ "\texample : -c5\n\n"
-				+ dynamicSpaceAppend
 				+ "[-j,--jobslist=]\n"
 				+ dynamicSpaceAppend
-				+ "\tList of jobs seperated by ';'\n"
+				+ "\tList of jobs seperated by ';' (could be omitted if \"jobsfile\"  contains jobs)\n"
 				+ dynamicSpaceAppend
 				+ "\texample : -j'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n"
 				+ dynamicSpaceAppend
 				+ "[-f,--jobsfile=]\n"
 				+ dynamicSpaceAppend
-				+ "\tPath to the jobs plain text file. Jobs are separated by new line\n"
+				+ "\tPath to the jobs plain text file. Jobs are separated by new line (could be omitted if \"jobslist\"  contains jobs)\n"
 				+ dynamicSpaceAppend + "\texample : -f/home/me/test.job\n\n"
-				+ dynamicSpaceAppend + " [-p,--jobsparam=]\n"
+				+ dynamicSpaceAppend + "[-p,--jobsparam=]\n"
 				+ dynamicSpaceAppend
-				+ "\tSet global params to add for each job\n"
+				+ "\tSet global params to add for all jobs\n"
 				+ dynamicSpaceAppend
-				+ "\texample : -p'-x 2011/05/05 -m 1024'\n"
+				+ "\texample : -p'-x 2011/05/05 -m 1024'\n\n"
+				+ dynamicSpaceAppend
+                + "[-c,--corepoolsize=]\n"
+                + dynamicSpaceAppend
+                + "\tSet number of thread processor\n"
+                + dynamicSpaceAppend
+                + "\texample : -c5\n\n"
+                + dynamicSpaceAppend
+                + "[-l,--jobslogdir=]\n"
+				+ dynamicSpaceAppend
+				+ "\tPath to the jobs logs directory.\n"
+				+ dynamicSpaceAppend + "\texample : -l/home/me/var/log\n\n"
 				+ "--------------\n" + "Author name  : " + AppInfo.AUTHOR_NAME
 				+ "\n" + "Author email : " + AppInfo.AUTHOR_EMAIL + "\n"
 				+ "Copyright    : " + AppInfo.APP_COPYRIGHT + "\n";
@@ -108,13 +113,13 @@ public final class Util {
 	/**
 	 * Build string duration between two dates :
 	 * <ul>
-	 * <li>format : HH:MM:SS</li>
+	 * <li>format : HH:mm:ss.SS</li>
 	 * </ul>
-	 * @param end
-	 * @param start
+	 * @param start Start date for calculation
+	 * @param end End date for calculation
 	 * @return String representation of the duration
 	 */
-	public static String buildDurationFromDates(final Date end, final Date start) {
+	public static String buildDurationFromDates(final Date start, final Date end) {
 		if (end != null && start != null) {//Build the duration only if both parameters are not null
 			final long milliInSecond = 1000;
 			final long secondsInHour = 3600;

@@ -1,13 +1,12 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import org.apache.log4j.Logger;
 
 /**
  * Representing the job to execute
@@ -60,7 +59,7 @@ public class JobExecution {
 		if (this.getStatus().equals(JobStatus.NONE)) { // Run the job only if job status is NONE (no state)
 			this.run();
 		} else {
-			LOG.warn("JobId: " + this.getId() + " with status: "
+			LOG.warn("JobId: " + this.getId() + ":" + this.getCommandLine() + " with status: "
 					+ this.getStatus() + " couldn't be started");
 		}
 	}
@@ -72,6 +71,11 @@ public class JobExecution {
 		try {
 			process = processBuilder.start();
 			this.setStatus(JobStatus.RUNNING);
+			if (Batch.getInstance().getLogDirectory() != null) {
+				this.getProcessOutput(process, true);
+			} else if (LOG.isDebugEnabled()) {
+				LOG.debug(this.getProcessOutput(process));
+			}
 			this.setExitCode(process.waitFor());
 			this.setEndDate(Calendar.getInstance().getTime());
 			if (this.getExitCode() == 0) {
@@ -81,7 +85,7 @@ public class JobExecution {
 				this.setStatus(JobStatus.FAILED);
 				Batch.getInstance().getBatchStatus().incrementFailedJob();
 			}
-			synchronized (this.getClass()) {
+			synchronized (this.getClass()) { //We need synchronized here because "+" operator is not thread safe
 				LOG.info("[JOB_EXECUTION] BatchId: "
 						+ Batch.getInstance().getId()
 						+ " | BatchName: "
@@ -95,13 +99,9 @@ public class JobExecution {
 						+ " | JobEndDate: "
 						+ this.getEndDate()
 						+ " | JobDuration: "
-						+ Util.buildDurationFromDates(this.getEndDate(),
-								this.getStartDate()) + " | JobStatus: "
+						+ Util.buildDurationFromDates(this.getStartDate(), this.getEndDate()) + " | JobStatus: "
 						+ this.getStatus() + " | JobExitCode: "
 						+ this.getExitCode());
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(getProcessOutput(process));
-				}
 			}
 		} catch (IOException e) {
 			LOG.error(e);
@@ -173,7 +173,7 @@ public class JobExecution {
 	 * Job status enumeration : NONE, RUNNING, FAILED, COMPLETED
 	 */
 	public static enum JobStatus {
-		NONE, RUNNING, FAILED, COMPLETED;
+		NONE, RUNNING, FAILED, COMPLETED
 	}
 
 	/**
@@ -197,28 +197,45 @@ public class JobExecution {
 	 * Get the output of a process
 	 * 
 	 * @param process
+	 * @param isLogPrintedToFile Print process output to log file if true
 	 * @return String representation of the process output
 	 */
-	private String getProcessOutput(final Process process) {
+	private String getProcessOutput(final Process process, boolean isLogPrintedToFile) {
 		final StringBuilder sbResult = new StringBuilder();
 		sbResult.append("JobId: ").append(this.getId()).append(" - STDOUT: ");
 		final StringBuilder sbLine = new StringBuilder();
 		final InputStreamReader tempReader = new InputStreamReader(
 				new BufferedInputStream(process.getInputStream()));
 		final BufferedReader reader = new BufferedReader(tempReader);
+		PrintWriter writer = null;
+		if (isLogPrintedToFile) {
+			final String logFile = JobExecution.buildLogFilename(this.getId(), this.getCommandLine(), Batch.getInstance().getLogDirectory());
+            LOG.debug("log directory is : " + logFile);
+			try {
+				writer = new PrintWriter(new BufferedWriter(new FileWriter(logFile)));
+			} catch (IOException e) {
+				LOG.warn("Can't create a process output log file", e);
+			}
+		}
 		String line;
 		try {
 			while ((line = reader.readLine()) != null) {
+				if (isLogPrintedToFile && writer != null) {
+					writer.println(line);
+				}
 				sbLine.append(line);
 			}
 		} catch (IOException e) {
 			LOG.error(e);
 		} finally {
 			line = null;
+			if (writer != null) {
+				writer.close();
+			}
 			try {
 				reader.close();
 			} catch (IOException e) {
-				LOG.warn("Can't close the proccess output stream : " + e);
+				LOG.warn("Can't close the job process output stream", e);
 			}
 		}
 		if (sbLine.toString().trim().length() > 0) {
@@ -227,5 +244,33 @@ public class JobExecution {
 		} else {
 			return "";
 		}
+	}
+	
+	/**
+	 * Build Log filename without non desired characters
+	 * @param jobId Job identifier
+	 * @param cmdLine Job Command line
+	 * @return Clean log filename
+	 */
+	private static String buildLogFilename(int jobId, final String cmdLine, final String dirName) {
+		final StringBuilder res = new StringBuilder();
+		res.append(dirName).append(File.separator);
+		res.append("BatchId-").append(Batch.getInstance().getId()).append("_JobId-").append(String.valueOf(jobId)).append("_");
+		final String regex = "[^a-zA-Z_-]";
+		res.append(cmdLine.replaceAll(regex, "-")).append("_");
+		final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmssSS");
+		res.append(dateFormat.format(new Date().getTime()));
+		res.append(".log");
+		return res.toString();
+	}
+
+	/**
+	 * Get the output of a process
+	 * 
+	 * @param process The process for the output in string
+	 * @return String representation of the process output
+	 */
+	private String getProcessOutput(final Process process) {
+		return getProcessOutput(process, false);
 	}
 }
