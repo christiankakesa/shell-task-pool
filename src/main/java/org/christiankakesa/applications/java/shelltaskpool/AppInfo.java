@@ -5,9 +5,8 @@ import java.util.Calendar;
 public final class AppInfo {
 	/**
 	 * Application name.
-	 * TODO: Try to retrieve dynamically the program name.
 	 */
-	public static final String APP_NAME = "shelltaskpool.jar";
+	public static final String APP_NAME = "shelltaskpool.jar"; // TODO: Try to retrieve dynamically the program name.
 	/**
 	 * Application author name.
 	 */
