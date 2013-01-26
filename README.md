@@ -23,7 +23,7 @@ A Java tool to run in parallel, command lines with java ThreadPoolExecutor parad
     |                  |           +-------------+              x+-----------------+
     |                  |                                     xxxx
     |                  |           +-------------+       xxxxx
-    |                  +---------->|worker 4     |   xxxxx
+    |                  +---------->|Worker 4     |   xxxxx
     |                  |           |-------------xxxxx
     |                  |           +-------------+
     |                  |
@@ -60,21 +60,29 @@ The structure is described below :
         * **job\_exit\_code**: Job exit code [number].
 
 ### Standard output logs description
-The standard output log are separate in 3 part :
+The standard output log are separate in 3 part and are formated as *key*:*value* separated by pipe *|* :
 
-1. Start batch information (key:value)
-    * Output_1 : ``batch:info_start|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|parameters:-n YDL -jydl https://www.youtube.com/watch?v=svZRp0QoRCY; ydl https://www.youtube.com/watch?v=IECH5cqDLCE|workers:4|number_of_jobs:2|start_date:1354294165000|status:STARTED|jobs_file:|log_dir:/home/christian/tmp/log``
+1. Start batch information
+
+    batch:start|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|parameters:-n YDL -jydl https://www.youtube.com/watch?v=svZRp0QoRCY; ydl https://www.youtube.com/watch?v=IECH5cqDLCE|workers:4|number_of_jobs:2|jobs_file:|log_dir:/home/christian/tmp/log|start_date:1354294165000|status:STARTED
+
 2. Job information
-    * Output_2 : ``batch:info_job|batch_id:bbab79e96aa64becb1587774cf28acf8|command_line:ydl https://www.youtube.com/watch?v=svZRp0QoRCY|start_date:1354294165000|end_date:1354294465000|duration:00:05:00.000|status:COMPLETED|exit_code:0``
-    * Output_3 : ``batch:info_job|batch_id:bbab79e96aa64becb1587774cf28acf8|command_line:ydl https://www.youtube.com/watch?v=IECH5cqDLCE|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED|exit_code:0``
+
+    batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:1|command_line:ydl https://www.youtube.com/watch?v=svZRp0QoRCY|start_date:1354294165000|end_date:1354294465000|duration:00:05:00.000|status:COMPLETED|exit_code:0
+    batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:2|command_line:ydl https://www.youtube.com/watch?v=IECH5cqDLCE|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED|exit_code:0
+
 3. End batch information
-    * Output_4 : ``batch:info_end|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED``
+
+    batch:end|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED
 
 ### JSON logs format
+
+TODO(fenicks): Need the great format for http monitoring
+
 A JSON log could be parsed easily, look at the example below:
 
     {
-        "batch_info": { // Batch information
+        "batch_stats": { // Batch statistics
             "batch_id": "bbab79e96aa64becb1587774cf28acf8",
             "batch_name": "Retrieve best Java technical talks",
             "batch_parameters": "-n YDL -jydl https://www.youtube.com/watch?v=svZRp0QoRCY; ydl https://www.youtube.com/watch?v=IECH5cqDLCE",
@@ -82,7 +90,7 @@ A JSON log could be parsed easily, look at the example below:
             "batch_number_of_jobs": 2,
             "batch_start_date": 1354294165000, // Unixtime in milliseconds
             "batch_end_date": 1354294665000,   // Unixtime in milliseconds
-            "batch_duration": "00:08:20.000",  // Format : HH:mm:ss.SS (Java DateFormat)
+            "batch_duration": "00:08:20.000",  // Format : HH:mm:ss.SS (Java DateFormat duration)
             "batch_status": "COMPLETED",
             "batch_jobs_file": null,
             "batch_log_dir": "/home/christian/tmp/log",
@@ -99,30 +107,30 @@ A JSON log could be parsed easily, look at the example below:
 	Usage: shelltaskpool.jar -n "Batch name" -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]
        or: shelltaskpool.jar -n "Batch name" -f/path/to/file.job [OPTIONS]
        or: shelltaskpool.jar -h
-       [-h,--help]
-       	Show this help screen
+         [-h,--help]
+       	   Show this help screen
 
-       [-n,--batchname=]
-       	Set the name of the entire batch (always needed)
-       	example : -n "Alimentation différentiel des omes"
+         [-n,--batchname=]
+       	   Set the name of the entire batch (always needed)
+       	   example : -n "Alimentation différentiel des omes"
 
-       [-j,--jobslist=]
-       	List of jobs seperated by ';' (could be omitted if "jobsfile"  contains jobs)
-       	example : -j'nslookup google.fr; /path/script2.sh > /tmp/script2.log'
+         [-j,--jobslist=]
+       	   List of jobs seperated by ';' (could be omitted if "jobsfile"  contains jobs)
+       	   example : -j'nslookup google.fr; /path/script2.sh > /tmp/script2.log'
 
-       [-f,--jobsfile=]
-       	Path to the jobs plain text file. Jobs are separated by new line (could be omitted if "jobslist"  contains jobs)
-       	example : -f/home/me/test.job
+         [-f,--jobsfile=]
+       	   Path to the jobs plain text file. Jobs are separated by new line (could be omitted if "jobslist"  contains jobs)
+       	   example : -f/home/me/test.job
 
-       [-p,--jobsparam=]
-       	Set global params to add for all jobs
-       	example : -p'-x 2011/05/05 -m 1024'
+         [-p,--jobsparam=]
+       	   Set global params to add for all jobs
+       	   example : -p'-x 2011/05/05 -m 1024'
 
-       [-c,--corepoolsize=]
-       	Set number of thread processor
-       	example : -c5
+         [-c,--corepoolsize=]
+       	   Set number of thread processor
+       	   example : -c5
 
-       [-l,--jobslogdir=]
-       	Path to the jobs logs directory.
-       	example : -l/home/me/var/log
+         [-l,--jobslogdir=]
+       	   Path to the jobs logs directory.
+       	   example : -l/home/me/var/log
 
