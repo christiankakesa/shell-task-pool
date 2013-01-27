@@ -138,4 +138,3 @@ A JSON log could be parsed easily, look at the example below:
          [-l,--jobslogdir=]
        	   Path to the jobs logs directory.
        	   example : -l/home/me/var/log
-
