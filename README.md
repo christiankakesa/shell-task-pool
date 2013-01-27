@@ -60,23 +60,24 @@ The structure is described below :
         * **job\_exit\_code**: Job exit code [number].
 
 ### Standard output logs description
-The standard output log are separate in 3 part and are formated as *key*:*value* separated by pipe *|* :
+The standard output log are separate in 3 part and are formated as *key:value* separated by pipe *|* :
 
 1. Start batch information
 
-    # Standard output
-    batch:start|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|parameters:-n YDL -jydl https://www.youtube.com/watch?v=svZRp0QoRCY; ydl https://www.youtube.com/watch?v=IECH5cqDLCE|workers:4|number_of_jobs:2|jobs_file:|log_dir:/home/christian/tmp/log|start_date:1354294165000|status:STARTED
+        batch:start|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|parameters:-n YDL -jydl https://www.youtube.com/watch?v=svZRp0QoRCY; ydl https://www.youtube.com/watch?v=IECH5cqDLCE|workers:4|number_of_jobs:2|jobs_file:|log_dir:/home/christian/tmp/log|start_date:1354294165000|status:STARTED
+
 
 2. Job information
 
-    # Standard output
-    batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:1|command_line:ydl https://www.youtube.com/watch?v=svZRp0QoRCY|start_date:1354294165000|end_date:1354294465000|duration:00:05:00.000|status:COMPLETED|exit_code:0
-    batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:2|command_line:ydl https://www.youtube.com/watch?v=IECH5cqDLCE|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED|exit_code:0
+        batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:1|command_line:ydl https://www.youtube.com/watch?v=svZRp0QoRCY|start_date:1354294165000|end_date:1354294465000|duration:00:05:00.000|status:COMPLETED|exit_code:0
+        batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:2|command_line:ydl https://www.youtube.com/watch?v=IECH5cqDLCE|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED|exit_code:0
+
 
 3. End batch information
 
-    # Standard output
-    batch:end|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED
+
+        batch:end|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED
+
 
 ### JSON logs format
 
