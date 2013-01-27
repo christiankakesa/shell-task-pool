@@ -35,10 +35,10 @@ A Java tool to run in parallel, command lines with java ThreadPoolExecutor parad
 
 ## Logs format
 ### Logs data description
-The main element for the log data description is **batch\_info**. This element store all batch information including jobs information.
+The main element for the log data description is **batch\_stats**. This element store all batch information including jobs information.
 The structure is described below :
 
-* **batch\_info**: Main element for the batch information [object (hash map)].
+* **batch\_stats**: Main element for the batch information [object (hash map)].
     * **batch\_id**: The id of the batch. Technically this is a UUID without `-` character [string].
     * **batch\_name**: The name of the batch [string].
     * **batch\_parameters**: Batch command line parameters [string].
@@ -64,15 +64,18 @@ The standard output log are separate in 3 part and are formated as *key*:*value*
 
 1. Start batch information
 
+    # Standard output
     batch:start|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|parameters:-n YDL -jydl https://www.youtube.com/watch?v=svZRp0QoRCY; ydl https://www.youtube.com/watch?v=IECH5cqDLCE|workers:4|number_of_jobs:2|jobs_file:|log_dir:/home/christian/tmp/log|start_date:1354294165000|status:STARTED
 
 2. Job information
 
+    # Standard output
     batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:1|command_line:ydl https://www.youtube.com/watch?v=svZRp0QoRCY|start_date:1354294165000|end_date:1354294465000|duration:00:05:00.000|status:COMPLETED|exit_code:0
     batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:2|command_line:ydl https://www.youtube.com/watch?v=IECH5cqDLCE|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED|exit_code:0
 
 3. End batch information
 
+    # Standard output
     batch:end|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED
 
 ### JSON logs format
@@ -104,9 +107,10 @@ A JSON log could be parsed easily, look at the example below:
 
 ## Usage
 
-	Usage: shelltaskpool.jar -n "Batch name" -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]
+    Usage: shelltaskpool.jar -n "Batch name" -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]
        or: shelltaskpool.jar -n "Batch name" -f/path/to/file.job [OPTIONS]
        or: shelltaskpool.jar -h
+
          [-h,--help]
        	   Show this help screen
 
