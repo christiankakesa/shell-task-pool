@@ -44,8 +44,8 @@ The structure is described below :
     * **batch\_parameters**: Batch command line parameters [string].
     * **batch\_workers**: Number of workers to process the jobs [number].
     * **batch\_number\_of\_jobs**: Total number of jobs [number].
-    * **batch\_start\_date**:Started date of the batch in milliseconds [number (long)].
-    * **batch\_end\_date**: Ended date of the batch in milliseconds [number (long)].
+    * **batch\_start\_date**:Started date of the batch in milliseconds (Unix timestamp) [number (long)].
+    * **batch\_end\_date**: Ended date of the batch in milliseconds (Unix timestamp) [number (long)].
     * **batch\_duration**: Batch duration in format HH:mm:ss.SS [string].
     * **batch\_status**: Bath status [string].
     * **batch\_jobs\_file**: File path of jobs [string].
@@ -53,8 +53,8 @@ The structure is described below :
     * **batch\_jobs\_info**: This element contains jobs information [array]
         * **job\_id**: The id of the job [number].
         * **job\_command\_line**: Job command line [string].
-        * **job\_start\_date**: Started date of the job [number (long)].
-        * **job\_end\_date**: ended date of the job [number (long)].
+        * **job\_start\_date**: Started date of the job in milliseconds (Unix timestamp) [number (long)].
+        * **job\_end\_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)].
         * **job\_duration**: Job duration in format HH:mm:ss.SS [string].
         * **job\_status**: Job status [string].
         * **job\_exit\_code**: Job exit code [number].
