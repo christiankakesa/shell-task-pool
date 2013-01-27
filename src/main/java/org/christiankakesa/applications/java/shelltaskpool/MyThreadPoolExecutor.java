@@ -44,7 +44,7 @@ class MyThreadPoolExecutor extends ThreadPoolExecutor {
                     + "|number_of_jobs:" + this.getTaskCount()
                     + "|jobs_file:" + Batch.getInstance().getJobsFile()
                     + "|log_dir:" + Batch.getInstance().getLogDirectory()
-                    + "|start_date:" + Batch.getInstance().getStartDate()
+                    + "|start_date:" + Batch.getInstance().getStartDate().getTime()
                     + "|status:" + Batch.getInstance().getBatchStatus().getStatus());
         }
     }
@@ -61,8 +61,8 @@ class MyThreadPoolExecutor extends ThreadPoolExecutor {
         synchronized (MyThreadPoolExecutor.class) { // We need synchronized here because "+" operator is not thread safe
             Logger.getLogger("STDOUT").log(Level.INFO, "batch:end|id:" + Batch.getInstance().getId()
                     + "|name:" + Batch.getInstance().getName()
-                    + "|start_date:" + Batch.getInstance().getStartDate()
-                    + "|end_date:" + Batch.getInstance().getEndDate()
+                    + "|start_date:" + Batch.getInstance().getStartDate().getTime()
+                    + "|end_date:" + Batch.getInstance().getEndDate().getTime()
                     + "|duration:" + Util.buildDurationFromDates(Batch.getInstance().getStartDate(),
                     Batch.getInstance().getEndDate())
                     + "|status:" + Batch.getInstance().getBatchStatus().getStatus());

@@ -93,9 +93,9 @@ public final class JobExecution {
                         + "|command_line:"
                         + this.getCommandLine()
                         + "|start_date:"
-                        + this.getStartDate()
+                        + this.getStartDate().getTime()
                         + "|end_date:"
-                        + this.getEndDate()
+                        + this.getEndDate().getTime()
                         + "|duration:"
                         + Util.buildDurationFromDates(this.getStartDate(), this.getEndDate())
                         + "|status:"
