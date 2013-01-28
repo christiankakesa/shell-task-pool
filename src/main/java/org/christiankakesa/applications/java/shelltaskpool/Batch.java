@@ -1,6 +1,6 @@
 package org.christiankakesa.applications.java.shelltaskpool;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 

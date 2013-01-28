@@ -2,7 +2,7 @@ package org.christiankakesa.applications.java.shelltaskpool;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -11,11 +11,11 @@ import java.util.List;
 
 /**
  * <b>Shell Task Pool</b>.
- * <p/>
- * This is the main class of the program. This project aims to parallelize shell
+ * <p>
+ * This is the main class of the program. This project aims to parallelized shell
  * command execution efficiently and safely. All the task are logged and could
  * be parsed by a reporting tool.
- *
+ * </p>
  * @author Christian Kakesa (christian.kakesa@gmail.com)
  */
 public final class Main {
