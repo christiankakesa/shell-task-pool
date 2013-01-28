@@ -30,7 +30,7 @@
 					<target>1.5</target>
 					<encoding>UTF-8</encoding>
 				</configuration>
-				<version>2.5</version>
+				<version>3.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -51,12 +51,12 @@
 				<configuration>
 					<encoding>UTF-8</encoding>
 				</configuration>
-				<version>2.5</version>
+				<version>2.6</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.4</version>
 				<executions>
 					<execution>
 						<id>bundle-project-sources</id>
@@ -138,15 +138,15 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -192,5 +192,5 @@
 		<name>Christian Kakesa</name>
 		<url>http://www.kakesa.net</url>
 	</organization>
-	<description>Thread Pool Executor, run shell command line in parallel.</description>
+	<description>Thread Pool Executor, run shell command lines in parallel.</description>
 </project>
