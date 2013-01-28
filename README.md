@@ -1,8 +1,9 @@
 # SHELL-TASK-POOL
+This is my Java tool to run command lines in parallel with Java ThreadPoolExecutor paradigm. [![Build Status](https://secure.travis-ci.org/fenicks/shell-task-pool.png?branch=master)](http://travis-ci.org/fenicks/shell-task-pool).
 
-A Java tool to run in parallel, command lines with java ThreadPoolExecutor paradigm. [![Build Status](https://secure.travis-ci.org/fenicks/shell-task-pool.png?branch=master)](http://travis-ci.org/fenicks/shell-task-pool).
 
-## Use cases
+
+## Use Cases
 
                         MAPPER                      REDUCER
 
@@ -12,14 +13,14 @@ A Java tool to run in parallel, command lines with java ThreadPoolExecutor parad
     |job1              |           +-------------|xxxx
     |job2              |           +-------------+    xxxxx
     |job3              |                                  xxxxxxx+-----------------+
-    |job4              |           +-------------+               |                 |
-    |job5              +---------->|Worker 2     xxxxxxxxxxxxxxxx|                 |
-    |job6              |           |-------------|               |                 |
-    |job7              |           +-------------+               | Finalizer       |
-    |job8              |                                         |                 |
-    |...               |           +-------------+               |                 |
-    |                  +---------->|Worker 3     |               |                 |
-    |                  |           |-------------xxxxxxxxxxxxxxxxx                 |
+    |job4              |           +-------------+               |     Status      |
+    |job5              +---------->|Worker 2     xxxxxxxxxxxxxxxx+-----------------+
+    |job6              |           |-------------|               | job5:running    |
+    |job7              |           +-------------+               | job2:completed  |
+    |job8              |                                         | job3:none       |
+    |...               |           +-------------+               | job4:completed  |
+    |                  +---------->|Worker 3     |               | job1:running    |
+    |                  |           |-------------xxxxxxxxxxxxxxxxx jobx:...        |
     |                  |           +-------------+              x+-----------------+
     |                  |                                     xxxx
     |                  |           +-------------+       xxxxx
@@ -33,58 +34,54 @@ A Java tool to run in parallel, command lines with java ThreadPoolExecutor parad
 * Maximum job number is **5120** (it's hardcoded, give me some reasons to parameterized this limit).
 * Command line length limit is **2048** characters (it's hardcoded, give me some reasons to parameterized this limit).
 
-## Logs format
-### Standard output logs description
+## Logs Format
+### Standard output logs
 The standard output log are separate in 3 part and are formatted as *key:value* separated by pipe *|* :
 
 1. Start batch information
 
         batch:start|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|parameters:-n YDL -jydl https://www.youtube.com/watch?v=svZRp0QoRCY; ydl https://www.youtube.com/watch?v=IECH5cqDLCE|workers:4|number_of_jobs:2|jobs_file:|log_dir:/home/christian/tmp/log|start_date:1354294165000|status:STARTED
 
-
 2. Job information
 
         batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:1|job_command_line:ydl https://www.youtube.com/watch?v=svZRp0QoRCY|job_start_date:1354294165000|job_end_date:1354294465000|job_duration:00:05:00.000|job_status:COMPLETED|job_exit_code:0
         batch:job|id:bbab79e96aa64becb1587774cf28acf8|job_id:2|job_command_line:ydl https://www.youtube.com/watch?v=IECH5cqDLCE|job_start_date:1354294165000|job_end_date:1354294665000|job_duration:00:08:20.000|job_status:COMPLETED|job_exit_code:0
 
-
 3. End batch information
 
         batch:end|id:bbab79e96aa64becb1587774cf28acf8|name:Retrieve best Java technical talks|start_date:1354294165000|end_date:1354294665000|duration:00:08:20.000|status:COMPLETED
 
-#### Standard output logs data description
+### Standard output logs data description
 
-* **batch:start**:
-    * **id**:
-    * **name**:
-    * **parameters**:
-    * **workers**:
-    * **number_of_jobs**:
-    * **jobs_file**:
-    * **log_dir**:
-    * **start_date**:
-    * **status**:
-* **batch:job**:
-    * **id**:
-    * **job_id**:
-    * **job_command_line**:
-    * **job_start_date**:
-    * **job_end_date**:
-    * **job_duration**:
-    * **job_status**:
-    * **job_exit_code**:
-* **batch:end**:
-    * **id**:
-    * **name**:
-    * **start_date**:
-    * **end_date**:
-    * **duration**:
-    * **status**:
+* **batch:start**: The batch start information
+    * **id**: The id of the batch. Technically this is a UUID without `-` character [string]
+    * **name**: The name of the batch [string]
+    * **parameters**: Batch command line parameters [string]
+    * **workers**: Number of workers to process the jobs [number]
+    * **number_of_jobs**: Total number of jobs [number]
+    * **jobs_file**: File path of jobs [string]
+    * **log_dir**: Directory path to store all jobs logs [string]
+    * **start_date**: Started date of the batch in milliseconds (Unix timestamp) [number (long)]
+    * **status**: Bath status [string]
+* **batch:job**: Jobs information
+    * **id**: The id of the batch. Technically this is a UUID without `-` character [string]
+    * **job_id**: The id of the job [number]
+    * **job_command_line**: Job command line [string]
+    * **job_start_date**: Started date of the job in milliseconds (Unix timestamp) [number (long)]
+    * **job_end_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)]
+    * **job_duration**: Job duration in format HH:mm:ss.SS (Java DateFormat duration) [string]
+    * **job_status**: Job status [string]
+    * **job_exit_code**: Job exit code [number]
+* **batch:end**: The batch end information
+    * **id**: The id of the batch. Technically this is a UUID without `-` character [string]
+    * **name**: The name of the batch [string]
+    * **start_date**: Started date of the batch in milliseconds (Unix timestamp) [number (long)]
+    * **end_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)]
+    * **duration**: Batch duration in format HH:mm:ss.SS (Java DateFormat duration) [string]
+    * **status**: Bath status [string]
 
-### Monitoring JSON logs format
-
-TODO(fenicks): Need the great format for http monitoring
-
+## Real-time Monitoring With JSON Logs Format
+### JSON log format example
 A JSON log could be parsed easily, look at the example below:
 
     {
@@ -107,30 +104,30 @@ A JSON log could be parsed easily, look at the example below:
         }
     }
 
-#### JSON logs data description
+### JSON logs data description
 The main element for the log data description is **batch\_stats**. This element store all batch information including jobs information.
 The structure is described below :
 
-* **batch\_stats**: Main element for the batch information [object (hash map)].
-    * **batch\_id**: The id of the batch. Technically this is a UUID without `-` character [string].
-    * **batch\_name**: The name of the batch [string].
-    * **batch\_parameters**: Batch command line parameters [string].
-    * **batch\_workers**: Number of workers to process the jobs [number].
-    * **batch\_number\_of\_jobs**: Total number of jobs [number].
-    * **batch\_start\_date**:Started date of the batch in milliseconds (Unix timestamp) [number (long)].
-    * **batch\_end\_date**: Ended date of the batch in milliseconds (Unix timestamp) [number (long)].
-    * **batch\_duration**: Batch duration in format HH:mm:ss.SS [string].
-    * **batch\_status**: Bath status [string].
-    * **batch\_jobs\_file**: File path of jobs [string].
-    * **batch\_log\_dir**: Directory path to store all jobs logs [string].
+* **batch\_stats**: Main element for the batch information [object (hash map)]
+    * **batch\_id**: The id of the batch. Technically this is a UUID without `-` character [string]
+    * **batch\_name**: The name of the batch [string]
+    * **batch\_parameters**: Batch command line parameters [string]
+    * **batch\_workers**: Number of workers to process the jobs [number]
+    * **batch\_number\_of\_jobs**: Total number of jobs [number]
+    * **batch\_start\_date**: Started date of the batch in milliseconds (Unix timestamp) [number (long)]
+    * **batch\_end\_date**: Ended date of the batch in milliseconds (Unix timestamp) [number (long)]
+    * **batch\_duration**: Batch duration in format HH:mm:ss.SS (Java DateFormat duration) [string]
+    * **batch\_status**: Bath status [string]
+    * **batch\_jobs\_file**: File path of jobs [string]
+    * **batch\_log\_dir**: Directory path to store all jobs logs [string]
     * **batch\_jobs\_info**: This element contains jobs information [array]
-        * **job\_id**: The id of the job [number].
-        * **job\_command\_line**: Job command line [string].
-        * **job\_start\_date**: Started date of the job in milliseconds (Unix timestamp) [number (long)].
-        * **job\_end\_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)].
-        * **job\_duration**: Job duration in format HH:mm:ss.SS [string].
-        * **job\_status**: Job status [string].
-        * **job\_exit\_code**: Job exit code [number].
+        * **job\_id**: The id of the job [number]
+        * **job\_command\_line**: Job command line [string]
+        * **job\_start\_date**: Started date of the job in milliseconds (Unix timestamp) [number (long)]
+        * **job\_end\_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)]
+        * **job\_duration**: Job duration in format HH:mm:ss.SS (Java DateFormat duration) [string]
+        * **job\_status**: Job status [string]
+        * **job\_exit\_code**: Job exit code [number]
 
 ## Usage
 
@@ -158,7 +155,7 @@ The structure is described below :
        	   example : -p'-x 2011/05/05 -m 1024'
 
          [-c,--corepoolsize=]
-       	   Set number of thread processor
+       	   Set number of cores (workers)
        	   example : -c5
 
          [-l,--jobslogdir=]
