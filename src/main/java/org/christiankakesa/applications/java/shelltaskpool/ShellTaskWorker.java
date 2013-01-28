@@ -9,7 +9,7 @@ class ShellTaskWorker implements Runnable {
     private static final Logger LOG = Logger.getLogger(ShellTaskWorker.class);
     private final String commandLine;
 
-    public ShellTaskWorker(String commandLine) {
+    public ShellTaskWorker(final String commandLine) {
         this.commandLine = commandLine;
     }
 

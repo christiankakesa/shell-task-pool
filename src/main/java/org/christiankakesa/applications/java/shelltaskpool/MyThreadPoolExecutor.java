@@ -41,7 +41,7 @@ class MyThreadPoolExecutor extends ThreadPoolExecutor {
                     + "|name:" + Batch.getInstance().getName()
                     + "|parameters:" + Batch.getInstance().getStringParameters()
                     + "|workers:" + this.getCorePoolSize()
-                    + "|number_of_jobs:" + this.getTaskCount()
+                    + "|number_of_jobs:" + Main.JOBS_ARRAY_LIST.size()  // TODO(fenicks): Add member to Batch for number of total jobs
                     + "|jobs_file:" + Batch.getInstance().getJobsFile()
                     + "|log_dir:" + Batch.getInstance().getLogDirectory()
                     + "|start_date:" + Batch.getInstance().getStartDate().getTime()

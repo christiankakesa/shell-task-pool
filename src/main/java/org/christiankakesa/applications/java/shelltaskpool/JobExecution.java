@@ -23,7 +23,7 @@ public final class JobExecution {
     /**
      * Job id
      */
-    private int id = 0;
+    private final int id;
     /**
      * Job start date
      */
@@ -52,10 +52,10 @@ public final class JobExecution {
      */
     public JobExecution(final String commandLine) {
         this.commandLine = commandLine;
+        this.id = Batch.getInstance().getBatchStatus().incrementAndGetTotalJOb();
     }
 
     public void start() {
-        this.id = Batch.getInstance().getBatchStatus().incrementAndGetTotalJOb();
         if (this.getStatus().equals(JobStatus.NONE)) { // Run the job only if job status is NONE (no state)
             this.run();
         } else {
@@ -86,22 +86,14 @@ public final class JobExecution {
                 Batch.getInstance().getBatchStatus().incrementFailedJob();
             }
             synchronized (JobExecution.class) { //We need synchronized here because "+" operator is not thread safe
-                Logger.getLogger("STDOUT").log(Level.INFO, "batch:job|id:"
-                        + Batch.getInstance().getId()
-                        + "|job_id:"
-                        + this.getId()
-                        + "|command_line:"
-                        + this.getCommandLine()
-                        + "|start_date:"
-                        + this.getStartDate().getTime()
-                        + "|end_date:"
-                        + this.getEndDate().getTime()
-                        + "|duration:"
-                        + Util.buildDurationFromDates(this.getStartDate(), this.getEndDate())
-                        + "|status:"
-                        + this.getStatus()
-                        + "|exit_code:"
-                        + this.getExitCode());
+                Logger.getLogger("STDOUT").log(Level.INFO, "batch:job|id:" + Batch.getInstance().getId()
+                        + "|job_id:" + this.getId()
+                        + "|job_command_line:" + this.getCommandLine()
+                        + "|job_start_date:" + this.getStartDate().getTime()
+                        + "|job_end_date:" + this.getEndDate().getTime()
+                        + "|job_duration:" + Util.buildDurationFromDates(this.getStartDate(), this.getEndDate())
+                        + "|job_status:" + this.getStatus()
+                        + "|job_exit_code:" + this.getExitCode());
             }
         } catch (IOException e) {
             LOG.error(e);
@@ -124,10 +116,6 @@ public final class JobExecution {
     int getId() {
         return id;
     }
-
-//	public void setId(final int id) {
-//		this.id = id;
-//	}
 
     Date getStartDate() {
         return new Date(startDate.getTime());
@@ -162,15 +150,6 @@ public final class JobExecution {
     }
 
     /**
-     * Get the job process object
-     *
-     * @return job process object
-     */
-    /*public Process getProcess() {
-		return process;
-	}*/
-
-    /**
      * Job status enumeration : NONE, RUNNING, FAILED, COMPLETED
      */
     public static enum JobStatus {
@@ -182,7 +161,7 @@ public final class JobExecution {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         final String separator = " - ";
         sb.append("JobExecution: ");
         sb.append(separator).append(this.getCommandLine());

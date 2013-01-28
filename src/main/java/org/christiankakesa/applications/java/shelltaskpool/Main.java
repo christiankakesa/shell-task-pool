@@ -23,7 +23,7 @@ public final class Main {
     private static final int MAX_LINE_LENGTH = 2048;
     private static final char JOB_SEPARATOR = ';';
 
-    private static final List<String> JOBS_ARRAY_LIST = new ArrayList<String>(
+    static final List<String> JOBS_ARRAY_LIST = new ArrayList<String>(
             MAX_JOBS);
 
     private static int corePoolSize = Util.defaultCorePoolSize();
