@@ -1,7 +1,10 @@
 # SHELL-TASK-POOL
 This is my Java tool to run command lines in parallel with Java ThreadPoolExecutor paradigm. [![Build Status](https://secure.travis-ci.org/fenicks/shell-task-pool.png?branch=master)](http://travis-ci.org/fenicks/shell-task-pool).
 
+My inspiration led me to make this code, not really in Java standards, but with other programming language skills and my own experience.
 
+This tool has allowed my company to save an hour in nightly batch processing and easily parse logs reporting.
+I admit that the first purpose was to retrieve many videos of programming languages, design pattern etc...
 
 ## Use Cases
 
@@ -58,25 +61,25 @@ The standard output log are separate in 3 part and are formatted as *key:value* 
     * **name**: The name of the batch [string]
     * **parameters**: Batch command line parameters [string]
     * **workers**: Number of workers to process the jobs [number]
-    * **number_of_jobs**: Total number of jobs [number]
-    * **jobs_file**: File path of jobs [string]
-    * **log_dir**: Directory path to store all jobs logs [string]
-    * **start_date**: Started date of the batch in milliseconds (Unix timestamp) [number (long)]
+    * **number\_of\_jobs**: Total number of jobs [number]
+    * **jobs\_file**: File path of jobs [string]
+    * **log\_dir**: Directory path to store all jobs logs [string]
+    * **start\_date**: Started date of the batch in milliseconds (Unix timestamp) [number (long)]
     * **status**: Bath status [string]
 * **batch:job**: Jobs information
     * **id**: The id of the batch. Technically this is a UUID without `-` character [string]
-    * **job_id**: The id of the job [number]
-    * **job_command_line**: Job command line [string]
-    * **job_start_date**: Started date of the job in milliseconds (Unix timestamp) [number (long)]
-    * **job_end_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)]
-    * **job_duration**: Job duration in format HH:mm:ss.SS (Java DateFormat duration) [string]
-    * **job_status**: Job status [string]
-    * **job_exit_code**: Job exit code [number]
+    * **job\_id**: The id of the job [number]
+    * **job\_command\_line**: Job command line [string]
+    * **job\_start\_date**: Started date of the job in milliseconds (Unix timestamp) [number (long)]
+    * **job\_end\_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)]
+    * **job\_duration**: Job duration in format HH:mm:ss.SS (Java DateFormat duration) [string]
+    * **job\_status**: Job status [string]
+    * **job\_exit\_code**: Job exit code [number]
 * **batch:end**: The batch end information
     * **id**: The id of the batch. Technically this is a UUID without `-` character [string]
     * **name**: The name of the batch [string]
-    * **start_date**: Started date of the batch in milliseconds (Unix timestamp) [number (long)]
-    * **end_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)]
+    * **start\_date**: Started date of the batch in milliseconds (Unix timestamp) [number (long)]
+    * **end\_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)]
     * **duration**: Batch duration in format HH:mm:ss.SS (Java DateFormat duration) [string]
     * **status**: Bath status [string]
 
