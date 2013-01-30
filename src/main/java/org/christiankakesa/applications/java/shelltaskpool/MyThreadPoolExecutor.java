@@ -27,7 +27,7 @@ class MyThreadPoolExecutor extends ThreadPoolExecutor {
     }
 
 	/*public MyThreadPoolExecutor(int poolSize, int maxPoolSize,
-			long keepAliveTime) {
+            long keepAliveTime) {
 		super(poolSize, maxPoolSize, keepAliveTime, TimeUnit.SECONDS,
 				new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE));
 		this.myInit();
@@ -37,11 +37,11 @@ class MyThreadPoolExecutor extends ThreadPoolExecutor {
         Batch.getInstance().getBatchStatus().setStatus(Batch.Status.STARTED);
         Batch.getInstance().setStartDate(Calendar.getInstance().getTime());
         synchronized (MyThreadPoolExecutor.class) { // We need synchronized here because "+" operator is not thread safe
-            Logger.getLogger("STDOUT").log(Level.INFO, " batch:start|id:" + Batch.getInstance().getId()
+            Logger.getLogger("STDOUT").log(Level.INFO, "batch:start|id:" + Batch.getInstance().getId()
                     + "|name:" + Batch.getInstance().getName()
                     + "|parameters:" + Batch.getInstance().getStringParameters()
                     + "|workers:" + this.getCorePoolSize()
-                    + "|number_of_jobs:" + Main.JOBS_ARRAY_LIST.size()  // TODO(fenicks): Add member to Batch for number of total jobs
+                    + "|number_of_jobs:" + Batch.JOBS_STORE.size()
                     + "|jobs_file:" + Batch.getInstance().getJobsFile()
                     + "|log_dir:" + Batch.getInstance().getLogDirectory()
                     + "|start_date:" + Batch.getInstance().getStartDate().getTime()
