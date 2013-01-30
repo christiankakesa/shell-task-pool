@@ -6,8 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <b>Shell Task Pool</b>.
@@ -16,58 +14,49 @@ import java.util.List;
  * command execution efficiently and safely. All the task are logged and could
  * be parsed by a reporting tool.
  * </p>
+ *
  * @author Christian Kakesa (christian.kakesa@gmail.com)
  */
 public final class Main {
-    private static final int MAX_JOBS = 5120;
-    private static final int MAX_LINE_LENGTH = 2048;
-    private static final char JOB_SEPARATOR = ';';
 
-    static final List<String> JOBS_ARRAY_LIST = new ArrayList<String>(
-            MAX_JOBS);
-
-    private static int corePoolSize = Util.defaultCorePoolSize();
-    private static String batchName;
-    private static String jobsFile;
+    /**
+     * Additional jobs added from command line.
+     */
     private static String jobsList;
-    private static String jobsParam;
-    private static String jobsLogDir;
 
+    /**
+     * Additional params added to each jobs from command line.
+     */
+    private static String jobsParam;
+
+    /**
+     * Logger for Main class.
+     */
     private static final Logger LOG = Logger.getLogger(Main.class);
 
+    /**
+     * Private constructor.
+     */
     private Main() {
     }
 
+    /**
+     * Main method of the application.
+     *
+     * @param args Program arguments.
+     */
     public static void main(String[] args) {
+        Batch.getInstance().setParameters(args);
         Main.CmdLineParser clp = new Main.CmdLineParser(args);
         clp.parse();
-        Main.prepareJobListToExecute();// Populate JOBS_ARRAY_LIST
-        if (Main.JOBS_ARRAY_LIST.isEmpty()) {
+        Main.prepareJobListToExecute();// Populate JOBS_STORE
+        if (Batch.JOBS_STORE.isEmpty()) {
             LOG.error("No jobs found.");
             Util.printHelpAndExit();
         }
-        if (Main.batchName != null) {
-            Batch.getInstance().setName(Main.batchName);
-        } else {
-            LOG.error("Name of the batch are required. Set the \"n\" parameter");
-            Util.printHelpAndExit();
-        }
-        if (Main.jobsLogDir != null) {
-            File d = new File(Main.jobsLogDir);
-            if (d.isDirectory()) {
-                Batch.getInstance().setLogDirectory(Main.jobsLogDir);
-            } else {
-                LOG.error(Main.jobsLogDir + " is not a directory.");
-                Util.printHelpAndExit();
-            }
-        }
-        if (Main.jobsFile != null) {
-            Batch.getInstance().setJobsFile(Main.jobsFile);
-        }
-        Batch.getInstance().setParameters(args);
-        MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(Main.corePoolSize,
-                Main.corePoolSize);
-        for (String cmd : Main.JOBS_ARRAY_LIST) {
+        MyThreadPoolExecutor mtpe = new MyThreadPoolExecutor(Batch.getInstance().getNumberOfWorkers(),
+                Batch.getInstance().getNumberOfWorkers());
+        for (String cmd : Batch.JOBS_STORE) {
             mtpe.addTask(new ShellTaskWorker(cmd));
         }
         mtpe.shutdown();
@@ -95,13 +84,13 @@ public final class Main {
             String arg;
             final LongOpt[] opts = {
                     new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
-                    new LongOpt("batchname", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
+                    new LongOpt("batchname", LongOpt.OPTIONAL_ARGUMENT, null, 'n'),
                     new LongOpt("jobslist", LongOpt.OPTIONAL_ARGUMENT, null, 'j'),
                     new LongOpt("jobsfile", LongOpt.OPTIONAL_ARGUMENT, null, 'f'),
                     new LongOpt("jobsparam", LongOpt.OPTIONAL_ARGUMENT, null, 'p'),
                     new LongOpt("corepoolsize", LongOpt.OPTIONAL_ARGUMENT, null, 'c'),
                     new LongOpt("jobslogdir", LongOpt.OPTIONAL_ARGUMENT, null, 'l')};
-            Getopt g = new Getopt(AppInfo.APP_NAME, params, "hn:j::f::p::c::l::", opts, false);
+            Getopt g = new Getopt(AppInfo.APP_NAME, params, "hn::j::f::p::c::l::", opts, false);
             g.setOpterr(true);
             while ((opt = g.getopt()) != -1) {
                 switch (opt) {
@@ -110,8 +99,8 @@ public final class Main {
                         break;
                     case 'n':
                         arg = g.getOptarg();
-                        Main.batchName = arg;
-                        LOG.debug("Param [batchname]: " + Main.batchName);
+                        Batch.getInstance().setName(arg);
+                        LOG.debug("Param [batchname]: " +Batch.getInstance().getName());
                         break;
                     case 'j':
                         arg = g.getOptarg();
@@ -120,8 +109,8 @@ public final class Main {
                         break;
                     case 'f':
                         arg = g.getOptarg();
-                        Main.jobsFile = arg;
-                        LOG.debug("Param [jobsfile]: " + Main.jobsFile);
+                        Batch.getInstance().setJobsFile(arg);
+                        LOG.debug("Param [jobsfile]: " + Batch.getInstance().getJobsFile());
                         break;
                     case 'p':
                         arg = g.getOptarg();
@@ -131,18 +120,23 @@ public final class Main {
                     case 'c':
                         arg = g.getOptarg();
                         try {
-                            Main.corePoolSize = Integer.valueOf(arg);
+                            Batch.getInstance().setNumberOfWorkers( Integer.valueOf(arg) );
                         } catch (NumberFormatException e) {
                             LOG.warn("Wrong corePoolSize set: " + arg);
-                            Main.corePoolSize = Util.defaultCorePoolSize();
-                            LOG.warn("Detected free cpu core set: corePoolSize=" + Main.corePoolSize);
+                            Batch.getInstance().setNumberOfWorkers(  Util.defaultCorePoolSize() );
+                            LOG.warn("Detected free cpu core set: corePoolSize=" + Batch.getInstance().getNumberOfWorkers());
                         }
-                        LOG.debug("Param [corepoolsize]: " + Main.corePoolSize);
+                        LOG.debug("Param [corepoolsize]: " + Batch.getInstance().getNumberOfWorkers());
                         break;
                     case 'l':
                         arg = g.getOptarg();
-                        Main.jobsLogDir = arg;
-                        LOG.debug("Param [jobslogdir]: " + Main.jobsLogDir);
+                        Batch.getInstance().setLogDirectory(arg);
+                        File d = new File(Batch.getInstance().getLogDirectory());
+                        if (!d.isDirectory()) {
+                            LOG.error(Batch.getInstance().getLogDirectory() + " is not a directory.");
+                            Util.printHelpAndExit();
+                        }
+                        LOG.debug("Param [jobslogdir]: " + Batch.getInstance().getLogDirectory());
                         break;
                     default:
                         LOG.error("Unknown parameter : " + Character.toString((char) opt));
@@ -154,14 +148,14 @@ public final class Main {
 
     private static void prepareJobListToExecute() {
         if (Main.jobsList != null) {
-            String[] jl = StringUtils.split(Main.jobsList, Main.JOB_SEPARATOR);
+            String[] jl = StringUtils.split(Main.jobsList, Batch.JOB_SEPARATOR);
             for (String s : jl) {
                 Main.addJob(s.trim());
             }
         }
-        if (Main.jobsFile != null) {
+        if (Batch.getInstance().getJobsFile() != null) {
             try {
-                FileReader fr = new FileReader(Main.jobsFile);
+                FileReader fr = new FileReader(Batch.getInstance().getJobsFile());
                 BufferedReader br = new BufferedReader(fr);
                 try {
                     String jobsFileLine;
@@ -173,7 +167,7 @@ public final class Main {
                         }
                     }
                 } catch (IOException e) {
-                    LOG.error("Problem with the jobs file : " + Main.jobsFile,
+                    LOG.error("Problem with the jobs file : " + Batch.getInstance().getJobsFile(),
                             e);
                 } finally {
                     try {
@@ -184,7 +178,7 @@ public final class Main {
                     }
                 }
             } catch (FileNotFoundException fne) {
-                LOG.error("jobsFile not exists : " + Main.jobsFile, fne);
+                LOG.error("jobsFile not exists : " + Batch.getInstance().getJobsFile(), fne);
                 Util.printHelpAndExit();
             }
         }
@@ -207,18 +201,18 @@ public final class Main {
             // and <code>jobsParam</code> contains parameter.
             jcl = jcl + " " + Main.jobsParam;
         }
-        if (Main.JOBS_ARRAY_LIST.size() < Main.MAX_JOBS) {
-            if (jcl.length() < Main.MAX_LINE_LENGTH) {
-                Main.JOBS_ARRAY_LIST.add(jcl);
+        if (Batch.JOBS_STORE.size() < Batch.MAX_JOBS) {
+            if (jcl.length() < Batch.MAX_LINE_LENGTH) {
+                Batch.JOBS_STORE.add(jcl);
             } else {
                 LOG.warn("Length of the jobs command line is too long: \n"
                         + "           Command line: " + jcl + "\n"
                         + "    Command line length: " + jcl.length() + "\n"
-                        + "             Maximum is: " + Main.MAX_LINE_LENGTH
+                        + "             Maximum is: " + Batch.MAX_LINE_LENGTH
                         + " !!!");
             }
         } else {
-            LOG.error("Maximum of jobs is " + Main.MAX_JOBS);
+            LOG.error("Maximum of jobs is " + Batch.MAX_JOBS);
             LOG.error("Reduce the number of jobs");
             Util.printHelpAndExit();
         }

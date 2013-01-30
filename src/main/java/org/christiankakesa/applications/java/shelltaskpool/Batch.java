@@ -2,7 +2,9 @@ package org.christiankakesa.applications.java.shelltaskpool;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Store all informations about Batch.
@@ -14,6 +16,26 @@ public enum Batch {
      * Unique instance of batch statically construct.
      */
     INSTANCE;
+
+    /**
+     * Maximum number of jobs.
+     */
+    static final int MAX_JOBS = 5120;
+
+    /**
+     * Maximum line length.
+     */
+    static final int MAX_LINE_LENGTH = 2048;
+
+    /**
+     * Jobs separator for jobs passed through command line.
+     */
+    static final char JOB_SEPARATOR = ';';
+
+    /**
+     * Jobs store array list.
+     */
+    static final List<String> JOBS_STORE = new ArrayList<String>(MAX_JOBS);
 
     /**
      * The batch name.
@@ -54,6 +76,11 @@ public enum Batch {
      * Batch parameters
      */
     private String[] parameters = new String[]{};
+
+    /**
+     * Batch cores defined
+     */
+    private int numberOfWorkers = Util.defaultCorePoolSize();
 
     /**
      * Get the name of the batch.
@@ -335,16 +362,6 @@ public enum Batch {
     }
 
     /**
-     * Set the batch parameters.
-     *
-     * @param params String array of batch parameters.
-     */
-    public void setParameters(final String[] params) {
-        this.parameters = new String[params.length];
-        System.arraycopy(params, 0, this.parameters, 0, params.length);
-    }
-
-    /**
      * String representation of batch parameters.
      *
      * @return String of batch parameters.
@@ -355,5 +372,33 @@ public enum Batch {
             res = StringUtils.join(this.parameters, " ");
         }
         return res;
+    }
+
+    /**
+     * Set the batch parameters.
+     *
+     * @param params String array of batch parameters.
+     */
+    public void setParameters(final String[] params) {
+        this.parameters = new String[params.length];
+        System.arraycopy(params, 0, this.parameters, 0, params.length);
+    }
+
+    /**
+     * Get number of numberOfWorkers defined in batch.
+     *
+     * @return number of numberOfWorkers defined for this batch.
+     */
+    public int getNumberOfWorkers() {
+        return numberOfWorkers;
+    }
+
+    /**
+     * Set number of workers defined in this batch.
+     *
+     * @param workers Number of workers
+     */
+    public void setNumberOfWorkers(int workers) {
+        this.numberOfWorkers = workers;
     }
 }
