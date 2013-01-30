@@ -134,23 +134,23 @@ The structure is described below :
 
 ## Usage
 
-    Usage: shelltaskpool.jar -n "Batch name" -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]
-       or: shelltaskpool.jar -n "Batch name" -f/path/to/file.job [OPTIONS]
+    Usage: shelltaskpool.jar -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]
+       or: shelltaskpool.jar -n'Batch name' -f/path/to/file.job [OPTIONS]
        or: shelltaskpool.jar -h
 
          [-h,--help]
        	   Show this help screen
 
          [-n,--batchname=]
-       	   Set the name of the entire batch (always needed)
-       	   example : -n "All Youtube Mongoid video podcast retrieval"
+       	   Set the name of the entire batch (default set to : NO BATCH NAME)
+       	   example : -n'All Youtube Mongoid video podcast retrieval'
 
          [-j,--jobslist=]
-       	   List of jobs seperated by ';' (could be omitted if "jobsfile"  contains jobs)
+       	   List of jobs seperated by ';' (can be omitted if "jobsfile"  contains jobs)
        	   example : -j'nslookup google.fr; /path/script2.sh > /tmp/script2.log'
 
          [-f,--jobsfile=]
-       	   Path to the jobs plain text file. Jobs are separated by new line (could be omitted if "jobslist"  contains jobs)
+       	   Path to the jobs plain text file. Jobs are separated by new line (can be omitted if "jobslist"  contains jobs)
        	   example : -f/home/me/test.job
 
          [-p,--jobsparam=]
