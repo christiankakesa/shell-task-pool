@@ -25,10 +25,9 @@ public class BatchTest {
 
         final String batchName = "Shell Task Pool";
         Batch.getInstance().setName(batchName);
-        assertEquals(batchName, Batch.getInstance().getName());
         assertNotNull(Batch.getInstance().getName());
         assertTrue(Batch.getInstance().getName().length() > 0);
-        assertTrue(null != Batch.getInstance().getName());
+        assertEquals(batchName, Batch.getInstance().getName());
     }
 
     @Test
@@ -51,6 +50,11 @@ public class BatchTest {
         assertArrayEquals(MY_PARAMS, Batch.getInstance().getParameters());
         final String STRING_PARAMS = Batch.getInstance().getStringParameters();
         assertTrue(STRING_PARAMS.length() == "-p titi -l my_log_dir".length());
+    }
+
+    @Test
+    public void testNumberOfWorkers() {
+        assertTrue(0 <= Batch.getInstance().getNumberOfWorkers());
     }
 
     @Test

@@ -40,7 +40,7 @@ class MyThreadPoolExecutor extends ThreadPoolExecutor {
             Logger.getLogger("STDOUT").log(Level.INFO, "batch:start|id:" + Batch.getInstance().getId()
                     + "|name:" + Batch.getInstance().getName()
                     + "|parameters:" + Batch.getInstance().getStringParameters()
-                    + "|workers:" + this.getCorePoolSize()
+                    + "|workers:" + Batch.getInstance().getNumberOfWorkers()
                     + "|number_of_jobs:" + Batch.JOBS_STORE.size()
                     + "|jobs_file:" + Batch.getInstance().getJobsFile()
                     + "|log_dir:" + Batch.getInstance().getLogDirectory()

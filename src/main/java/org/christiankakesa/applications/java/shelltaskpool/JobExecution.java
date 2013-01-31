@@ -10,43 +10,43 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Representing the job to execute
+ * Representing the job to execute.
  */
 public final class JobExecution {
     private static final Logger LOG = Logger.getLogger(JobExecution.class);
     private static final int MOINS_QUARANTE_DEUX = -42;
 
     /**
-     * Job command line string
+     * Job command line.
      */
     private final String commandLine;
     /**
-     * Job id
+     * Job id.
      */
     private final int id;
     /**
-     * Job start date
+     * Job start date.
      */
     private Date startDate;
     /**
-     * Job end date
+     * Job end date.
      */
     private Date endDate;
     /**
-     * Job status
+     * Job status.
      */
     private JobStatus status = JobStatus.NONE;
     /**
-     * Job exit status code
+     * Job exit status code.
      */
     private int exitCode = MOINS_QUARANTE_DEUX;
     /**
-     * Job process
+     * Job process.
      */
     private Process process;
 
     /**
-     * JobExecution constructor
+     * JobExecution constructor.
      *
      * @param commandLine Command line to execute.
      */
@@ -150,14 +150,14 @@ public final class JobExecution {
     }
 
     /**
-     * Job status enumeration : NONE, RUNNING, FAILED, COMPLETED
+     * Job status enumeration : NONE, RUNNING, FAILED, COMPLETED.
      */
     public static enum JobStatus {
         NONE, RUNNING, FAILED, COMPLETED
     }
 
     /**
-     * Return string representation of the object
+     * Return string representation of the object.
      */
     @Override
     public String toString() {
@@ -174,10 +174,10 @@ public final class JobExecution {
     }
 
     /**
-     * Get the output of a process
+     * Get the output of a process.
      *
-     * @param process The process for the output in string
-     * @return String representation of the process output
+     * @param process The process for the output in string.
+     * @return String representation of the process output.
      */
     private String getProcessOutput(final Process process) {
         return getProcessOutput(process, false);
@@ -236,11 +236,11 @@ public final class JobExecution {
     }
 
     /**
-     * Build Log filename without non desired characters
+     * Build Log filename without non desired characters.
      *
-     * @param jobId   Job identifier
-     * @param cmdLine Job Command line
-     * @return Clean log filename
+     * @param jobId   Job identifier.
+     * @param cmdLine Job Command line.
+     * @return Clean log filename.
      */
     private static String buildLogFilename(int jobId, final String cmdLine, final String dirName) {
         final StringBuilder res = new StringBuilder();

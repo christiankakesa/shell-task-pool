@@ -82,6 +82,7 @@ The standard output log are separate in 3 part and are formatted as *key:value* 
     * **end\_date**: Ended date of the job in milliseconds (Unix timestamp) [number (long)]
     * **duration**: Batch duration in format HH:mm:ss.SS (Java DateFormat duration) [string]
     * **status**: Bath status [string]
+* **batch:log**: Specific application log output such as: `error`, `warning`, `debug`, `info`.
 
 ## Real-time Monitoring With JSON Logs Format
 ### JSON log format example

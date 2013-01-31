@@ -47,14 +47,14 @@ final class Util {
      * @return Help screen string content
      */
     public static String getHelp() {
-        String result = "Usage: " + AppInfo.APP_NAME + " -n \"Batch name\" -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]\n"
+        return "Usage: " + AppInfo.APP_NAME + " -n \"Batch name\" -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]\n"
                 + "   or: " + AppInfo.APP_NAME + " -n \"Batch name\" -f/path/to/file.job [OPTIONS]\n"
                 + "   or: " + AppInfo.APP_NAME + " -h\n\n"
                 + "    [-h,--help]\n"
                 + "        Show this help screen\n\n"
                 + "    [-n,--batchname=]\n"
                 + "        Set the name of the entire batch (default set to : NO BATCH NAME)\n"
-                + "        example : -n'Alimentation différentiel des omes'\n\n"
+                + "        example : -n'All Youtube Mongoid video podcast retrieval'\n\n"
                 + "    [-j,--jobslist=]\n"
                 + "        List of jobs seperated by ';' (can be omitted if \"jobsfile\"  contains jobs)\n"
                 + "        example : -j'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n"
@@ -74,7 +74,6 @@ final class Util {
                 + "Author name  : " + AppInfo.AUTHOR_NAME + "\n"
                 + "Author email : " + AppInfo.AUTHOR_EMAIL + "\n"
                 + "Copyright    : " + AppInfo.APP_COPYRIGHT;
-        return (result); // Parenthesis here to avoid Idea warning for redundant "String result".
     }
 
     /**
@@ -154,7 +153,7 @@ final class Util {
      * @return UUID without all '-' characters
      */
     public static String buildUUID() {
-        UUID newUUID = UUID.randomUUID();
+        final UUID newUUID = UUID.randomUUID();
         return Util.removeCharFromString(newUUID.toString(), '-');
     }
 
