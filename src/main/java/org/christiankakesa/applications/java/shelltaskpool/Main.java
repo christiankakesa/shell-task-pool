@@ -100,7 +100,7 @@ public final class Main {
                     case 'n':
                         arg = g.getOptarg();
                         Batch.getInstance().setName(arg);
-                        LOG.debug("Param [batchname]: " +Batch.getInstance().getName());
+                        LOG.debug("Param [batchname]: " + Batch.getInstance().getName());
                         break;
                     case 'j':
                         arg = g.getOptarg();
@@ -120,10 +120,10 @@ public final class Main {
                     case 'c':
                         arg = g.getOptarg();
                         try {
-                            Batch.getInstance().setNumberOfWorkers( Integer.valueOf(arg) );
+                            Batch.getInstance().setNumberOfWorkers(Integer.valueOf(arg));
                         } catch (NumberFormatException e) {
                             LOG.warn("Wrong corePoolSize set: " + arg);
-                            Batch.getInstance().setNumberOfWorkers(  Util.defaultCorePoolSize() );
+                            Batch.getInstance().setNumberOfWorkers(Util.defaultCorePoolSize());
                             LOG.warn("Detected free cpu core set: corePoolSize=" + Batch.getInstance().getNumberOfWorkers());
                         }
                         LOG.debug("Param [corepoolsize]: " + Batch.getInstance().getNumberOfWorkers());
