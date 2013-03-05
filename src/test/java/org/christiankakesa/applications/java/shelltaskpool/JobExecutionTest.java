@@ -2,7 +2,6 @@ package org.christiankakesa.applications.java.shelltaskpool;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -15,7 +14,7 @@ public class JobExecutionTest {
     public void testCommandLine() {
         assertNotNull(jobExecution.getCommandLine());
         assertTrue(0 <= jobExecution.getCommandLine().length());
-        assertTrue( cmd.equals(jobExecution.getCommandLine()) );
+        assertTrue(cmd.equals(jobExecution.getCommandLine()));
     }
 
     @Test
