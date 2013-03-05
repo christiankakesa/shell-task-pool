@@ -15,7 +15,6 @@ public class BatchTest {
     @Test
     public void testGetInstance() {
         assertNotNull(Batch.getInstance());
-        assertTrue(null != Batch.getInstance());
     }
 
     @Test
