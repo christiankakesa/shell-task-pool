@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNotNull;
 public class ShellTaskWorkerTest {
     @Test
     public void test() {
-        final ShellTaskWorker stw = new ShellTaskWorker("sh dosomestuff.sh");
+        final ShellTaskWorker stw = new ShellTaskWorker("sh do_some_stuff.sh");
         assertNotNull(stw);
     }
 }

@@ -14,29 +14,17 @@ import java.util.concurrent.TimeUnit;
 class MyThreadPoolExecutor extends ThreadPoolExecutor {
     private static final Logger LOG = Logger.getLogger(MyThreadPoolExecutor.class);
 
-	/*public MyThreadPoolExecutor(int poolSize) {
-        super(poolSize, poolSize, 0L, TimeUnit.SECONDS,
-				new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE));
-		this.myInit();
-	}*/
-
     public MyThreadPoolExecutor(int poolSize, int maxPoolSize) {
         super(poolSize, maxPoolSize, 0L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE));
         this.myInit();
     }
 
-	/*public MyThreadPoolExecutor(int poolSize, int maxPoolSize,
-            long keepAliveTime) {
-		super(poolSize, maxPoolSize, keepAliveTime, TimeUnit.SECONDS,
-				new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE));
-		this.myInit();
-	}*/
-
     private void myInit() {
         Batch.getInstance().getBatchStatus().setStatus(Batch.Status.STARTED);
         Batch.getInstance().setStartDate(Calendar.getInstance().getTime());
-        synchronized (MyThreadPoolExecutor.class) { // We need synchronized here because "+" operator is not thread safe
+        // We need synchronized here because "+" operator is not thread safe
+        synchronized (MyThreadPoolExecutor.class) {
             Logger.getLogger("STDOUT").log(Level.INFO, "batch:start|id:" + Batch.getInstance().getId()
                     + "|name:" + Batch.getInstance().getName()
                     + "|parameters:" + Batch.getInstance().getStringParameters()
@@ -58,7 +46,8 @@ class MyThreadPoolExecutor extends ThreadPoolExecutor {
     public void terminated() {
         Batch.getInstance().setEndDate(Calendar.getInstance().getTime());
         Batch.getInstance().getBatchStatus().doEndStatus();
-        synchronized (MyThreadPoolExecutor.class) { // We need synchronized here because "+" operator is not thread safe
+        // We need synchronized here because "+" operator is not thread safe
+        synchronized (MyThreadPoolExecutor.class) {
             Logger.getLogger("STDOUT").log(Level.INFO, "batch:end|id:" + Batch.getInstance().getId()
                     + "|name:" + Batch.getInstance().getName()
                     + "|start_date:" + Batch.getInstance().getStartDate().getTime()
@@ -70,30 +59,13 @@ class MyThreadPoolExecutor extends ThreadPoolExecutor {
         super.terminated();
     }
 
-
-//	@Override
-//	public void shutdown() {
-//		try {
-//			LOG.debug("ThreadPool shutdown. All pool is working !!!");
-//		} finally {
-//			super.shutdown();
-//		} 
-//	}
-
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
         super.beforeExecute(t, r);
-        if (Batch.getInstance().getBatchStatus().getStatus() != Batch.Status.RUNNING) { //Ensure that Batch state is set to Batch.RUNNING
+        // Ensure that Batch state is set to Batch.RUNNING
+        if (Batch.getInstance().getBatchStatus().getStatus() != Batch.Status.RUNNING) {
             Batch.getInstance().getBatchStatus().setStatus(Batch.Status.RUNNING);
         }
     }
 
-//	@Override
-//	protected void afterExecute(Runnable r, Throwable t) {
-//		try {
-//			// Perhaps launching a web server for monitoring all batch
-//		} finally {
-//			super.afterExecute(r, t);
-//		}
-//	 }
 }

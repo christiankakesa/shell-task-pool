@@ -56,7 +56,7 @@ final class Util {
                 + "        Set the name of the entire batch (default set to : NO BATCH NAME)\n"
                 + "        example : -n'All Youtube Mongoid video podcast retrieval'\n\n"
                 + "    [-j,--jobslist=]\n"
-                + "        List of jobs seperated by ';' (can be omitted if \"jobsfile\"  contains jobs)\n"
+                + "        List of jobs separated by ';' (can be omitted if \"jobsfile\"  contains jobs)\n"
                 + "        example : -j'nslookup google.fr; /path/script2.sh > /tmp/script2.log'\n\n"
                 + "    [-f,--jobsfile=]\n"
                 + "        Path to the jobs plain text file. Jobs are separated by new line (can be omitted if \"jobslist\"  contains jobs)\n"
@@ -104,7 +104,8 @@ final class Util {
      * @return String representation of the duration
      */
     public static String buildDurationFromDates(final Date start, final Date end) {
-        if (end != null && start != null) {//Build the duration only if both parameters are not null
+        // Build the duration only if both parameters are not null
+        if (end != null && start != null) {
             final long milliInSecond = 1000;
             final long secondsInHour = 3600;
             final long secondsInMinute = 60;

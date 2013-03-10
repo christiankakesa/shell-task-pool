@@ -6,11 +6,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.nio.charset.Charset;
 
 /**
  * <b>Shell Task Pool</b>.
  * <p>
- * This is the main class of the program. This project aims to parallelized shell
+ * This is the main class of the program. This project aims to bring parallel paradigm in shell
  * command execution efficiently and safely. All the task are logged and could
  * be parsed by a reporting tool.
  * </p>
@@ -20,19 +21,21 @@ import java.io.*;
 public final class Main {
 
     /**
-     * Additional jobs added from command line.
+     * UTF-8 encoding string constant.
      */
-    private static String jobsList;
-
-    /**
-     * Additional params added to each jobs from command line.
-     */
-    private static String jobsParam;
-
+    private static final String UTF8_ENCODING = "utf-8";
     /**
      * Logger for Main class.
      */
     private static final Logger LOG = Logger.getLogger(Main.class);
+    /**
+     * Additional jobs added from command line.
+     */
+    private static String jobsList;
+    /**
+     * Additional params added to each jobs from command line.
+     */
+    private static String jobsParam;
 
     /**
      * Private constructor.
@@ -49,7 +52,8 @@ public final class Main {
         Batch.getInstance().setParameters(args);
         Main.CmdLineParser clp = new Main.CmdLineParser(args);
         clp.parse();
-        Main.prepareJobListToExecute();// Populate JOBS_STORE
+        // Populate JOBS_STORE for jobs list.
+        Main.prepareJobListToExecute();
         if (Batch.JOBS_STORE.isEmpty()) {
             LOG.error("No jobs found.");
             Util.printHelpAndExit();
@@ -60,6 +64,80 @@ public final class Main {
             mtpe.addTask(new ShellTaskWorker(cmd));
         }
         mtpe.shutdown();
+    }
+
+    private static void prepareJobListToExecute() {
+        if (Main.jobsList != null) {
+            String[] jl = StringUtils.split(Main.jobsList, Batch.JOB_SEPARATOR);
+            for (String s : jl) {
+                Main.addJob(s.trim());
+            }
+        }
+        if (Batch.getInstance().getJobsFile() != null) {
+            try {
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(
+                                new FileInputStream(Batch.getInstance().getJobsFile()), Charset.forName(Main.UTF8_ENCODING)
+                        )
+                );
+                try {
+                    String jobsFileLine;
+                    while ((jobsFileLine = br.readLine()) != null) {
+                        // Test if line is not a comment (starting with "#") or not empty
+                        if ((jobsFileLine.trim().length() > 0)
+                                && !jobsFileLine.trim().startsWith("#")) {
+                            Main.addJob(jobsFileLine.trim());
+                        }
+                    }
+                } catch (IOException e) {
+                    LOG.error("Problem with the jobs file : " + Batch.getInstance().getJobsFile(), e);
+                } finally {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        LOG.warn("Can't close jobsFile resource", e);
+                    }
+                }
+            } catch (FileNotFoundException fne) {
+                LOG.error("jobsFile " + Batch.getInstance().getJobsFile() + " not exists", fne);
+                Util.printHelpAndExit();
+            }
+        }
+    }
+
+    /**
+     * Add job in the list of the jobs <b>Main.allJobs</b>. If jobsParam is set,
+     * jobsParam is added to the jobCommandLine.
+     *
+     * @param jobCommandLine The job command line.
+     */
+    private static void addJob(final String jobCommandLine) {
+        String jcl = jobCommandLine;
+        // Exit the method if jobCommandLine is empty
+        if (jcl.length() == 0) {
+            LOG.warn("Can't add empty job");
+            return;
+        }
+        if (Main.jobsParam != null && Main.jobsParam.length() > 0) {
+            // Add global job parameter if <code>jobsParam</code> is not null
+            // and <code>jobsParam</code> contains parameter.
+            jcl = jcl + " " + Main.jobsParam;
+        }
+        if (Batch.JOBS_STORE.size() < Batch.MAX_JOBS) {
+            if (jcl.length() < Batch.MAX_LINE_LENGTH) {
+                Batch.JOBS_STORE.add(jcl);
+            } else {
+                LOG.warn("Length of the jobs command line is too long: \n"
+                        + "           Command line: " + jcl + "\n"
+                        + "    Command line length: " + jcl.length() + "\n"
+                        + "             Maximum is: " + Batch.MAX_LINE_LENGTH
+                        + " !!!");
+            }
+        } else {
+            LOG.error("Maximum of jobs is " + Batch.MAX_JOBS);
+            LOG.error("Reduce the number of jobs");
+            Util.printHelpAndExit();
+        }
     }
 
     private static class CmdLineParser {
@@ -130,15 +208,13 @@ public final class Main {
                         break;
                     case 'l':
                         arg = g.getOptarg();
-                        Batch.getInstance().setLogDirectory(arg);
-                        File d = null;
-                        try {
-                            d = new File(Batch.getInstance().getLogDirectory());
-                        } catch (NullPointerException e) {
-                            LOG.error("Le répertoire des logs n'est pas valide", e);
+                        if (arg.trim().length() == 0) {
+                            LOG.error("Log directory is not valid");
                             Util.printHelpAndExit();
                         }
-                        if (null != d && !d.isDirectory()) {
+                        Batch.getInstance().setLogDirectory(arg);
+                        File d = new File(Batch.getInstance().getLogDirectory());
+                        if (!d.isDirectory()) {
                             LOG.error(Batch.getInstance().getLogDirectory() + " is not a directory.");
                             Util.printHelpAndExit();
                         }
@@ -149,78 +225,6 @@ public final class Main {
                         break;
                 }
             }
-        }
-    }
-
-    private static void prepareJobListToExecute() {
-        if (Main.jobsList != null) {
-            String[] jl = StringUtils.split(Main.jobsList, Batch.JOB_SEPARATOR);
-            for (String s : jl) {
-                Main.addJob(s.trim());
-            }
-        }
-        if (Batch.getInstance().getJobsFile() != null) {
-            try {
-                FileReader fr = new FileReader(Batch.getInstance().getJobsFile());
-                BufferedReader br = new BufferedReader(fr);
-                try {
-                    String jobsFileLine;
-                    while ((jobsFileLine = br.readLine()) != null) {
-                        // Test if line is not a comment (starting with "#") or not empty
-                        if ((jobsFileLine.trim().length() > 0)
-                                && !jobsFileLine.trim().startsWith("#")) {
-                            Main.addJob(jobsFileLine.trim());
-                        }
-                    }
-                } catch (IOException e) {
-                    LOG.error("Problem with the jobs file : " + Batch.getInstance().getJobsFile(),
-                            e);
-                } finally {
-                    try {
-                        br.close();
-                    } catch (IOException e) {
-                        LOG.warn("Can't close jobsFile reader stream : "
-                                + e.getLocalizedMessage());
-                    }
-                }
-            } catch (FileNotFoundException fne) {
-                LOG.error("jobsFile not exists : " + Batch.getInstance().getJobsFile(), fne);
-                Util.printHelpAndExit();
-            }
-        }
-    }
-
-    /**
-     * Add job in the list of the jobs <b>Main.allJobs</b>. If jobsParam is set,
-     * jobsParam is added to the jobCommandLine.
-     *
-     * @param jobCommandLine The job command line.
-     */
-    private static void addJob(final String jobCommandLine) {
-        String jcl = jobCommandLine;
-        if (jcl.length() == 0) { // Exit the method if jobCommandLine is empty
-            LOG.warn("Can't add empty job");
-            return;
-        }
-        if (Main.jobsParam != null && Main.jobsParam.length() > 0) {
-            // Add global job parameter if <code>jobsParam</code> is not null
-            // and <code>jobsParam</code> contains parameter.
-            jcl = jcl + " " + Main.jobsParam;
-        }
-        if (Batch.JOBS_STORE.size() < Batch.MAX_JOBS) {
-            if (jcl.length() < Batch.MAX_LINE_LENGTH) {
-                Batch.JOBS_STORE.add(jcl);
-            } else {
-                LOG.warn("Length of the jobs command line is too long: \n"
-                        + "           Command line: " + jcl + "\n"
-                        + "    Command line length: " + jcl.length() + "\n"
-                        + "             Maximum is: " + Batch.MAX_LINE_LENGTH
-                        + " !!!");
-            }
-        } else {
-            LOG.error("Maximum of jobs is " + Batch.MAX_JOBS);
-            LOG.error("Reduce the number of jobs");
-            Util.printHelpAndExit();
         }
     }
 }

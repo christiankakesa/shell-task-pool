@@ -94,7 +94,7 @@ public class UtilTest extends TestCase {
         try {
             Thread.sleep(SLEEP_TIME);
         } catch (InterruptedException e) {
-            LOG.warn("Can invoque Thread.sleep(" + String.valueOf(SLEEP_TIME) + ") in UtilsTest.testBuildDurationFromDates()", e);
+            LOG.warn("Can invoke Thread.sleep(" + String.valueOf(SLEEP_TIME) + ") in UtilsTest.testBuildDurationFromDates()", e);
         }
         final java.util.Date END_DATE = Calendar.getInstance().getTime();
         assertFalse(Util.buildDurationFromDates(BEGIN_DATE, END_DATE).equals(DEFAULT_DURATION));

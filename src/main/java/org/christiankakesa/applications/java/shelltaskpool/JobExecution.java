@@ -13,8 +13,18 @@ import java.util.Date;
  * Representing the job to execute.
  */
 public final class JobExecution {
+    /**
+     * Logger for JobExecution class.
+     */
     private static final Logger LOG = Logger.getLogger(JobExecution.class);
-    private static final int MOINS_QUARANTE_DEUX = -42;
+    /**
+     * Minus forty two string constant.
+     */
+    private static final int MINUS_FORTY_TWO = -42;
+    /**
+     * UTF-8 encoding string constant.
+     */
+    private static final String UTF8_ENCODING = "utf-8";
 
     /**
      * Job command line.
@@ -39,7 +49,7 @@ public final class JobExecution {
     /**
      * Job exit status code.
      */
-    private int exitCode = MOINS_QUARANTE_DEUX;
+    private int exitCode = MINUS_FORTY_TWO;
     /**
      * Job process.
      */
@@ -56,7 +66,8 @@ public final class JobExecution {
     }
 
     public void start() {
-        if (this.getStatus().equals(JobStatus.NONE)) { // Run the job only if job status is NONE (no state)
+        // Run the job only if job status is NONE (no state)
+        if (this.getStatus().equals(JobStatus.NONE)) {
             this.run();
         } else {
             LOG.warn("JobId: " + this.getId() + ":" + this.getCommandLine() + " with status: "
@@ -85,7 +96,8 @@ public final class JobExecution {
                 this.setStatus(JobStatus.FAILED);
                 Batch.getInstance().getBatchStatus().incrementFailedJob();
             }
-            synchronized (JobExecution.class) { //We need synchronized here because "+" operator is not thread safe
+            // We need synchronized here because "+" operator is not thread safe
+            synchronized (JobExecution.class) {
                 Logger.getLogger("STDOUT").log(Level.INFO, "batch:job|id:" + Batch.getInstance().getId()
                         + "|job_id:" + this.getId()
                         + "|job_command_line:" + this.getCommandLine()
@@ -104,7 +116,8 @@ public final class JobExecution {
 
     @SuppressWarnings(value = "unused")
     public void destroy() {
-        if (null != this.process) { // Destroy JobExecution.process if not destroyed
+        // Destroy JobExecution.process if not destroyed
+        if (null != this.process) {
             this.process.destroy();
         }
     }
@@ -194,38 +207,42 @@ public final class JobExecution {
         final StringBuilder sbResult = new StringBuilder();
         sbResult.append("JobId: ").append(this.getId()).append(" - STDOUT: ");
         final StringBuilder sbLine = new StringBuilder();
-        final InputStreamReader tempReader = new InputStreamReader(
-                new BufferedInputStream(process.getInputStream()));
-        final BufferedReader reader = new BufferedReader(tempReader);
-        PrintWriter writer = null;
-        if (isLogPrintedToFile) {
-            final String logFile = JobExecution.buildLogFilename(this.getId(), this.getCommandLine(), Batch.getInstance().getLogDirectory());
-            LOG.debug("log directory is : " + logFile);
-            try {
-                writer = new PrintWriter(new BufferedWriter(new FileWriter(logFile)));
-            } catch (IOException e) {
-                LOG.warn("Can't create a process output log file", e);
-            }
-        }
-        String line;
         try {
-            while ((line = reader.readLine()) != null) {
-                if (isLogPrintedToFile && writer != null) {
-                    writer.println(line);
+            final InputStreamReader tempReader = new InputStreamReader(
+                    new BufferedInputStream(process.getInputStream()), UTF8_ENCODING);
+            final BufferedReader reader = new BufferedReader(tempReader);
+            PrintWriter writer = null;
+            if (isLogPrintedToFile) {
+                final String logFile = JobExecution.buildLogFilename(this.getId(), this.getCommandLine(), Batch.getInstance().getLogDirectory());
+                LOG.debug("log directory is : " + logFile);
+                try {
+                    writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(logFile), UTF8_ENCODING));
+                } catch (IOException e) {
+                    LOG.warn("Can't create a process output log file", e);
                 }
-                sbLine.append(line);
             }
-        } catch (IOException e) {
-            LOG.error(e);
-        } finally {
-            if (writer != null) {
-                writer.close();
-            }
+            String line;
             try {
-                reader.close();
+                while ((line = reader.readLine()) != null) {
+                    if (isLogPrintedToFile && writer != null) {
+                        writer.println(line);
+                    }
+                    sbLine.append(line);
+                }
             } catch (IOException e) {
-                LOG.warn("Can't close the job process output stream", e);
+                LOG.error(e);
+            } finally {
+                if (writer != null) {
+                    writer.close();
+                }
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    LOG.warn("Can't close the job process output stream", e);
+                }
             }
+        } catch (UnsupportedEncodingException e) {
+            LOG.error(e);
         }
         if (sbLine.toString().trim().length() > 0) {
             sbResult.append(sbLine);

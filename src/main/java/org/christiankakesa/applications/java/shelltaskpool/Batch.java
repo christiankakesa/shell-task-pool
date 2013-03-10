@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Store all informations about Batch.
+ * Store all information about Batch.
  *
  * @author Christian Kakesa (christian.kakesa@gmail.com)
  */
@@ -206,14 +206,16 @@ public enum Batch {
          * @return Number of successful job.
          */
         public int getSuccessJob() {
-            return successJob;// No synchronization needed, successJob is volatile, not cached.
+            // No synchronization needed, successJob is volatile, not cached.
+            return successJob;
         }
 
         /**
          * Increment <code>successJob</code> by 1.
          */
         public void incrementSuccessJob() {
-            synchronized (successJobMonitor) {// Synchronized because Add operator is not thread safe
+            // Synchronized because Add operator is not thread safe.
+            synchronized (successJobMonitor) {
                 ++(this.successJob);
             }
         }
@@ -224,14 +226,16 @@ public enum Batch {
          * @return Number of failed job.
          */
         public int getFailedJob() {
-            return failedJob;// No synchronization needed, failedJob is volatile, not cached.
+            // No synchronization needed, failedJob is volatile, not cached.
+            return failedJob;
         }
 
         /**
          * Increment <code>failedJob</code> by 1.
          */
         public void incrementFailedJob() {
-            synchronized (failedJobMonitor) {// Synchronized because Add operator is not thread safe
+            // Synchronized because Add operator is not thread safe.
+            synchronized (failedJobMonitor) {
                 ++(this.failedJob);
             }
         }
@@ -260,14 +264,16 @@ public enum Batch {
          * @return Number of total job.
          */
         public int getTotalJob() {
-            return totalJob;// No synchronization needed, totalJob is volatile, not cached.
+            // No synchronization needed, totalJob is volatile, not cached.
+            return totalJob;
         }
 
         /**
          * Increment <code>totalJob</code> by 1.
          */
         public void incrementTotalJob() {
-            synchronized (totalJobMonitor) {// Synchronized because Add operator is not thread safe
+            // Synchronized because Add operator is not thread safe.
+            synchronized (totalJobMonitor) {
                 ++(this.totalJob);
             }
         }

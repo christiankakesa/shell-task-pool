@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 public class JobExecutionTest {
 
-    final String cmd = "sudo aptitude full-upgrade";
-    final JobExecution jobExecution = new JobExecution(cmd);
+    private final String cmd = "sudo aptitude full-upgrade";
+    private final JobExecution jobExecution = new JobExecution(cmd);
 
     @Test
     public void testCommandLine() {
