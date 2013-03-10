@@ -6,6 +6,12 @@ My inspiration led me to make this code, not really in Java standards, but with 
 This tool has allowed my company to save an hour in nightly batch processing and easily parse logs reporting.
 I admit that the first purpose was to retrieve many videos of programming languages, design pattern etc...
 
+## Examples
+
+        java -jar shelltaskpool-1.2.0.jar -f./jobs_list.job [OPTIONS]
+        java -jar shelltaskpool-1.2.0.jar -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' -f./jobs_list.job [OPTIONS]
+        java -jar shelltaskpool-1.2.0.jar -n"Batch name" -f./jobs_list.job [OPTIONS]
+
 ## Use Cases
 
                         MAPPER                      REDUCER

@@ -47,8 +47,8 @@ final class Util {
      * @return Help screen string content
      */
     public static String getHelp() {
-        return "Usage: " + AppInfo.APP_NAME + " -n \"Batch name\" -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]\n"
-                + "   or: " + AppInfo.APP_NAME + " -n \"Batch name\" -f/path/to/file.job [OPTIONS]\n"
+        return "Usage: " + AppInfo.APP_NAME + " -n\"Batch name\" -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]\n"
+                + "   or: " + AppInfo.APP_NAME + " -f/path/to/file.job [OPTIONS]\n"
                 + "   or: " + AppInfo.APP_NAME + " -h\n\n"
                 + "    [-h,--help]\n"
                 + "        Show this help screen\n\n"
