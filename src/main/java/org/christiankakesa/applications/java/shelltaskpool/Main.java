@@ -131,8 +131,14 @@ public final class Main {
                     case 'l':
                         arg = g.getOptarg();
                         Batch.getInstance().setLogDirectory(arg);
-                        File d = new File(Batch.getInstance().getLogDirectory());
-                        if (!d.isDirectory()) {
+                        File d = null;
+                        try {
+                            d = new File(Batch.getInstance().getLogDirectory());
+                        } catch (NullPointerException e) {
+                            LOG.error("Le répertoire des logs n'est pas valide", e);
+                            Util.printHelpAndExit();
+                        }
+                        if (null != d && !d.isDirectory()) {
                             LOG.error(Batch.getInstance().getLogDirectory() + " is not a directory.");
                             Util.printHelpAndExit();
                         }
