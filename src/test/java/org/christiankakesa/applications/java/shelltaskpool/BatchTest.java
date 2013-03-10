@@ -35,11 +35,20 @@ public class BatchTest {
     }
 
     @Test
+    public void testJobFile() {
+        final String setJobFileBackup = Batch.getInstance().getJobsFile();
+        final String setJobFile = "my_job_file.log";
+        Batch.getInstance().setJobsFile(setJobFile);
+        assertEquals(setJobFile, Batch.getInstance().getJobsFile());
+        Batch.getInstance().setJobsFile(setJobFileBackup);
+    }
+
+    @Test
     public void testLogDirectory() {
-        final String SET_LOG_DIRECTORY = "my_log_dir";
-        Batch.getInstance().setLogDirectory(SET_LOG_DIRECTORY);
+        final String setLogDirectory = "my_log_dir";
+        Batch.getInstance().setLogDirectory(setLogDirectory);
         final String GET_LOG_DIRECTORY = Batch.getInstance().getLogDirectory();
-        assertEquals(SET_LOG_DIRECTORY, GET_LOG_DIRECTORY);
+        assertEquals(setLogDirectory, GET_LOG_DIRECTORY);
     }
 
     @Test
@@ -54,6 +63,11 @@ public class BatchTest {
     @Test
     public void testNumberOfWorkers() {
         assertTrue(0 <= Batch.getInstance().getNumberOfWorkers());
+        final int workersBackup = Batch.getInstance().getNumberOfWorkers();
+        final int workers = 5;
+        Batch.getInstance().setNumberOfWorkers(workers);
+        assertEquals(workers, Batch.getInstance().getNumberOfWorkers());
+        Batch.getInstance().setNumberOfWorkers(workersBackup);
     }
 
     @Test
