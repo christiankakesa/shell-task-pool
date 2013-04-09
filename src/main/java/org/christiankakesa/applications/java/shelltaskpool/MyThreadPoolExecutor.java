@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
+ * Specific ThreadPoolExecutor.
  */
 class MyThreadPoolExecutor extends ThreadPoolExecutor {
     private static final Logger LOG = Logger.getLogger(MyThreadPoolExecutor.class);
