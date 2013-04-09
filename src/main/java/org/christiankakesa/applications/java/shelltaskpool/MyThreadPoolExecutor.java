@@ -19,7 +19,10 @@ class MyThreadPoolExecutor extends ThreadPoolExecutor {
                 new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE));
         this.myInit();
     }
-
+    
+    /**
+     * Global initialization.
+     */
     private void myInit() {
         Batch.getInstance().getBatchStatus().setStatus(Batch.Status.STARTED);
         Batch.getInstance().setStartDate(Calendar.getInstance().getTime());
