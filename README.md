@@ -92,7 +92,7 @@ The standard output log are separate in 3 part and are formatted as *key:value* 
 
 ## Usage
 
-    Usage: shelltaskpool.jar -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/job.sh' [OPTIONS]
+    Usage: shelltaskpool.jar -j'/path/to/shell.sh > /var/log/shell.sh.log;/path/to/another_job.sh' [OPTIONS]
        or: shelltaskpool.jar -n'Batch name' -f/path/to/file.job [OPTIONS]
        or: shelltaskpool.jar -h
 
